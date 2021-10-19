@@ -108,12 +108,12 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 
 FName FWorldSeedEdModeToolkit::GetToolkitFName() const
 {
-	return FName("WorldSeedEdMode");
+	return FName("Level Designer");
 }
 
 FText FWorldSeedEdModeToolkit::GetBaseToolkitName() const
 {
-	return NSLOCTEXT("WorldSeedEdModeToolkit", "DisplayName", "WorldSeedEdMode Tool");
+	return NSLOCTEXT("WorldSeed_EditorToolkit", "DisplayName", "WorldSeed Tool");
 }
 
 class FEdMode* FWorldSeedEdModeToolkit::GetEditorMode() const

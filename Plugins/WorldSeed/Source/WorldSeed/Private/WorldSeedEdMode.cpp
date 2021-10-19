@@ -40,6 +40,12 @@ void FWorldSeedEdMode::Exit()
 	FEdMode::Exit();
 }
 
+void FWorldSeedEdMode::Tick(FEditorViewportClient* ViewportClient, float DeltaTime)
+{
+
+	//GEditor->GetSelectedActors()
+}
+
 bool FWorldSeedEdMode::UsesToolkits() const
 {
 	return true;

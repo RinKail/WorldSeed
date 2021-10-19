@@ -8,7 +8,7 @@
 void FWorldSeedModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
-	FEditorModeRegistry::Get().RegisterMode<FWorldSeedEdMode>(FWorldSeedEdMode::EM_WorldSeedEdModeId, LOCTEXT("WorldSeedEdModeName", "WorldSeedEdMode"), FSlateIcon(), true);
+	FEditorModeRegistry::Get().RegisterMode<FWorldSeedEdMode>(FWorldSeedEdMode::EM_WorldSeedEdModeId, LOCTEXT("WorldSeedEdModeName", "World Seed"), FSlateIcon(), true);
 }
 
 void FWorldSeedModule::ShutdownModule()
