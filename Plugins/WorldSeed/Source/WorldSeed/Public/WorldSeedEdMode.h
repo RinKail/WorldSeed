@@ -21,4 +21,13 @@ public:
 	//virtual void ActorSelectionChangeNotify() override;
 	bool UsesToolkits() const override;
 	// End of FEdMode interface
+
+
+
+	UPROPERTY()
+	class AWT_GeneratorCore* ActiveGenerator;
+
+
+
+
 };

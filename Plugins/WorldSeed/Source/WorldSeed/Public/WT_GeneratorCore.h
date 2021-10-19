@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "GameFramework/Actor.h"
 #include "WT_GeneratorCore.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class WORLDSEED_API UWT_GeneratorCore : public UObject
+class WORLDSEED_API AWT_GeneratorCore : public AActor
 {
 	GENERATED_BODY()
 	
