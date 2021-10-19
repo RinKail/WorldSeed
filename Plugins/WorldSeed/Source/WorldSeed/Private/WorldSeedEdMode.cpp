@@ -5,7 +5,7 @@
 #include "Toolkits/ToolkitManager.h"
 #include "EditorModeManager.h"
 
-const FEditorModeID FWorldSeedEdMode::EM_WorldSeedEdModeId = TEXT("EM_WorldSeedEdMode");
+const FEditorModeID FWorldSeedEdMode::EM_WorldSeedEdModeId = TEXT("EM_WorldSeedEditor");
 
 FWorldSeedEdMode::FWorldSeedEdMode()
 {
