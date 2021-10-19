@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{2DE5BADF-4114-6D35-7E1D-1BB603E9ED27}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "WorldTree_PCGTool",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
