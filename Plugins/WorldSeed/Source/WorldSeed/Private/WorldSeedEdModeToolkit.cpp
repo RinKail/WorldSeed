@@ -53,12 +53,92 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 				.Text(InLabel)
 				.OnClicked_Static(&Locals::OnButtonClick, InOffset);
 		}
+
+	};
+
+
+	struct LandmarkSelector
+	{
+		FReply SetActiveLandmarkType()
+		{
+			//LandmarkTypes_Active;
+		}
+
+		
+
+
 	};
 
 	const float Factor = 256.0f;
 
-	SAssignNew(ToolkitWidget, SBorder)
-		.HAlign(HAlign_Center)
+
+
+	Options = {
+		LOCTEXT("Slice", "Slice"),
+			LOCTEXT("Add", "Add"),
+			LOCTEXT("Remove", "Remove"),
+			LOCTEXT("Room", "Room"),
+			LOCTEXT("Corridor", "Corridor"),
+	};
+	
+	LandmarkTypes_SelectedTitle = MakeShareable(new FText(Options[0]));
+	for (const auto& ActiveOption : Options)
+	{
+		LandmarkTypes_DropDownOptions.Add(MakeShareable(new FText(ActiveOption)));
+	}
+	TSharedPtr<SComboBox<TSharedPtr<FText>>> LandmarkOptions_ComboBox;
+
+	
+	
+		
+
+	SAssignNew(ToolkitWidget, SBorder).HAlign(HAlign_Left).Padding(25)
+		[
+			SNew(SVerticalBox)
+			+ SVerticalBox::Slot().MaxHeight(50)
+		[
+			SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth().MaxWidth(250)
+			[
+				SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("TitleLabel", "Edit the properties beneath or select a landmark in the scene"))
+			]
+		]
+		+ SVerticalBox::Slot().Padding(0, 0).MaxHeight(25)
+		[
+
+
+
+
+
+			SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth()
+			[
+				SAssignNew(LandmarkOptions_ComboBox, SComboBox<TSharedPtr<FText>>).InitiallySelectedItem(LandmarkTypes_SelectedTitle).OptionsSource(&LandmarkTypes_DropDownOptions)
+				.OnSelectionChanged_Lambda([this](TSharedPtr<FText>NewSelection, ESelectInfo::Type SelectInfo) { LandmarkTypes_SelectedTitle = NewSelection; })
+		.OnGenerateWidget_Lambda([](TSharedPtr<FText>Option) {return SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11)).Text(*Option); })
+		[
+			SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11)).Text_Lambda([this]() { return LandmarkTypes_SelectedTitle.IsValid() ? *LandmarkTypes_SelectedTitle : FText::GetEmpty(); })
+		]
+			]
+	+ SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
+		[
+			SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
+			[
+				SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+				.Text(LOCTEXT("ButtonName", "Generate Landmark"))
+			]
+		]
+
+		]
+
+			
+		];
+	
+	
+
+
+
+
+		/*
+		* .HAlign(HAlign_Center)
 		.Padding(25)
 		.IsEnabled_Static(&Locals::IsWidgetEnabled)
 		[
@@ -100,8 +180,13 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 				[
 					Locals::MakeButton(LOCTEXT("DownButtonLabel", "Down"), FVector(0, 0, -Factor))
 				]
+		*/
+		
+		
 
-		];
+
+
+		
 		
 	FModeToolkit::Init(InitToolkitHost);
 }
@@ -121,4 +206,108 @@ class FEdMode* FWorldSeedEdModeToolkit::GetEditorMode() const
 	return GLevelEditorModeTools().GetActiveMode(FWorldSeedEdMode::EM_WorldSeedEdModeId);
 }
 
+FReply FWorldSeedEdModeToolkit::SetLandmark()
+{
+
+	int ResulingIndex = 0;
+	for (int i = 0; i < Options.Num(); i++)
+	{
+		if ((FString)Options[i].ToString() == *LandmarkTypes_SelectedTitle.Get()->ToString())
+		{
+			ResulingIndex = i;
+			break;
+		}
+	}
+
+	TSubclassOf<AWT_Landmark_Base> LandmarkType;
+
+	switch (ResulingIndex)
+	{
+	case 0:
+		LandmarkType = AWT_Landmark_Base::StaticClass();
+
+		break;
+	case 1:
+		LandmarkType = AWT_Landmark_Base::StaticClass();
+		break;
+	case 2:
+		LandmarkType = AWT_Landmark_Base::StaticClass();
+		break;
+	}
+
+	FWorldSeedEdMode* EditorMode = Cast<FWorldSeedEdMode>(GetEditorMode());
+	EditorMode->CreateLandmark(LandmarkType);
+
+
+
+	return FReply::Handled();
+}
+
+
+
 #undef LOCTEXT_NAMESPACE
+
+
+
+
+/*
+[
+	SNew(SBorder)
+	.BorderImage(InArgs._Background)
+	.Padding(FMargin(20))
+	[
+		SNew(SVerticalBox) + SVerticalBox::Slot().AutoHeight()
+		[
+			SNew(SHorizontalBox)
+			+ SHorizontalBox::Slot()
+		[
+		SAssignNew(TitleComboBox, SComboBox<TSharedPtr<FText>>)
+			.InitiallySelectedItem(SelectedTitle)
+			.OptionsSource(&TitleOptions)
+			.OnSelectionChanged_Lambda([this](TSharedPtr<FText> NewSelection, ESelectInfo::Type SelectInfo)
+			{
+			SelectedTitle = NewSelection;
+			})
+				.OnGenerateWidget_Lambda([](TSharedPtr<FText> Option)
+				{
+					return SNew(STextBlock)
+						.Font(FCoreStyle::GetDefaultFontStyle("Regular", 18))
+						.Text(*Option);
+				})
+				[
+				SNew(STextBlock)
+				.Font(FCoreStyle::GetDefaultFontStyle("Regular", 18))
+			.Text_Lambda([this]()
+				{
+					return SelectedTitle.IsValid() ? *SelectedTitle : FText::GetEmpty();
+				})
+				]
+	]
++ SHorizontalBox::Slot()
+.Padding(5, 0)
+[
+	SAssignNew(NameBox, SEditableTextBox)
+	.Font(FCoreStyle::GetDefaultFontStyle("Regular", 18))
+	.HintText(LOCTEXT("YourName", "Fill your name"))
+]
++ SHorizontalBox::Slot()
+.Padding(5, 0)
+[
+	SNew(SButton)
+	.OnClicked(this, &SGreetings::Greet)
+	[
+		SNew(STextBlock)
+		.Font(FCoreStyle::GetDefaultFontStyle("Regular", 18))
+	.Text(LOCTEXT("Hello", "Hello!"))
+	]
+]
+	]
++ SVerticalBox::Slot()
+.Padding(0, 10)
+[
+	SAssignNew(GreetBox, STextBlock)
+	.Font(FCoreStyle::GetDefaultFontStyle("Regular", 18))
+]
+	]
+];
+*/

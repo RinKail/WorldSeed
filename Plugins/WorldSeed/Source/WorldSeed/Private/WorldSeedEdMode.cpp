@@ -6,7 +6,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "WorldSeed/Public/WT_GeneratorCore.h"
+
 #include "EditorModeManager.h"
+
 
 const FEditorModeID FWorldSeedEdMode::EM_WorldSeedEdModeId = TEXT("EM_WorldSeedEditor");
 
@@ -75,6 +77,12 @@ void FWorldSeedEdMode::Tick(FEditorViewportClient* ViewportClient, float DeltaTi
 bool FWorldSeedEdMode::UsesToolkits() const
 {
 	return true;
+}
+
+void FWorldSeedEdMode::CreateLandmark(TSubclassOf<AWT_Landmark_Base> Class)
+{
+
+	Landmark_List.Add(GetWorld()->SpawnActor<AWT_Landmark_Base>(Class));
 }
 
 

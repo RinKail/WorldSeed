@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WorldSeed/public/WT_Landmark_Base.h"
 #include "EdMode.h"
 
 class FWorldSeedEdMode : public FEdMode
@@ -23,11 +24,16 @@ public:
 	// End of FEdMode interface
 
 
+	void CreateLandmark(TSubclassOf<AWT_Landmark_Base> Class);
+
+
 
 	UPROPERTY()
 	class AWT_GeneratorCore* ActiveGenerator;
 
 
+	UPROPERTY()
+	TArray<AWT_Landmark_Base*> Landmark_List;
 
 
 };
