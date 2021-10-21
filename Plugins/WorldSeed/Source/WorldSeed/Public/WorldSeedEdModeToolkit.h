@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Toolkits/BaseToolkit.h"
 #include "Widgets/SCompoundWidget.h"
+#include "Widgets/Input/SNumericEntryBox.h"
 #include "SlateFwd.h"
 #include "WorldSeed/public/WT_Landmark_Base.h"
 
@@ -32,10 +33,29 @@ public:
 
 	FReply SetLandmark();
 
-private:
-	TArray<FText> Options;
+
+
+
+
 	
 
+
+private:
+	TArray<FText> Options;
+
+	int GridXScale;
+	int GridYScale;
+
+	
+	int ChunkXScale;
+	int ChunkYScale;
+	
+	
+	TSharedPtr<SEditableTextBox> GridScaleXBox;
+	TSharedPtr<SEditableTextBox> GridScaleYBox;
+
+	TSharedPtr<SEditableTextBox> ChunkScaleXBox;
+	TSharedPtr<SEditableTextBox> ChunkScaleYBox;
 
 	FWorldSeedEdMode* EditorReference;
 
@@ -50,10 +70,6 @@ private:
 
 
 
-	TSharedPtr<SNumericEntryBox> DataEntry_ChunkScale_X;
-	TSharedPtr<SNumericEntryBox> DataEntry_ChunkScale_Y;
-
-	TSharedPtr<SNumericEntryBox> DataEntry_GridScale_X;
-	TSharedPtr<SNumericEntryBox> DataEntry_GridScale_Y;
+	
 
 };

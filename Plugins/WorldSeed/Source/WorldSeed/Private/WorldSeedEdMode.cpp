@@ -64,6 +64,12 @@ void FWorldSeedEdMode::Exit()
 		FToolkitManager::Get().CloseToolkit(Toolkit.ToSharedRef());
 		Toolkit.Reset();
 	}
+	for (int i = 0; i < Landmark_List.Num(); i++)
+	{
+		Landmark_List[i]->Destroy();
+	}
+	Landmark_List.Empty();
+
 
 	UE_LOG(LogTemp, Warning, TEXT("Exited WorldSeed Editor"));
 

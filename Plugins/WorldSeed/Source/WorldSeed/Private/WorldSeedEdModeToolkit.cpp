@@ -6,6 +6,7 @@
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/Input/SEditableTextBox.h"
+
 #include "EditorModeManager.h"
 
 #define LOCTEXT_NAMESPACE "FWorldSeedEdModeToolkit"
@@ -91,7 +92,7 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 
 	
 	
-		
+	
 
 	SAssignNew(ToolkitWidget, SBorder).HAlign(HAlign_Left).Padding(25)
 		[
@@ -100,14 +101,14 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 				SNew(SBorder)
 				[
 					SNew(SVerticalBox)
-					+ SVerticalBox::Slot().MaxHeight(50)
+					+ SVerticalBox::Slot().MaxHeight(30)
 					[
 						SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth().MaxWidth(275)
 						[
 							SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("TitleLabel", "Edit the properties beneath or select a landmark in the scene"))
 						]
 					]
-					+ SVerticalBox::Slot().Padding(0, 0).MaxHeight(25)
+					+ SVerticalBox::Slot().Padding(0, 0).MaxHeight(30)
 					[
 						SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth()
 						[
@@ -115,7 +116,7 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 								.OnSelectionChanged_Lambda([this](TSharedPtr<FText>NewSelection, ESelectInfo::Type SelectInfo) { LandmarkTypes_SelectedTitle = NewSelection; })
 								.OnGenerateWidget_Lambda([](TSharedPtr<FText>Option) {return SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11)).Text(*Option); })
 								[
-									SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11)).Text_Lambda([this]() { return LandmarkTypes_SelectedTitle.IsValid() ? *LandmarkTypes_SelectedTitle : FText::GetEmpty(); })
+									SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 15)).Text_Lambda([this]() { return LandmarkTypes_SelectedTitle.IsValid() ? *LandmarkTypes_SelectedTitle : FText::GetEmpty(); })
 								]
 						]
 						+ SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
@@ -130,35 +131,63 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 				]
 			]
 		]
-	+SVerticalBox::Slot()
+		+ SVerticalBox::Slot()
 		[
 			SNew(SBorder)
 			[
-				SNew(SVerticalBox) + SVerticalBox::Slot()
+				SNew(SVerticalBox) + SVerticalBox::Slot().MaxHeight(25).Padding(0,5)
 				[
-					SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth().MaxWidth(275)
-					[
-						SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("TitleLabel", "Setup the size of the grid here"))
-					]
+					SNew(SHorizontalBox) 
+					+ SHorizontalBox::Slot().AutoWidth().MaxWidth(275)
+						[
+							SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("GridLabel", "Grid Scale"))
+						]
+					+ SHorizontalBox::Slot().AutoWidth().Padding(5, 0)
+						[
+							SAssignNew(GridScaleXBox, SEditableTextBox)
+							.Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+							.HintText(LOCTEXT("GridX", "X Scale"))
+						]
+					+ SHorizontalBox::Slot().AutoWidth().Padding(5, 0)
+						[
+							SAssignNew(GridScaleYBox, SEditableTextBox)
+							.Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+						.HintText(LOCTEXT("GridY", "Y Scale"))
+						]
 				]
-				+SVerticalBox::Slot()
+			+ SVerticalBox::Slot().MaxHeight(25).Padding(0,5)
+			[
+				SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth().MaxWidth(275)
+					[
+						SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("ChunkLabel", "Chunk Scale"))
+					]
+				+ SHorizontalBox::Slot().AutoWidth().Padding(5, 0)
 				[
-					SNew(SHorizontalBox) + SHorizontalBox::Slot()
-					[
-						SNew()
-					]
-					+SHorizontalBox::Slot()
-					[
-						SAssignNew(DataEntry_ChunkScale_Y, SNumericEntryBox)
-					]
+					SAssignNew(GridScaleXBox, SEditableTextBox)
+					.Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+				.HintText(LOCTEXT("ChunkX", "X Scale"))
 				]
-	
+			+ SHorizontalBox::Slot().AutoWidth().Padding(5, 0)
+				[
+					SAssignNew(GridScaleYBox, SEditableTextBox)
+					.Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+				.HintText(LOCTEXT("GridY", "Y Scale"))
+				]
 			]
+			
+		
+		
+				]
 		]
+];
+	
+			
+		
 	
 
-			
-		];
+	
+	
+
 	
 	
 
@@ -218,6 +247,9 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 		
 	FModeToolkit::Init(InitToolkitHost);
 }
+
+
+
 
 FName FWorldSeedEdModeToolkit::GetToolkitFName() const
 {

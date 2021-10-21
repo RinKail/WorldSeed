@@ -64,7 +64,7 @@ void AWT_WorldChunk::Tick(float DeltaTime)
 			FName OName = "Mesh_" + x + y;
 			UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(OName);
 
-			*/
+			
 
 		}
 	}
