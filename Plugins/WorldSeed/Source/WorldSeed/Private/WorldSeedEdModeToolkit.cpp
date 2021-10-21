@@ -5,6 +5,7 @@
 #include "Engine/Selection.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Text/STextBlock.h"
+#include "Widgets/Input/SEditableTextBox.h"
 #include "EditorModeManager.h"
 
 #define LOCTEXT_NAMESPACE "FWorldSeedEdModeToolkit"
@@ -94,40 +95,67 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 
 	SAssignNew(ToolkitWidget, SBorder).HAlign(HAlign_Left).Padding(25)
 		[
-			SNew(SVerticalBox)
-			+ SVerticalBox::Slot().MaxHeight(50)
-		[
-			SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth().MaxWidth(250)
+			SNew(SVerticalBox) + SVerticalBox::Slot()
 			[
-				SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("TitleLabel", "Edit the properties beneath or select a landmark in the scene"))
+				SNew(SBorder)
+				[
+					SNew(SVerticalBox)
+					+ SVerticalBox::Slot().MaxHeight(50)
+					[
+						SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth().MaxWidth(275)
+						[
+							SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("TitleLabel", "Edit the properties beneath or select a landmark in the scene"))
+						]
+					]
+					+ SVerticalBox::Slot().Padding(0, 0).MaxHeight(25)
+					[
+						SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth()
+						[
+							SAssignNew(LandmarkOptions_ComboBox, SComboBox<TSharedPtr<FText>>).InitiallySelectedItem(LandmarkTypes_SelectedTitle).OptionsSource(&LandmarkTypes_DropDownOptions)
+								.OnSelectionChanged_Lambda([this](TSharedPtr<FText>NewSelection, ESelectInfo::Type SelectInfo) { LandmarkTypes_SelectedTitle = NewSelection; })
+								.OnGenerateWidget_Lambda([](TSharedPtr<FText>Option) {return SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11)).Text(*Option); })
+								[
+									SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11)).Text_Lambda([this]() { return LandmarkTypes_SelectedTitle.IsValid() ? *LandmarkTypes_SelectedTitle : FText::GetEmpty(); })
+								]
+						]
+						+ SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
+						[
+							SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
+						[
+						SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+						.Text(LOCTEXT("ButtonName", "Generate Landmark"))
+						]
+					]
+
+				]
 			]
 		]
-		+ SVerticalBox::Slot().Padding(0, 0).MaxHeight(25)
+	+SVerticalBox::Slot()
 		[
-
-
-
-
-
-			SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth()
+			SNew(SBorder)
 			[
-				SAssignNew(LandmarkOptions_ComboBox, SComboBox<TSharedPtr<FText>>).InitiallySelectedItem(LandmarkTypes_SelectedTitle).OptionsSource(&LandmarkTypes_DropDownOptions)
-				.OnSelectionChanged_Lambda([this](TSharedPtr<FText>NewSelection, ESelectInfo::Type SelectInfo) { LandmarkTypes_SelectedTitle = NewSelection; })
-		.OnGenerateWidget_Lambda([](TSharedPtr<FText>Option) {return SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11)).Text(*Option); })
-		[
-			SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11)).Text_Lambda([this]() { return LandmarkTypes_SelectedTitle.IsValid() ? *LandmarkTypes_SelectedTitle : FText::GetEmpty(); })
-		]
+				SNew(SVerticalBox) + SVerticalBox::Slot()
+				[
+					SNew(SHorizontalBox) + SHorizontalBox::Slot().AutoWidth().MaxWidth(275)
+					[
+						SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("TitleLabel", "Setup the size of the grid here"))
+					]
+				]
+				+SVerticalBox::Slot()
+				[
+					SNew(SHorizontalBox) + SHorizontalBox::Slot()
+					[
+						SNew()
+					]
+					+SHorizontalBox::Slot()
+					[
+						SAssignNew(DataEntry_ChunkScale_Y, SNumericEntryBox)
+					]
+				]
+	
 			]
-	+ SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
-		[
-			SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
-			[
-				SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
-				.Text(LOCTEXT("ButtonName", "Generate Landmark"))
-			]
 		]
-
-		]
+	
 
 			
 		];
@@ -235,8 +263,13 @@ FReply FWorldSeedEdModeToolkit::SetLandmark()
 		break;
 	}
 
-	FWorldSeedEdMode* EditorMode = Cast<FWorldSeedEdMode>(GetEditorMode());
-	EditorMode->CreateLandmark(LandmarkType);
+
+	
+	GEditor->BeginTransaction(LOCTEXT("MoveActorsTransactionName", "MoveActors"));
+	//FWorldSeedEdMode* EditorMode = Cast<FWorldSeedEdMode>(GetEditorMode());
+	EditorReference->CreateLandmark(LandmarkType);
+
+	GEditor->EndTransaction();
 
 
 

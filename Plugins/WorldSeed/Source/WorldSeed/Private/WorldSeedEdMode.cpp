@@ -33,6 +33,9 @@ void FWorldSeedEdMode::Enter()
 	{
 		Toolkit = MakeShareable(new FWorldSeedEdModeToolkit);
 		Toolkit->Init(Owner->GetToolkitHost());
+
+		FWorldSeedEdModeToolkit* Temp = static_cast<FWorldSeedEdModeToolkit*>(Toolkit.Get());
+		Temp->SetEditorReference(this);
 	}
 
 	TArray<AActor*> ActorList;
@@ -81,7 +84,7 @@ bool FWorldSeedEdMode::UsesToolkits() const
 
 void FWorldSeedEdMode::CreateLandmark(TSubclassOf<AWT_Landmark_Base> Class)
 {
-
+	
 	Landmark_List.Add(GetWorld()->SpawnActor<AWT_Landmark_Base>(Class));
 }
 

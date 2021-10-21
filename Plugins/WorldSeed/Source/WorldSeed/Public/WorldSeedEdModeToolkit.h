@@ -4,7 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Toolkits/BaseToolkit.h"
+#include "Widgets/SCompoundWidget.h"
+#include "SlateFwd.h"
 #include "WorldSeed/public/WT_Landmark_Base.h"
+
+
+
 
 class FWorldSeedEdModeToolkit : public FModeToolkit
 {
@@ -22,12 +27,17 @@ public:
 	virtual TSharedPtr<class SWidget> GetInlineContent() const override { return ToolkitWidget; }
 
 
+	void SetEditorReference(FWorldSeedEdMode* Ref) { EditorReference = Ref; }
+
 
 	FReply SetLandmark();
 
 private:
 	TArray<FText> Options;
 	
+
+
+	FWorldSeedEdMode* EditorReference;
 
 	int Result;
 
@@ -37,5 +47,13 @@ private:
 
 	TArray<TSharedPtr<FText>> LandmarkTypes_DropDownOptions;
 	TSharedPtr<FText> LandmarkTypes_SelectedTitle;
+
+
+
+	TSharedPtr<SNumericEntryBox> DataEntry_ChunkScale_X;
+	TSharedPtr<SNumericEntryBox> DataEntry_ChunkScale_Y;
+
+	TSharedPtr<SNumericEntryBox> DataEntry_GridScale_X;
+	TSharedPtr<SNumericEntryBox> DataEntry_GridScale_Y;
 
 };
