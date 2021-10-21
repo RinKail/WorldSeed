@@ -25,3 +25,49 @@ void AWT_WorldChunk::Tick(float DeltaTime)
 
 }
 
+/*
+* // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = false;
+	FAttachmentTransformRules Rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, false);
+	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(SceneRoot);
+
+
+
+	for (int x = 0; x < ChunkSize; x++)
+	{
+		for (int y = 0; y < ChunkSize; y++)
+		{
+
+			FVector2D Pos = FVector2D((int)x, (int)y);
+			
+			Meshes.Add(Pos, nullptr);
+		
+		
+
+			FName Name = *FString::Printf(TEXT("Mesh %i %i"), x, y);
+			Meshes[Pos] = CreateDefaultSubobject<UStaticMeshComponent>(Name);
+		
+
+			if (Meshes[Pos])
+			{
+				
+				Meshes[Pos]->SetupAttachment(SceneRoot);
+				Meshes[Pos]->SetRelativeLocation(FVector(TileScale * x, TileScale * y, 0));
+				
+				
+			}
+
+
+
+			/*
+			FName OName = "Mesh_" + x + y;
+			UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(OName);
+
+			*/
+
+		}
+	}
+* 
+*/
+
