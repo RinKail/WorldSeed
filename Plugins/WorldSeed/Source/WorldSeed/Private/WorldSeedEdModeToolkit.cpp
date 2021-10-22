@@ -6,6 +6,8 @@
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/Input/SEditableTextBox.h"
+#include "Engine/World.h"
+
 
 #include "EditorModeManager.h"
 
@@ -94,7 +96,7 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 	
 	
 
-	SAssignNew(ToolkitWidget, SBorder).HAlign(HAlign_Left).Padding(25)
+	SAssignNew(ToolkitWidget, SBorder).HAlign(HAlign_Left).Padding(15)
 		[
 			SNew(SVerticalBox) + SVerticalBox::Slot()
 			[
@@ -120,11 +122,11 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 								]
 						]
 						+ SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
-						[
-							SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
-						[
+							[
+								SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
+							[
 						SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
-						.Text(LOCTEXT("ButtonName", "Generate Landmark"))
+							.Text(LOCTEXT("ButtonName", "Generate Landmark"))
 						]
 					]
 
@@ -162,23 +164,65 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 						SNew(STextBlock).AutoWrapText(true).Text(LOCTEXT("ChunkLabel", "Chunk Scale"))
 					]
 				+ SHorizontalBox::Slot().AutoWidth().Padding(5, 0)
-				[
-					SAssignNew(GridScaleXBox, SEditableTextBox)
-					.Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
-				.HintText(LOCTEXT("ChunkX", "X Scale"))
-				]
+					[
+						SAssignNew(GridScaleXBox, SEditableTextBox)
+						.Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+						.HintText(LOCTEXT("ChunkX", "X Scale"))
+					]
 			+ SHorizontalBox::Slot().AutoWidth().Padding(5, 0)
 				[
 					SAssignNew(GridScaleYBox, SEditableTextBox)
 					.Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
-				.HintText(LOCTEXT("GridY", "Y Scale"))
+					.HintText(LOCTEXT("GridY", "Y Scale"))
 				]
 			]
 			
 		
 		
-				]
 		]
+
+
+	]
+		+ SVerticalBox::Slot()
+			[
+				SNew(SBorder)
+				[
+					SNew(SVerticalBox)
+					+ SVerticalBox::Slot().MaxHeight(30)
+						[
+							SNew(SHorizontalBox)+SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
+							[
+								SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
+								[
+									SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+									.Text(LOCTEXT("ClearLandmarkName", "Clear Landmarks"))
+								]
+							]
+							
+						]
+				]
+			]
+
+		+ SVerticalBox::Slot()
+			[
+				SNew(SBorder)
+				[
+					SNew(SVerticalBox)
+					+ SVerticalBox::Slot().MaxHeight(30)
+			[
+				SNew(SHorizontalBox) + SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
+				[
+					SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
+					[
+						SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
+						.Text(LOCTEXT("GenerateButtonName", "Generate Grid"))
+					]
+				]
+
+			]
+				]
+			]
+
 ];
 	
 			
@@ -306,6 +350,20 @@ FReply FWorldSeedEdModeToolkit::SetLandmark()
 
 
 	return FReply::Handled();
+}
+
+void FWorldSeedEdModeToolkit::GenerateGrid()
+{
+	GEditor->BeginTransaction(LOCTEXT("GenerateGridTransactionName", "GenerateGrid"));
+
+	
+
+	GEditor->EndTransaction();
+
+}
+
+void FWorldSeedEdModeToolkit::ClearLandmarks()
+{
 }
 
 

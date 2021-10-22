@@ -19,8 +19,26 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
+
+
+	UStaticMesh* Floor;
+
+	UStaticMesh* Raised;
+
+
+
+	TMap<FVector2D,class UStaticMeshComponent*> Meshes;
+
+	class USceneComponent* SceneRoot;
+
+	int ChunkSize;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+
+	void Generate(class AWT_GeneratorCore* Generator, FVector2D GridPosition);
 
 };

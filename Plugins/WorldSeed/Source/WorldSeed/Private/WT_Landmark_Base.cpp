@@ -2,6 +2,8 @@
 
 
 #include "WorldSeed/Public/WT_Landmark_Base.h"
+#include "WorldSeed/Public/WT_Resources.h"
+#include "WorldSeed/Public/WT_GeneratorCore.h"
 
 // Sets default values
 AWT_Landmark_Base::AWT_Landmark_Base()
@@ -25,3 +27,18 @@ void AWT_Landmark_Base::Tick(float DeltaTime)
 
 }
 
+void AWT_Landmark_Base::ApplyLandmark(class AWT_GeneratorCore* Generator)
+{
+	FVector2D ConvertedPosition = FVector2D(GetActorLocation().X, GetActorLocation().Y);
+
+	ConvertedPosition.X = (int)(ConvertedPosition.X / TileScale);
+	ConvertedPosition.Y = (int)(ConvertedPosition.Y / TileScale);
+
+	for (int x = 0; x < LandmarkScale.X; x++)
+	{
+		for (int y = 0; y < LandmarkScale.Y; y++)
+		{
+			Generator->ApplyToGrid(ConvertedPosition + FVector2D(x, y), true);
+		}
+	}
+}

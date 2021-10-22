@@ -26,7 +26,16 @@ public:
 
 	void CreateLandmark(TSubclassOf<AWT_Landmark_Base> Class);
 
+	void GenerateGrid(int GridX, int GridY, int ChunkX, int ChunkY);
 
+
+	bool bMovingLandmark;
+
+	bool IsALandmarkSelected();
+
+
+	FVector CachedLandmarkPosition;
+	AWT_Landmark_Base* SelectedLandmark;
 
 	UPROPERTY()
 	class AWT_GeneratorCore* ActiveGenerator;

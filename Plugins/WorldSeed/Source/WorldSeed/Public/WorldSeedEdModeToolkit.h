@@ -35,7 +35,9 @@ public:
 
 
 
+	void GenerateGrid();
 
+	void ClearLandmarks();
 
 	
 
