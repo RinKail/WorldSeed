@@ -26,6 +26,8 @@ public:
 
 	void CreateLandmark(TSubclassOf<AWT_Landmark_Base> Class);
 
+	void ClearLandmarks();
+
 	void GenerateGrid(int GridX, int GridY, int ChunkX, int ChunkY);
 
 

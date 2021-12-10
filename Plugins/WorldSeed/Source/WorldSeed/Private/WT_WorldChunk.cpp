@@ -8,17 +8,24 @@
 // Sets default values
 AWT_WorldChunk::AWT_WorldChunk()
 {
+
+
+	UE_LOG(LogTemp, Warning, TEXT("IS RUNNING PER FRAME"));
+
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	ChunkSize = 25;
+	ChunkSize = 5;
 
 	FAttachmentTransformRules Rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, false);
 	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(SceneRoot);
 
-	 ConstructorHelpers::FObjectFinder<UStaticMesh> Floor (TEXT("StaticMesh'/Game/PlaceholderAssets/PlaceholderSet_Floor.PlaceholderSet_Floor'")); 
-	 ConstructorHelpers::FObjectFinder<UStaticMesh> Raised (TEXT("StaticMesh'/Game/PlaceholderAssets/PlaceholderSet_Raised.PlaceholderSet_Raised'"));
-	
+	 ConstructorHelpers::FObjectFinder<UStaticMesh> FloorMesh (TEXT("/Game/PlaceholderAssets/PlaceholderSet_Floor")); 
+	 ConstructorHelpers::FObjectFinder<UStaticMesh> RaisedMesh (TEXT("/Game/PlaceholderAssets/PlaceholderSet_Raised"));
+
+
+	 Floor = FloorMesh.Object;
+	 Raised = RaisedMesh.Object;
 
 	for (int x = 0; x < ChunkSize; x++)
 	{
@@ -30,6 +37,8 @@ AWT_WorldChunk::AWT_WorldChunk()
 
 			FName Name = *FString::Printf(TEXT("Mesh %i %i"), x, y);
 			Meshes[Pos] = CreateDefaultSubobject<UStaticMeshComponent>(Name);
+		
+			
 
 
 			if (Meshes[Pos])
@@ -37,6 +46,7 @@ AWT_WorldChunk::AWT_WorldChunk()
 
 				Meshes[Pos]->SetupAttachment(SceneRoot);
 				Meshes[Pos]->SetRelativeLocation(FVector(TileScale * x, TileScale * y, 0));
+				Meshes[Pos]->SetStaticMesh(Floor);
 
 
 			}

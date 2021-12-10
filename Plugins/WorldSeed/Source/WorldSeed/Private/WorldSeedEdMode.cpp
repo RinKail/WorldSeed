@@ -29,7 +29,7 @@ void FWorldSeedEdMode::Enter()
 	FEdMode::Enter();
 
 
-	UE_LOG(LogTemp, Warning, TEXT("Entered WorldSeed Editor"));
+	UE_LOG(LogTemp, Warning, TEXT("Entered World-Seed Editor"));
 
 	if (!Toolkit.IsValid() && UsesToolkits())
 	{
@@ -105,14 +105,28 @@ void FWorldSeedEdMode::CreateLandmark(TSubclassOf<AWT_Landmark_Base> Class)
 	Landmark_List.Add(GetWorld()->SpawnActor<AWT_Landmark_Base>(Class));
 }
 
+void FWorldSeedEdMode::ClearLandmarks()
+{
+	for (AWT_Landmark_Base* Landmark : Landmark_List)
+	{
+		Landmark->Destroy();
+	}
+
+}
+
 void FWorldSeedEdMode::GenerateGrid(int GridX, int GridY, int ChunkX, int ChunkY)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Chunk Scale: "), GridX, GridY);
+	UE_LOG(LogTemp, Warning, TEXT("Grid Scale: "), ChunkX, ChunkY);
+
 	ActiveGenerator->ClearChunkList();
 	for (int x = 0; x < GridX; x++)
 	{
 		for (int y = 0; y < GridY; y++)
 		{
-			GetWorld()->SpawnActor<AWT_WorldChunk>(FVector((ChunkX * TileScale) * x, (ChunkY * TileScale) * y, 0), FRotator(0,0,0));
+			UE_LOG(LogTemp, Warning, TEXT("Generating Chunk: %d, %d"),x,y);
+			ActiveGenerator->AddChunk(FVector2D(x,y), GetWorld()->SpawnActor<AWT_WorldChunk>(FVector((ChunkX * TileScale) * x, (ChunkY * TileScale) * y, 0), FRotator(0, 0, 0)));
+
 		}
 	}
 }

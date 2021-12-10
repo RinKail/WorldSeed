@@ -35,9 +35,9 @@ public:
 
 
 
-	void GenerateGrid();
+	FReply GenerateGrid();
 
-	void ClearLandmarks();
+	FReply ClearLandmarks();
 
 	
 

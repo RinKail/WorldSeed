@@ -15,6 +15,11 @@
 
 FWorldSeedEdModeToolkit::FWorldSeedEdModeToolkit()
 {
+	GridXScale = 0;
+	GridYScale = 0;
+
+	ChunkXScale = 0;
+	ChunkYScale = 0;
 }
 
 void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHost)
@@ -192,7 +197,7 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 						[
 							SNew(SHorizontalBox)+SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
 							[
-								SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
+								SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::ClearLandmarks)
 								[
 									SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
 									.Text(LOCTEXT("ClearLandmarkName", "Clear Landmarks"))
@@ -212,7 +217,7 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 			[
 				SNew(SHorizontalBox) + SHorizontalBox::Slot().Padding(5, 0).AutoWidth()
 				[
-					SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::SetLandmark)
+					SNew(SButton).OnClicked(this, &FWorldSeedEdModeToolkit::GenerateGrid)
 					[
 						SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular", 11))
 						.Text(LOCTEXT("GenerateButtonName", "Generate Grid"))
@@ -352,18 +357,32 @@ FReply FWorldSeedEdModeToolkit::SetLandmark()
 	return FReply::Handled();
 }
 
-void FWorldSeedEdModeToolkit::GenerateGrid()
+FReply FWorldSeedEdModeToolkit::GenerateGrid()
 {
 	GEditor->BeginTransaction(LOCTEXT("GenerateGridTransactionName", "GenerateGrid"));
 
-	
+	//EditorReference->GenerateGrid(GridXScale, GridYScale, ChunkXScale, ChunkYScale);
+
+
+	EditorReference->GenerateGrid(9, 9, 5, 5);
 
 	GEditor->EndTransaction();
 
+	return FReply::Handled();
+
 }
 
-void FWorldSeedEdModeToolkit::ClearLandmarks()
+FReply FWorldSeedEdModeToolkit::ClearLandmarks()
 {
+	GEditor->BeginTransaction(LOCTEXT("ClearLandmarksTransactionName", "ClearLandmarks"));
+
+	EditorReference->ClearLandmarks();
+
+	GEditor->EndTransaction();
+
+	return FReply::Handled();
+
+
 }
 
 
