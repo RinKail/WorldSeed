@@ -129,6 +129,7 @@ void FWorldSeedEdMode::GenerateGrid(int GridX, int GridY, int ChunkX, int ChunkY
 
 		}
 	}
+	ActiveGenerator->BuildEnviroment();
 }
 
 bool FWorldSeedEdMode::IsALandmarkSelected()

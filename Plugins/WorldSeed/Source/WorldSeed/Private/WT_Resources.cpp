@@ -3,10 +3,3 @@
 
 #include "WorldSeed/public/WT_Resources.h"
 
-WT_Resources::WT_Resources()
-{
-}
-
-WT_Resources::~WT_Resources()
-{
-}

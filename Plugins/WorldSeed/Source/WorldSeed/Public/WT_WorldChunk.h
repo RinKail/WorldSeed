@@ -4,7 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/InstancedStaticMeshComponent.h"
+#include "WT_Resources.h"
 #include "WT_WorldChunk.generated.h"
+
+
+
+USTRUCT(BlueprintType)
+struct FInstanceStack
+{
+	GENERATED_BODY()
+		TArray<class UInstancedStaticMeshComponent*> ComponentList;
+};
+
+
+
 
 UCLASS()
 class WORLDSEED_API AWT_WorldChunk : public AActor
@@ -26,7 +40,9 @@ protected:
 
 	UStaticMesh* Raised;
 
+	TMap<EWT_TileID, FInstanceStack*> MeshInstances;
 
+	
 
 	TMap<FVector2D,class UStaticMeshComponent*> Meshes;
 
@@ -34,7 +50,14 @@ protected:
 
 	int ChunkSize;
 
+
+
+	void SetTile(FVector Position,EWT_TileDirection Dir ,EWT_TileID ID, int Channel);
+
 public:	
+
+
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

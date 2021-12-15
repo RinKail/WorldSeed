@@ -41,10 +41,12 @@ public:
 
 	void ApplyToGrid(FVector2D Position, bool bIsOccupied) { GridData[Position] = bIsOccupied; }
 
+	void BuildEnviroment();
+
 
 protected: 
 
-	void BuildEnviroment();
+	
 
 
 	int ChunkSize;

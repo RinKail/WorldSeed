@@ -27,32 +27,7 @@ AWT_WorldChunk::AWT_WorldChunk()
 	 Floor = FloorMesh.Object;
 	 Raised = RaisedMesh.Object;
 
-	for (int x = 0; x < ChunkSize; x++)
-	{
-		for (int y = 0; y < ChunkSize; y++)
-		{
 
-			FVector2D Pos = FVector2D((int)x, (int)y);
-			Meshes.Add(Pos, nullptr);
-
-			FName Name = *FString::Printf(TEXT("Mesh %i %i"), x, y);
-			Meshes[Pos] = CreateDefaultSubobject<UStaticMeshComponent>(Name);
-		
-			
-
-
-			if (Meshes[Pos])
-			{
-
-				Meshes[Pos]->SetupAttachment(SceneRoot);
-				Meshes[Pos]->SetRelativeLocation(FVector(TileScale * x, TileScale * y, 0));
-				Meshes[Pos]->SetStaticMesh(Floor);
-
-
-			}
-
-		}
-	}
 
 			/*
 			FName OName = "Mesh_" + x + y;
@@ -66,6 +41,42 @@ AWT_WorldChunk::AWT_WorldChunk()
 
 }
 
+void AWT_WorldChunk::SetTile(FVector Position, EWT_TileDirection Dir, EWT_TileID ID, int Channel)
+{
+	if (!MeshInstances.Find(ID))
+	{
+
+		MeshInstances.Add(ID, new FInstanceStack());
+
+	}
+	if (MeshInstances[ID]->ComponentList[Channel] == nullptr)
+	{
+		UInstancedStaticMeshComponent* TempComponent = NewObject<UInstancedStaticMeshComponent>(this);
+		TempComponent->RegisterComponent();
+		TempComponent->SetupAttachment(RootComponent);
+
+		switch (ID)
+		{
+		case EWT_TileID::TI_Raised:
+			TempComponent->SetStaticMesh(Raised);
+			break;
+		case EWT_TileID::TI_Floor:
+			TempComponent->SetStaticMesh(Floor);
+			break;
+
+		}
+
+		MeshInstances[ID]->ComponentList.Add(TempComponent);
+
+	}
+	
+
+
+	MeshInstances[ID]->ComponentList[Channel]->AddInstance(FTransform(Position));
+
+}
+
+
 void AWT_WorldChunk::Generate(class AWT_GeneratorCore* Generator, FVector2D GridPosition)
 {
 	
@@ -75,11 +86,11 @@ void AWT_WorldChunk::Generate(class AWT_GeneratorCore* Generator, FVector2D Grid
 		{
 			if (Generator->GetGridData(GridPosition + FVector2D(x, y)))
 			{
-				Meshes[FVector2D(x, y)]->SetStaticMesh(Floor);
+				SetTile(FVector(x,y,0), EWT_TileDirection::TD_All, EWT_TileID::TI_Floor, 0);
 			}
 			else
 			{
-				Meshes[FVector2D(x, y)]->SetStaticMesh(Raised);
+				SetTile(FVector(x, y, 0), EWT_TileDirection::TD_All, EWT_TileID::TI_Raised, 0);
 			}
 		}
 	}
