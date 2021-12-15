@@ -10,11 +10,11 @@ AWT_WorldChunk::AWT_WorldChunk()
 {
 
 
-	UE_LOG(LogTemp, Warning, TEXT("IS RUNNING PER FRAME"));
+	
 
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	ChunkSize = 5;
+	ChunkSize = 16;
 
 	FAttachmentTransformRules Rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, false);
 	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
@@ -49,11 +49,12 @@ void AWT_WorldChunk::SetTile(FVector Position, EWT_TileDirection Dir, EWT_TileID
 		MeshInstances.Add(ID, new FInstanceStack());
 
 	}
-	if (MeshInstances[ID]->ComponentList[Channel] == nullptr)
+	if (!MeshInstances[ID]->ComponentList.IsValidIndex(Channel))
 	{
 		UInstancedStaticMeshComponent* TempComponent = NewObject<UInstancedStaticMeshComponent>(this);
-		TempComponent->RegisterComponent();
 		TempComponent->SetupAttachment(RootComponent);
+		TempComponent->RegisterComponent();
+	
 
 		switch (ID)
 		{
@@ -65,32 +66,36 @@ void AWT_WorldChunk::SetTile(FVector Position, EWT_TileDirection Dir, EWT_TileID
 			break;
 
 		}
-
 		MeshInstances[ID]->ComponentList.Add(TempComponent);
 
+		
+
 	}
-	
 
 
-	MeshInstances[ID]->ComponentList[Channel]->AddInstance(FTransform(Position));
+	UE_LOG(LogTemp, Warning, TEXT("Generating Tile at: %d, %d"), (int)Position.X, (int)Position.Y);
+	MeshInstances[ID]->ComponentList[Channel]->AddInstance(FTransform(FRotator(0,0,0), Position, FVector(1,1,1)));
 
 }
 
 
 void AWT_WorldChunk::Generate(class AWT_GeneratorCore* Generator, FVector2D GridPosition)
 {
-	
+	UE_LOG(LogTemp, Warning, TEXT("Generating Chunk: %d, %d"), (int)GridPosition.X, (int)GridPosition.Y);
+
+	GridPosition *= ChunkSize;
 	for (int x = 0; x < ChunkSize; x++)
 	{
 		for (int y = 0; y < ChunkSize; y++)
 		{
+			
 			if (Generator->GetGridData(GridPosition + FVector2D(x, y)))
 			{
-				SetTile(FVector(x,y,0), EWT_TileDirection::TD_All, EWT_TileID::TI_Floor, 0);
+				SetTile(FVector(x * TileScale, y * TileScale, 0), EWT_TileDirection::TD_All, EWT_TileID::TI_Floor, 0);
 			}
 			else
 			{
-				SetTile(FVector(x, y, 0), EWT_TileDirection::TD_All, EWT_TileID::TI_Raised, 0);
+				SetTile(FVector(x * TileScale, y * TileScale, 0), EWT_TileDirection::TD_All, EWT_TileID::TI_Raised, 0);
 			}
 		}
 	}

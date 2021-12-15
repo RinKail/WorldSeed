@@ -364,7 +364,7 @@ FReply FWorldSeedEdModeToolkit::GenerateGrid()
 	//EditorReference->GenerateGrid(GridXScale, GridYScale, ChunkXScale, ChunkYScale);
 
 
-	EditorReference->GenerateGrid(9, 9, 5, 5);
+	EditorReference->GenerateGrid(10, 10, 16, 16);
 
 	GEditor->EndTransaction();
 

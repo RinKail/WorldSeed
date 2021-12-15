@@ -101,8 +101,9 @@ bool FWorldSeedEdMode::UsesToolkits() const
 
 void FWorldSeedEdMode::CreateLandmark(TSubclassOf<AWT_Landmark_Base> Class)
 {
-	
-	Landmark_List.Add(GetWorld()->SpawnActor<AWT_Landmark_Base>(Class));
+	AWT_Landmark_Base* Temp = GetWorld()->SpawnActor<AWT_Landmark_Base>(Class);
+	Landmark_List.Add(Temp);
+	ActiveGenerator->StoreLandmark(Temp);
 }
 
 void FWorldSeedEdMode::ClearLandmarks()
@@ -124,12 +125,12 @@ void FWorldSeedEdMode::GenerateGrid(int GridX, int GridY, int ChunkX, int ChunkY
 	{
 		for (int y = 0; y < GridY; y++)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Generating Chunk: %d, %d"),x,y);
+			
 			ActiveGenerator->AddChunk(FVector2D(x,y), GetWorld()->SpawnActor<AWT_WorldChunk>(FVector((ChunkX * TileScale) * x, (ChunkY * TileScale) * y, 0), FRotator(0, 0, 0)));
 
 		}
 	}
-	ActiveGenerator->BuildEnviroment();
+	ActiveGenerator->BuildEnviroment(GridX,GridY,ChunkX, ChunkY);
 }
 
 bool FWorldSeedEdMode::IsALandmarkSelected()

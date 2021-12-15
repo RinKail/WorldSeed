@@ -27,7 +27,16 @@ public:
 
 	void AddChunk(FVector2D Coordinate, class AWT_WorldChunk* Chunk);
 
-	void ClearChunkList() { ChunkList.Empty(); }
+	void ClearChunkList() {
+		for (int x = 0; x < ChunkSize; x++)
+		{
+			for (int y = 0; y < ChunkSize; y++)
+			{
+				ChunkList[FVector2D(x, y)]->Destroy();
+			}
+		}
+		ChunkList.Empty();
+	}
 
 
 	void UpdateChunks();
@@ -41,7 +50,10 @@ public:
 
 	void ApplyToGrid(FVector2D Position, bool bIsOccupied) { GridData[Position] = bIsOccupied; }
 
-	void BuildEnviroment();
+	void BuildEnviroment(int GridX, int GridY, int ChunkX, int ChunkY);
+
+
+	void StoreLandmark(class AWT_Landmark_Base* Landmark) { StoredLandmarks.Add(Landmark); }
 
 
 protected: 

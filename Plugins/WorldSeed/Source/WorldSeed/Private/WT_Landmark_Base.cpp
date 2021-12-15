@@ -11,12 +11,19 @@ AWT_Landmark_Base::AWT_Landmark_Base()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(SceneRoot);
+
+	LandmarkScale = FVector2D(5, 5);
+
+
 }
 
 // Called when the game starts or when spawned
 void AWT_Landmark_Base::BeginPlay()
 {
 	Super::BeginPlay();
+	SetActorLocation(FVector(50, 50, 0) * TileScale);
 	
 }
 

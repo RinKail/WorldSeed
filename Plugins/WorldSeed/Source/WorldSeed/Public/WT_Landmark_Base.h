@@ -53,8 +53,10 @@ public:
 
 protected:
 
+	class USceneComponent* SceneRoot;
 
 	FVector2D LandmarkScale;
+	FVector2D LandmarkPosition;
 
 
 	// Called when the game starts or when spawned

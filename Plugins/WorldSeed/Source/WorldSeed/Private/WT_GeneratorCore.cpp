@@ -8,7 +8,8 @@
 void AWT_GeneratorCore::AddChunk(FVector2D Coordinate, AWT_WorldChunk* Chunk)
 {
 	ChunkList.Add(Coordinate, Chunk);
-
+	ChunkSize = 10;
+	
 }
 
 void AWT_GeneratorCore::UpdateChunks()
@@ -20,13 +21,13 @@ void AWT_GeneratorCore::UpdateChunks()
 }
 
 
-void AWT_GeneratorCore::BuildEnviroment()
+void AWT_GeneratorCore::BuildEnviroment(int GridX, int GridY, int ChunkX, int ChunkY)
 {
-	for (int x = 0; x < GridScale.X; x++)
+	for (int x = 0; x < GridX * ChunkX; x++)
 	{
-		for (int y = 0; y < GridScale.Y; y++)
+		for (int y = 0; y < GridY * ChunkY; y++)
 		{
-			GridData[FVector2D(x, y)] = false;
+			GridData.Add(FVector2D(x,y), false);
 		}
 	}
 
@@ -35,9 +36,9 @@ void AWT_GeneratorCore::BuildEnviroment()
 		StoredLandmarks[i]->ApplyLandmark(this);
 	}
 
-	for (int x = 0; x < GridScale.X; x++)
+	for (int x = 0; x < GridX; x++)
 	{
-		for (int y = 0; y < GridScale.Y; y++)
+		for (int y = 0; y < GridY; y++)
 		{
 			ChunkList[FVector2D(x, y)]->Generate(this, FVector2D(x,y));
 		}
