@@ -17,6 +17,14 @@ struct FInstanceStack
 		TArray<class UInstancedStaticMeshComponent*> ComponentList;
 };
 
+USTRUCT(BlueprintType)
+struct FTileRenderData
+{
+	GENERATED_BODY()
+		EWT_TileDirection Direction;
+		EWT_TileID Type;
+		int Channel;
+};
 
 
 
@@ -54,6 +62,8 @@ protected:
 
 	void SetTile(FVector Position,EWT_TileDirection Dir ,EWT_TileID ID, int Channel);
 
+	
+
 public:	
 
 
@@ -63,5 +73,7 @@ public:
 
 
 	void Generate(class AWT_GeneratorCore* Generator, FVector2D GridPosition);
+
+	void RefreshTile(FVector Position);
 
 };

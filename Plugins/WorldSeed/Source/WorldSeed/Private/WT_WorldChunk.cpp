@@ -101,6 +101,14 @@ void AWT_WorldChunk::Generate(class AWT_GeneratorCore* Generator, FVector2D Grid
 	}
 }
 
+void AWT_WorldChunk::RefreshTile(FVector Position)
+{
+
+
+
+
+}
+
 
 
 // Called when the game starts or when spawned

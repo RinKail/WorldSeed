@@ -23,11 +23,16 @@ void AWT_GeneratorCore::UpdateChunks()
 
 void AWT_GeneratorCore::BuildEnviroment(int GridX, int GridY, int ChunkX, int ChunkY)
 {
+	GridScale = FVector(GridX, GridY, 0);
+	ChunkScale = FVector(ChunkX, ChunkY, 0);
+
+
 	for (int x = 0; x < GridX * ChunkX; x++)
 	{
 		for (int y = 0; y < GridY * ChunkY; y++)
 		{
 			GridData.Add(FVector2D(x,y), false);
+			
 		}
 	}
 
@@ -44,4 +49,39 @@ void AWT_GeneratorCore::BuildEnviroment(int GridX, int GridY, int ChunkX, int Ch
 		}
 	}
 	
+}
+
+FTileRenderData AWT_GeneratorCore::GetTile(FVector Position)
+{
+	return FTileRenderData();
+}
+
+void AWT_GeneratorCore::ProcessGrid()
+{
+	for (int x = 0; x < GridScale.X * ChunkScale.X; x++)
+	{
+		for (int y = 0; y < GridScale.Y * ChunkScale.Y; y++)
+		{
+			if (GridData[FVector2D(x,y)]) Grid_AppearanceData.Add(FVector2D(x, y), EWT_TileID::TI_Raised);
+			else Grid_AppearanceData.Add(FVector2D(x, y), EWT_TileID::TI_Floor);
+
+		}
+	}
+
+
+}
+
+FTileRenderData AWT_GeneratorCore::CalculateTile_Edge(FVector Position)
+{
+	FTileRenderData ReturnData;
+
+
+
+
+	return FTileRenderData();
+}
+
+bool AWT_GeneratorCore::IsAdjacentTileOfType(EWT_TileID ID)
+{
+	return ;
 }

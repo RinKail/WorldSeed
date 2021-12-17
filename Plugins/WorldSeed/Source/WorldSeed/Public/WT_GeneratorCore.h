@@ -56,6 +56,9 @@ public:
 	void StoreLandmark(class AWT_Landmark_Base* Landmark) { StoredLandmarks.Add(Landmark); }
 
 
+	FTileRenderData GetTile(FVector Position);
+
+
 protected: 
 
 	
@@ -71,12 +74,28 @@ protected:
 
 
 
-	FVector2D ChunkScale;
-	FVector2D GridScale;
+	FVector ChunkScale;
+	FVector GridScale;
 
 
 	TMap<FVector2D, bool> GridData;
-	//TMap<FVector2D, EWT_TileTypes> Grid_AppearanceData;
+	TMap<FVector2D, EWT_TileID> Grid_AppearanceData;
+
+
+	void ProcessGrid();
+
+
+
+
+private: 
+
+	FTileRenderData CalculateTile_InnerCorner(FVector Position);
+	FTileRenderData CalculateTile_OuterCorner(FVector Position);
+	FTileRenderData CalculateTile_Edge(FVector Position);
+
+
+
+	bool IsAdjacentTileOfType(EWT_TileID ID);
 
 
 };
