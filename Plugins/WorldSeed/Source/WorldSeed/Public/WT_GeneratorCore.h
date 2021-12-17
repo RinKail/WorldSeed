@@ -10,6 +10,17 @@
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FCellData
+{
+	GENERATED_BODY()
+	
+	EWT_TileID Type;
+	int Channel;
+};
+
+
 UCLASS()
 class WORLDSEED_API AWT_GeneratorCore : public AActor
 {
@@ -68,7 +79,7 @@ protected:
 
 
 
-	TMap<FVector2D,class AWT_WorldChunk*> ChunkList;
+	TMap<FVector,class AWT_WorldChunk*> ChunkList;
 	TArray<class AWT_Landmark_Base*> StoredLandmarks;
 	//TArray<FCachedLandmarks> StoredLandmarkData;
 
@@ -78,24 +89,27 @@ protected:
 	FVector GridScale;
 
 
-	TMap<FVector2D, bool> GridData;
-	TMap<FVector2D, EWT_TileID> Grid_AppearanceData;
+	TMap<FVector, bool> GridData;
+	TMap<FVector, FCellData> Grid_AppearanceData;
 
 
-	void ProcessGrid();
+	//Designed for open and more natural enviroments. Generates from the bottom and enviroments work on the basis that the initial state is a empty floor.
+	void ProcessGrid_LayerDependant();
+	//Designed for internal, man-made structures. Layers work independently and ignore tile's rendered above and below.
+	void ProcessGrid_LayerIndependant();
 
 
 
 
 private: 
 
-	FTileRenderData CalculateTile_InnerCorner(FVector Position);
-	FTileRenderData CalculateTile_OuterCorner(FVector Position);
-	FTileRenderData CalculateTile_Edge(FVector Position);
+	EWT_TileDirection CalculateTile_InnerCorner(FVector Position);
+	EWT_TileDirection CalculateTile_OuterCorner(FVector Position);
+	EWT_TileDirection CalculateTile_Edge(FVector Position);
 
 
 
-	bool IsAdjacentTileOfType(EWT_TileID ID);
+	bool IsAdjacentTileOfType(FVector Positiom, EWT_TileID ID);
 
 
 };

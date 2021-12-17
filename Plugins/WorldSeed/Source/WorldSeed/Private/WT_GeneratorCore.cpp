@@ -5,7 +5,7 @@
 #include "WorldSeed/Public/WT_WorldChunk.h"
 #include "WorldSeed/Public/WT_Landmark_Base.h"
 
-void AWT_GeneratorCore::AddChunk(FVector2D Coordinate, AWT_WorldChunk* Chunk)
+void AWT_GeneratorCore::AddChunk(FVector Coordinate, AWT_WorldChunk* Chunk)
 {
 	ChunkList.Add(Coordinate, Chunk);
 	ChunkSize = 10;
@@ -27,11 +27,15 @@ void AWT_GeneratorCore::BuildEnviroment(int GridX, int GridY, int ChunkX, int Ch
 	ChunkScale = FVector(ChunkX, ChunkY, 0);
 
 
-	for (int x = 0; x < GridX * ChunkX; x++)
+	for (int z = 0; z < GridX * ChunkX; z++)
 	{
-		for (int y = 0; y < GridY * ChunkY; y++)
+		for (int x = 0; x < GridY * ChunkY; x++)
 		{
-			GridData.Add(FVector2D(x,y), false);
+			for (int y = 0; y < GridY * ChunkY; y++)
+			{
+				GridData.Add(FVector(x, y, z), false);
+
+			}
 			
 		}
 	}
@@ -53,35 +57,158 @@ void AWT_GeneratorCore::BuildEnviroment(int GridX, int GridY, int ChunkX, int Ch
 
 FTileRenderData AWT_GeneratorCore::GetTile(FVector Position)
 {
+	FTileRenderData TempData;
+	FCellData Cell = Grid_AppearanceData[Position];
+
+	TempData.Type = Cell.Type;
+	
+	if (Grid_AppearanceData[Position + FVector(0, 0, 1)].Type != EWT_TileID::TI_Empty)
+		TempData.Direction = EWT_TileDirection::TD_None;
+	else
+	{
+		switch (Cell.Type)
+		{
+		case EWT_TileID::TI_Edge:
+			TempData.Direction = CalculateTile_Edge(Position);
+
+			break;
+		case EWT_TileID::TI_InnerCorner:
+			TempData.Direction = CalculateTile_OuterCorner(Position);
+			break;
+		case EWT_TileID::TI_OuterCorner:
+			TempData.Direction = CalculateTile_OuterCorner(Position);
+			break;
+
+		}
+	}
+
 	return FTileRenderData();
 }
 
-void AWT_GeneratorCore::ProcessGrid()
+void AWT_GeneratorCore::ProcessGrid_LayerDependant()
 {
-	for (int x = 0; x < GridScale.X * ChunkScale.X; x++)
+	for (int z = 0; z < GridScale.X * ChunkScale.X; z++)
 	{
-		for (int y = 0; y < GridScale.Y * ChunkScale.Y; y++)
+		for (int x = 0; x < GridScale.Y * ChunkScale.Y; x++)
 		{
-			if (GridData[FVector2D(x,y)]) Grid_AppearanceData.Add(FVector2D(x, y), EWT_TileID::TI_Raised);
-			else Grid_AppearanceData.Add(FVector2D(x, y), EWT_TileID::TI_Floor);
+			for (int y = 0; y < GridScale.Z * ChunkScale.Z; y++)
+			{
+				FCellData TempCell = FCellData();
+				if (GridData[FVector(x, y, z)])
+				{
+					TempCell.Type = EWT_TileID::TI_Floor;
+
+					
+
+					
+
+				}
+				else
+				{
+					TempCell.Type = EWT_TileID::TI_Raised;
+				}
+
+
+				Grid_AppearanceData.Add(FVector(x, y, z), TempCell);
+
+			}
+
+		}
+	}
+	for (int z = 0; z < GridScale.X * ChunkScale.X; z++)
+	{
+		for (int x = 0; x < GridScale.Y * ChunkScale.Y; x++)
+		{
+			for (int y = 0; y < GridScale.Z * ChunkScale.Z; y++)
+			{
+				if (Grid_AppearanceData[FVector(x, y, z)].Type == EWT_TileID::TI_Floor)
+				{
+					if (IsAdjacentTileOfType(FVector(x, y, z) + FVector(1, 0, 0), EWT_TileID::TI_Raised))
+					{
+						Grid_AppearanceData[FVector(x, y, z) + FVector(1, 0, 0)].Type = EWT_TileID::TI_Edge;
+					}
+					if (
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(-1, 0, 0), EWT_TileID::TI_Raised) ||
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(0, 1, 0), EWT_TileID::TI_Raised) ||
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(0, -1, 0), EWT_TileID::TI_Raised))
+					{
+						Grid_AppearanceData[FVector(x, y, z) + FVector(1, 0, 0)].Type = EWT_TileID::TI_Edge;
+					}
+					if (IsAdjacentTileOfType(FVector(x, y, z) + FVector(1, 0, 0), EWT_TileID::TI_Raised) ||
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(-1, 0, 0), EWT_TileID::TI_Raised) ||
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(0, 1, 0), EWT_TileID::TI_Raised) ||
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(0, -1, 0), EWT_TileID::TI_Raised))
+					{
+						Grid_AppearanceData[FVector(x, y, z) + FVector(1, 0, 0)].Type = EWT_TileID::TI_Edge;
+					}
+					if (IsAdjacentTileOfType(FVector(x, y, z) + FVector(1, 0, 0), EWT_TileID::TI_Raised) ||
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(-1, 0, 0), EWT_TileID::TI_Raised) ||
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(0, 1, 0), EWT_TileID::TI_Raised) ||
+						IsAdjacentTileOfType(FVector(x, y, z) + FVector(0, -1, 0), EWT_TileID::TI_Raised))
+					{
+						Grid_AppearanceData[FVector(x, y, z) + FVector(1, 0, 0)].Type = EWT_TileID::TI_Edge;
+					}
+				}
+
+			}
 
 		}
 	}
 
 
+
+
+
+
+	
 }
 
-FTileRenderData AWT_GeneratorCore::CalculateTile_Edge(FVector Position)
+EWT_TileDirection AWT_GeneratorCore::CalculateTile_Edge(FVector Position)
 {
-	FTileRenderData ReturnData;
+	
+
+
+	FString Result;
+	if (IsAdjacentTileOfType(Position + FVector(1, 0, 0), EWT_TileID::TI_Floor))
+		Result += '1';
+	else Result += '0';
+	if (IsAdjacentTileOfType(Position + FVector(0, 1, 0), EWT_TileID::TI_Floor))
+		Result += '1';
+	else Result += '0';
+	if (IsAdjacentTileOfType(Position + FVector(-1, 0, 0), EWT_TileID::TI_Floor))
+		Result += '1';
+	else Result += '0';
+	if (IsAdjacentTileOfType(Position + FVector(0, -1, 0), EWT_TileID::TI_Floor))
+		Result += '1';
+	else Result += '0';
+
+	int32 IntResult = FCString::Atoi(*Result);
+
+	switch (IntResult)
+	{
+	case 1000:
+		return EWT_TileDirection::TD_Up;
+		break;
+	case 0100: 
+		return EWT_TileDirection::TD_Right;
+		break;
+	case 0010:
+		return EWT_TileDirection::TD_Down;
+		break;
+	case 0001:
+		return EWT_TileDirection::TD_Left;
+		break;
+	}
 
 
 
 
-	return FTileRenderData();
+
+	return EWT_TileDirection::TD_None;
 }
 
-bool AWT_GeneratorCore::IsAdjacentTileOfType(EWT_TileID ID)
+bool AWT_GeneratorCore::IsAdjacentTileOfType(FVector Position, EWT_TileID ID)
 {
-	return ;
+
+	return Grid_AppearanceData[Position].Type == ID;
 }
