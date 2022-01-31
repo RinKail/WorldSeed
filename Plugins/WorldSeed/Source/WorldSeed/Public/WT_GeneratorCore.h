@@ -14,10 +14,16 @@ UCLASS()
 class WORLDSEED_API AWT_GeneratorCore : public AActor
 {
 	GENERATED_BODY()
-	
+
+
+
+		
 
 
 public: 
+
+
+	AWT_GeneratorCore();
 
 	void SetChunkSize(int NewSize) { ChunkSize = NewSize; }
 	int GetChunkSize() { return ChunkSize; }

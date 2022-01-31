@@ -5,6 +5,9 @@
 #include "WorldSeed/Public/WT_Resources.h"
 #include "WorldSeed/Public/WT_GeneratorCore.h"
 
+
+
+
 // Sets default values
 AWT_Landmark_Base::AWT_Landmark_Base()
 {
@@ -17,6 +20,9 @@ AWT_Landmark_Base::AWT_Landmark_Base()
 	LandmarkScale = FVector2D(5, 5);
 
 
+
+	
+
 }
 
 // Called when the game starts or when spawned
@@ -24,13 +30,23 @@ void AWT_Landmark_Base::BeginPlay()
 {
 	Super::BeginPlay();
 	SetActorLocation(FVector(50, 50, 0) * TileScale);
+	//RootComponent->TransformUpdated.AddUObject(this, &AWT_Landmark_Base::OnMovementDetected);
 	
 }
+
 
 // Called every frame
 void AWT_Landmark_Base::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+
+
+void AWT_Landmark_Base::OnMovementDetected()
+{
+	
 
 }
 
@@ -49,3 +65,4 @@ void AWT_Landmark_Base::ApplyLandmark(class AWT_GeneratorCore* Generator)
 		}
 	}
 }
+

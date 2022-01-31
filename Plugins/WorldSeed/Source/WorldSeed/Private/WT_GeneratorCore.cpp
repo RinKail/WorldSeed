@@ -5,11 +5,24 @@
 #include "WorldSeed/Public/WT_WorldChunk.h"
 #include "WorldSeed/Public/WT_Landmark_Base.h"
 
+
+
+AWT_GeneratorCore::AWT_GeneratorCore()
+{
+
+}
+
 void AWT_GeneratorCore::AddChunk(FVector2D Coordinate, AWT_WorldChunk* Chunk)
 {
-	ChunkList.Add(Coordinate, Chunk);
-	ChunkSize = 10;
-	
+	if (ChunkList.Find(Coordinate) == nullptr)
+	{
+		ChunkList.Add(Coordinate, Chunk);
+		ChunkSize = 10;
+	}
+	else
+	{
+		Chunk->Destroy();
+	}
 }
 
 void AWT_GeneratorCore::UpdateChunks()

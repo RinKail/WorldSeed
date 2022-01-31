@@ -68,7 +68,7 @@ void FWorldSeedEdMode::Exit()
 	}
 	for (int i = 0; i < Landmark_List.Num(); i++)
 	{
-		Landmark_List[i]->Destroy();
+		//Landmark_List[i]->Destroy();
 	}
 	Landmark_List.Empty();
 

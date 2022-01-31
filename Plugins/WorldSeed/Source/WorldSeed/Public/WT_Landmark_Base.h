@@ -42,7 +42,9 @@ STRUCT() struct FLandmarkData
 */
 
 
-UCLASS()
+
+
+UCLASS(hidecategories=(Rendering,Replication,Collision,Input,Actor,LOD,Cooking))
 class WORLDSEED_API AWT_Landmark_Base : public AActor
 {
 	GENERATED_BODY()
@@ -55,7 +57,9 @@ protected:
 
 	class USceneComponent* SceneRoot;
 
+	UPROPERTY(EditAnywhere, Category = "Landmark")
 	FVector2D LandmarkScale;
+	UPROPERTY(EditAnywhere, Category = "Landmark")
 	FVector2D LandmarkPosition;
 
 
@@ -63,9 +67,14 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(Category = "TestEvent")
+	void OnMovementDetected();
 
 	virtual void ApplyLandmark(class AWT_GeneratorCore* Generator);
 
