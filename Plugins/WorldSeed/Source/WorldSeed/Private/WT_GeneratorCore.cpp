@@ -17,6 +17,7 @@ void AWT_GeneratorCore::AddChunk(FVector2D Coordinate, AWT_WorldChunk* Chunk)
 	if (ChunkList.Find(Coordinate) == nullptr)
 	{
 		ChunkList.Add(Coordinate, Chunk);
+		Chunk->ChunkPosition = Coordinate;
 		ChunkSize = 10;
 	}
 	else

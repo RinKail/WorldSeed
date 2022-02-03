@@ -41,6 +41,12 @@ AWT_WorldChunk::AWT_WorldChunk()
 
 }
 
+void OnConstruction(const FTransform& Transform)
+{
+
+}
+
+
 void AWT_WorldChunk::SetTile(FVector Position, EWT_TileDirection Dir, EWT_TileID ID, int Channel)
 {
 	if (!MeshInstances.Find(ID))
