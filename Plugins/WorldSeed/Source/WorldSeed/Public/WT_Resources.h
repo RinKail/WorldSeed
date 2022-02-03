@@ -11,7 +11,7 @@
  */
 
 UENUM(BlueprintType)
-enum EWT_TileType
+enum class EWT_TileType : uint8
 {
 	TT_Empty     UMETA(DisplayName = "Empty"),
 	TT_Floor     UMETA(DisplayName = "Empty"),
@@ -22,7 +22,7 @@ enum EWT_TileType
 };
 
 UENUM(BlueprintType)
-enum EWT_TileID
+enum class EWT_TileID : uint8
 {
 	TI_Raised        UMETA(DisplayName = "Empty"),
 	TI_Edge			 UMETA(DisplayName = "Empty"),
@@ -34,7 +34,7 @@ enum EWT_TileID
 };
 
 UENUM(BlueprintType)
-enum EWT_TileDirection
+enum class EWT_TileDirection : uint8
 {
 	TD_Up        UMETA(DisplayName = "Empty"),
 	TD_Down        UMETA(DisplayName = "Empty"),
@@ -54,6 +54,5 @@ enum EWT_TileDirection
 
 
 };
-
 
 
