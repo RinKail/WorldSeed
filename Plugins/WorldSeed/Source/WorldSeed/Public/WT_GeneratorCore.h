@@ -82,7 +82,7 @@ protected:
 
 
 	TMap<FVector2D, bool> GridData;
-	//TMap<FVector2D, EWT_TileTypes> Grid_AppearanceData;
+	
 
 
 };
