@@ -20,67 +20,65 @@ void AWT_GeneratorCore::BuildGrid()
 	int ChunkY = ChunkScale.Y;
 	int ChunkZ = ChunkScale.Z;
 
-
-
-	for (int z = 0; z < ChunkZ; ++z)
+	if ((GridX != 0 && GridY != 0 && GridZ != 0) && (ChunkX != 0 && ChunkY != 0 && ChunkZ != 0))
 	{
-		for (int x = 0; x < ChunkX; ++x)
+
+
+		for (int x = 0; x < GridX / ChunkX; ++x)
 		{
-			for (int y = 0; y < ChunkY; ++y)
+			for (int y = 0; y < GridY / ChunkY; ++y)
 			{
-
-				AddChunk(FVector(x,y,z));
-
+				AddChunk(FVector(x,y,0));
 			}
+
 		}
 
-	}
 
 
-
-	for (int z = 0; z < GridZ; ++z)
-	{
-		for (int x = 0; x < GridX; ++x)
+		for (int z = 0; z < GridZ; ++z)
 		{
-			for (int y = 0; y < GridY; ++y)
+			for (int x = 0; x < GridX; ++x)
 			{
-				
-				if (z < FillHeight)
+				for (int y = 0; y < GridY; ++y)
 				{
-					Grid_Data.Add(FVector(x, y, z), true);
-				}
-				else
-				{
-					Grid_Data.Add(FVector(x, y, z), false);
-				}
-				Grid_Visual.Add(FVector(x, y, z));
-				Grid_Structure.Add(FVector(x, y, z), EWT_SpaceID::ID_Empty);
 
+					if (z < FillHeight)
+					{
+						Grid_Data.Add(FVector(x, y, z), true);
+					}
+					else
+					{
+						Grid_Data.Add(FVector(x, y, z), false);
+					}
+					Grid_Visual.Add(FVector(x, y, z));
+					Grid_Structure.Add(FVector(x, y, z), EWT_SpaceID::ID_Empty);
+
+				}
 			}
+
 		}
-		
-	}
 
 
-	for (int i = 0; i < SubLandmarks.Num(); i++)
-	{
-		SubLandmarks[i]->ApplyLandmark(this);
-	}
-
-	for (int i = 0; i < AddLandmarks.Num(); i++)
-	{
-		AddLandmarks[i]->ApplyLandmark(this);
-	}
-
-	GenerateGeometryMap();
-
-	for (int z = 0; z < ChunkX; ++z)
-	{
-		for (int x = 0; x < ChunkY; ++x)
+		for (int i = 0; i < SubLandmarks.Num(); i++)
 		{
-			for (int y = 0; y < ChunkZ; ++y)
+			SubLandmarks[i]->ApplyLandmark(this);
+		}
+
+		for (int i = 0; i < AddLandmarks.Num(); i++)
+		{
+			AddLandmarks[i]->ApplyLandmark(this);
+		}
+
+		GenerateGeometryMap();
+
+		for (int z = 0; z < ChunkX; ++z)
+		{
+			for (int x = 0; x < ChunkY; ++x)
 			{
-				ChunkList[FVector(x, y, z)]->GenerateChunk(this, ChunkScale);
+				for (int y = 0; y < ChunkZ; ++y)
+				{
+					ChunkList[FVector(x, y, 0)]->GenerateChunk(this, ChunkScale);
+				}
 			}
 		}
 	}
@@ -88,7 +86,7 @@ void AWT_GeneratorCore::BuildGrid()
 }
 void AWT_GeneratorCore::AddChunk(FVector Position)
 {
-	ChunkList.Add(Position, GetWorld()->SpawnActor<AWT_WorldChunk>(FVector((Position.X * TileScale), (Position.Y * TileScale), (Position.Z * TileScale)), FRotator(0, 0, 0)));
+	ChunkList.Add(Position, GetWorld()->SpawnActor<AWT_WorldChunk>(FVector(((Position.X * (GridScale.X / ChunkScale.X)) * TileScale), ((Position.Y * (GridScale.Y / ChunkScale.Y)) * TileScale), 0.0f), FRotator(0, 0, 0)));
 }
 
 

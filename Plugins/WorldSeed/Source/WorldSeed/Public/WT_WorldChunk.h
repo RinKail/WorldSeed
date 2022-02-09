@@ -130,7 +130,7 @@ protected:
 
 	void UpdateTile(FVector Position, struct FGridVisual Data);
 	
-	void InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset);
+	void InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FName CompName);
 
 
 	void InitialiseMeshComponents();

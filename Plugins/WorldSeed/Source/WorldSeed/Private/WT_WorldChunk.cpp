@@ -24,57 +24,60 @@ AWT_WorldChunk::AWT_WorldChunk()
 	 ConstructorHelpers::FObjectFinder<UStaticMesh> RaisedMesh (TEXT("/Game/PlaceholderAssets/PlaceholderSet_Raised"));
 
 
-	/*
-	*  static ConstructorHelpers::FObjectFinder<UDataTable> Table(TEXT("DataTable'/Game/TUTORIAL_RESOURCES/DataTables/PlayerAttackMontage.PlayerAttackMontage'"));
+	
+	  static ConstructorHelpers::FObjectFinder<UDataTable> Table(TEXT("DataTable'/WorldSeed/DT_WorldSeed_TileData.DT_WorldSeed_TileData'"));
+
 	 if (Table.Succeeded())
 	 {
 		 DataTable_Geometry = Table.Object;
 	 }
-	*/
+	
 
 
 	
 	
 
 
+			
 			/*
-			FName OName = "Mesh_" + x + y;
+			* FName OName = "Mesh_" + x + y;
 			UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(OName);
 
+			*/
 
 		
-		}
-	}
-	*/
+	
+	 InitialiseMeshComponents();
 
 }
 
 void AWT_WorldChunk::InitialiseMeshComponents()
 {
-	static const FString ContextString(TEXT("Player Attack Montage"));
-	FTile_TableRow* TableRow = DataTable_Geometry->FindRow<FTile_TableRow>(FName(TEXT("Punch1")), ContextString, true);
+	static const FString ContextString(TEXT(""));
+	FTile_TableRow* TableRow = DataTable_Geometry->FindRow<FTile_TableRow>(FName(TEXT("Placeholder")), ContextString, true);
 	if (TableRow)
 	{
-		InitialiseTileData(EWT_GeomID::ID_Raised, TableRow->Raised);
+		InitialiseTileData(EWT_GeomID::ID_Raised, TableRow->Raised,"RaisedComponents");
 
-		InitialiseTileData(EWT_GeomID::ID_Wall, TableRow->Wall);
+		InitialiseTileData(EWT_GeomID::ID_Wall, TableRow->Wall, "WallComponents");
 		
-		InitialiseTileData(EWT_GeomID::ID_WallCorner, TableRow->WallCorner);
+	
+		InitialiseTileData(EWT_GeomID::ID_WallCorner, TableRow->WallCorner, "WallCornerComponents");
 
 	
 
-		InitialiseTileData(EWT_GeomID::ID_InnerCorner, TableRow->InnerCorner);
-		InitialiseTileData(EWT_GeomID::ID_OuterCorner, TableRow->OuterCorner);
+		InitialiseTileData(EWT_GeomID::ID_InnerCorner, TableRow->InnerCorner, "InnerCornerComponents");
+		InitialiseTileData(EWT_GeomID::ID_OuterCorner, TableRow->OuterCorner, "OuterCornerComponents");
 
 
 
-		InitialiseTileData(EWT_GeomID::ID_ThinCorner, TableRow->ThinCorner);
-		InitialiseTileData(EWT_GeomID::ID_ThinWall, TableRow->ThinWall);
-		InitialiseTileData(EWT_GeomID::ID_ThinWallEnd, TableRow->ThinWallEnd);
+		InitialiseTileData(EWT_GeomID::ID_ThinCorner, TableRow->ThinCorner, "ThinCornerComponents");
+		InitialiseTileData(EWT_GeomID::ID_ThinWall, TableRow->ThinWall, "ThinWallComponents");
+		InitialiseTileData(EWT_GeomID::ID_ThinWallEnd, TableRow->ThinWallEnd, "ThinWallEndComponents");
 
-		InitialiseTileData(EWT_GeomID::ID_TConnector, TableRow->TConnector);
-		InitialiseTileData(EWT_GeomID::ID_XConnector, TableRow->XConnector);
-		InitialiseTileData(EWT_GeomID::ID_Block, TableRow->Block);
+		InitialiseTileData(EWT_GeomID::ID_TConnector, TableRow->TConnector, "TConnectorComponents");
+		InitialiseTileData(EWT_GeomID::ID_XConnector, TableRow->XConnector, "XConnectorComponents");
+		InitialiseTileData(EWT_GeomID::ID_Block, TableRow->Block, "BlockComponents");
 
 		
 
@@ -97,9 +100,19 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector ChunkScale)
 				EWT_GeomID ID = Gen->GetTileData(CurrentPos).TileID;
 				if (ID != EWT_GeomID::ID_Empty && ID != EWT_GeomID::ID_Floor && Gen->IsEmptyAdjacent(CurrentPos))
 				{
-					UpdateTile(CurrentPos, Gen->GetTileData(CurrentPos));
-				}
+					UE_LOG(LogTemp, Warning, TEXT("Updating Tile: (%d | %d | %d): %s"), x, y, z, *UEnum::GetValueAsString<EWT_GeomID>(ID));
+					FGridVisual Temp;
+					Temp.TileID = EWT_GeomID::ID_Wall;
+					Temp.Channel = 0;
+					Temp.StackID = EWT_StackID::ID_Mid;
+					Temp.Rot = 0;
 
+					UpdateTile(CurrentPos, Temp);
+
+					//Gen->GetTileData(CurrentPos)
+
+				}
+				
 
 
 			}
@@ -109,27 +122,27 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector ChunkScale)
 
 void AWT_WorldChunk::OnConstruction(const FTransform& Transform)
 {
-	//InitialiseMeshComponents();
+	
 }
 
 
 
-void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset)
+void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FName CompName)
 {
 	FInstanceStack TempStack;
 
 	FTile_ComponentData TempData;
 
-	TempData.BottomComponent = NewObject<UInstancedStaticMeshComponent>(this);
+	TempData.BottomComponent = NewObject<UInstancedStaticMeshComponent>(this, CompName);
 	TempData.BottomComponent->RegisterComponent();
 	TempData.BottomComponent->SetStaticMesh(Asset.Bottom);
 
-	TempData.MiddleComponent = NewObject<UInstancedStaticMeshComponent>(this);
+	TempData.MiddleComponent = NewObject<UInstancedStaticMeshComponent>(this, CompName);
 	TempData.MiddleComponent->RegisterComponent();
 	TempData.MiddleComponent->SetStaticMesh(Asset.Middle);
 	
 
-	TempData.TopComponent = NewObject<UInstancedStaticMeshComponent>(this);
+	TempData.TopComponent = NewObject<UInstancedStaticMeshComponent>(this, CompName);
 	TempData.TopComponent->RegisterComponent();
 	TempData.TopComponent->SetStaticMesh(Asset.Top);
 	
@@ -142,8 +155,11 @@ void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asse
 
 void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Updating Tile"));
+
 	if (TileKeys.Find(Position))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Key Found, removing instance"));
 		TileKeys[Position].Comp->RemoveInstance(TileKeys[Position].Index);
 
 		TileKeys[Position].Index = 0;
@@ -151,7 +167,10 @@ void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("No key found, Creating key"));
 		TileKeys.Add(Position);
+		TileKeys[Position].Comp = nullptr;
+		TileKeys[Position].Index = 0;
 	}
 	
 
@@ -162,8 +181,8 @@ void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 		TileKeys[Position].Comp = ComponentList[Data.TileID].ComponentList[Data.Channel].BottomComponent;
 		break;
 	case EWT_StackID::ID_Mid:
-		TileKeys[Position].Index = ComponentList[Data.TileID].ComponentList[Data.Channel].MiddleComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
-		TileKeys[Position].Comp = ComponentList[Data.TileID].ComponentList[Data.Channel].MiddleComponent;
+		TileKeys[Position].Index = ComponentList[Data.TileID].ComponentList[0].MiddleComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].ComponentList[0].MiddleComponent;
 		break;
 	case EWT_StackID::ID_Top:
 		TileKeys[Position].Index = 	ComponentList[Data.TileID].ComponentList[Data.Channel].TopComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
