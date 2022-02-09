@@ -79,6 +79,7 @@ USTRUCT(BlueprintType)
 struct FInstanceStack
 {
 	GENERATED_BODY()
+
 		TArray<FTile_ComponentData> ComponentList;
 };
 
@@ -87,6 +88,7 @@ USTRUCT(BlueprintType)
 struct FTileKey
 {
 	GENERATED_BODY()
+public:
 		int Index;
 	class UInstancedStaticMeshComponent* Comp;
 	
@@ -123,14 +125,15 @@ protected:
 	
 
 
-	UPROPERTY()
-	TMap<EWT_GeomID, FInstanceStack> ComponentList;
+	UPROPERTY(EditAnywhere)
+	TMap<EWT_GeomID, FTile_ComponentData> ComponentList;
 
+	UPROPERTY(EditAnywhere)
 	TMap<FVector, FTileKey> TileKeys;
 
 	void UpdateTile(FVector Position, struct FGridVisual Data);
 	
-	void InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FName CompName);
+	void InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FString CompName);
 
 
 	void InitialiseMeshComponents();

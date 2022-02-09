@@ -42,14 +42,8 @@ void AWT_GeneratorCore::BuildGrid()
 				for (int y = 0; y < GridY; ++y)
 				{
 
-					if (z < FillHeight)
-					{
-						Grid_Data.Add(FVector(x, y, z), true);
-					}
-					else
-					{
-						Grid_Data.Add(FVector(x, y, z), false);
-					}
+				
+					Grid_Data.Add(FVector(x, y, z), false);
 					Grid_Visual.Add(FVector(x, y, z));
 					Grid_Structure.Add(FVector(x, y, z), EWT_SpaceID::ID_Empty);
 
@@ -57,7 +51,17 @@ void AWT_GeneratorCore::BuildGrid()
 			}
 
 		}
+		for (int x = 0; x < GridX; ++x)
+		{
+			for (int y = 0; y < GridY; ++y)
+			{
 
+
+				Grid_Data.Add(FVector(x, y, 0), true);
+				
+
+			}
+		}
 
 		for (int i = 0; i < SubLandmarks.Num(); i++)
 		{
@@ -71,11 +75,11 @@ void AWT_GeneratorCore::BuildGrid()
 
 		GenerateGeometryMap();
 
-		for (int z = 0; z < ChunkX; ++z)
+		for (int z = 0; z < ChunkZ; ++z)
 		{
-			for (int x = 0; x < ChunkY; ++x)
+			for (int x = 0; x < ChunkX; ++x)
 			{
-				for (int y = 0; y < ChunkZ; ++y)
+				for (int y = 0; y < ChunkY; ++y)
 				{
 					ChunkList[FVector(x, y, 0)]->GenerateChunk(this, ChunkScale);
 				}

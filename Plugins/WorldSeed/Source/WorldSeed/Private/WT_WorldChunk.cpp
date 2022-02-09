@@ -91,9 +91,9 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector ChunkScale)
 {
 	for (int z = 0; z < ChunkScale.Z; ++z)
 	{
-		for (int x = 0; x < ChunkScale.Y; ++x)
+		for (int x = 0; x < ChunkScale.X; ++x)
 		{
-			for (int y = 0; y < ChunkScale.Z; ++y)
+			for (int y = 0; y < ChunkScale.Y; ++y)
 			{
 				FVector CurrentPos = FVector(x, y, z) + (GetActorLocation() / TileScale);
 
@@ -127,29 +127,41 @@ void AWT_WorldChunk::OnConstruction(const FTransform& Transform)
 
 
 
-void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FName CompName)
+void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FString CompName)
 {
 	FInstanceStack TempStack;
 
 	FTile_ComponentData TempData;
 
-	TempData.BottomComponent = NewObject<UInstancedStaticMeshComponent>(this, CompName);
+	FName Top = FName(CompName + ".Top");
+	FName Mid = FName(CompName + ".Mid");
+	FName Bot = FName(CompName + ".Bot");
+
+	TempData.BottomComponent = NewObject<UInstancedStaticMeshComponent>(this, Bot);
+	TempData.BottomComponent->SetupAttachment(SceneRoot);
 	TempData.BottomComponent->RegisterComponent();
+
 	TempData.BottomComponent->SetStaticMesh(Asset.Bottom);
 
-	TempData.MiddleComponent = NewObject<UInstancedStaticMeshComponent>(this, CompName);
+	TempData.MiddleComponent = NewObject<UInstancedStaticMeshComponent>(this, Mid);
+	TempData.MiddleComponent->SetupAttachment(SceneRoot);
 	TempData.MiddleComponent->RegisterComponent();
 	TempData.MiddleComponent->SetStaticMesh(Asset.Middle);
 	
 
-	TempData.TopComponent = NewObject<UInstancedStaticMeshComponent>(this, CompName);
+	TempData.TopComponent = NewObject<UInstancedStaticMeshComponent>(this, Top);
+	TempData.TopComponent->SetupAttachment(SceneRoot);
 	TempData.TopComponent->RegisterComponent();
 	TempData.TopComponent->SetStaticMesh(Asset.Top);
 	
+	if (TempData.MiddleComponent != nullptr && TempData.TopComponent != nullptr && TempData.BottomComponent != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Components created successfully"));
+	}
 
 
-	TempStack.ComponentList.Add(TempData);
-	ComponentList.Add(EWT_GeomID::ID_Block, TempStack);
+	
+	ComponentList.Add(TileID, TempData);
 }
 
 
@@ -173,20 +185,25 @@ void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 		TileKeys[Position].Index = 0;
 	}
 	
+	if (ComponentList.Find(Data.TileID))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Component List located: "));
+		
+	}
 
 	switch (Data.StackID)
 	{
 	case EWT_StackID::ID_Bottom:
-		TileKeys[Position].Index = ComponentList[Data.TileID].ComponentList[Data.Channel].BottomComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1,1,1)));
-		TileKeys[Position].Comp = ComponentList[Data.TileID].ComponentList[Data.Channel].BottomComponent;
+		TileKeys[Position].Index = ComponentList[Data.TileID].BottomComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1,1,1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].BottomComponent;
 		break;
 	case EWT_StackID::ID_Mid:
-		TileKeys[Position].Index = ComponentList[Data.TileID].ComponentList[0].MiddleComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
-		TileKeys[Position].Comp = ComponentList[Data.TileID].ComponentList[0].MiddleComponent;
+		TileKeys[Position].Index = ComponentList[Data.TileID].MiddleComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].MiddleComponent;
 		break;
 	case EWT_StackID::ID_Top:
-		TileKeys[Position].Index = 	ComponentList[Data.TileID].ComponentList[Data.Channel].TopComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
-		TileKeys[Position].Comp = ComponentList[Data.TileID].ComponentList[Data.Channel].TopComponent;
+		TileKeys[Position].Index = 	ComponentList[Data.TileID].TopComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].TopComponent;
 		break;
 
 	}
