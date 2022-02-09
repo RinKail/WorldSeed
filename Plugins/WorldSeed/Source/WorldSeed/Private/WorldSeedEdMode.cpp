@@ -88,7 +88,7 @@ void FWorldSeedEdMode::Tick(FEditorViewportClient* ViewportClient, float DeltaTi
 		if (FVector::Distance(SelectedLandmark->GetActorLocation(), CachedLandmarkPosition) >= TileScale)
 		{
 			CachedLandmarkPosition = SelectedLandmark->GetActorLocation();
-			ActiveGenerator->UpdateChunks();
+			//ActiveGenerator->UpdateChunks();
 		}
 	}
 	//GEditor->GetSelectedActors()
@@ -120,17 +120,17 @@ void FWorldSeedEdMode::GenerateGrid(int GridX, int GridY, int ChunkX, int ChunkY
 	UE_LOG(LogTemp, Warning, TEXT("Chunk Scale: "), GridX, GridY);
 	UE_LOG(LogTemp, Warning, TEXT("Grid Scale: "), ChunkX, ChunkY);
 
-	ActiveGenerator->ClearChunkList();
+	//ActiveGenerator->ClearChunkList();
 	for (int x = 0; x < GridX; x++)
 	{
 		for (int y = 0; y < GridY; y++)
 		{
 			
-			ActiveGenerator->AddChunk(FVector2D(x,y), GetWorld()->SpawnActor<AWT_WorldChunk>(FVector((ChunkX * TileScale) * x, (ChunkY * TileScale) * y, 0), FRotator(0, 0, 0)));
+			//ActiveGenerator->AddChunk(FVector2D(x,y), GetWorld()->SpawnActor<AWT_WorldChunk>(FVector((ChunkX * TileScale) * x, (ChunkY * TileScale) * y, 0), FRotator(0, 0, 0)));
 
 		}
 	}
-	ActiveGenerator->BuildEnviroment(GridX,GridY,ChunkX, ChunkY);
+	ActiveGenerator->BuildGrid();
 }
 
 bool FWorldSeedEdMode::IsALandmarkSelected()

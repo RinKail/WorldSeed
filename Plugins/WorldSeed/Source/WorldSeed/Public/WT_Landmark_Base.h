@@ -58,7 +58,7 @@ protected:
 	class USceneComponent* SceneRoot;
 
 	UPROPERTY(EditAnywhere, Category = "Landmark")
-	FVector2D LandmarkScale;
+	FVector LandmarkScale;
 	UPROPERTY(EditAnywhere, Category = "Landmark")
 	FVector2D LandmarkPosition;
 

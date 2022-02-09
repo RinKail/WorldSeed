@@ -5,12 +5,49 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WorldSeed/Public/WT_WorldChunk.h"
+#include "WT_Resources.h"
 #include "WT_GeneratorCore.generated.h"
+
+
+USTRUCT(BlueprintType)
+struct FGridVisual
+{
+	GENERATED_BODY()
+
+
+
+public:
+
+
+	FGridVisual()
+	{
+		TileID = EWT_GeomID::ID_Block;
+		StackID = EWT_StackID::ID_Bottom;
+		Channel = 0;
+		Rot = 0;
+	}
+	UPROPERTY()
+		float Rot;
+	UPROPERTY()
+		EWT_GeomID TileID;
+	UPROPERTY()
+		EWT_StackID StackID;
+	UPROPERTY()
+		int Channel;
+
+
+};
+
+
+
+
 
 /**
  * 
  */
-UCLASS()
+
+
+UCLASS(hidecategories = (Rendering, Replication, Collision, Input, Actor, LOD, Cooking))
 class WORLDSEED_API AWT_GeneratorCore : public AActor
 {
 	GENERATED_BODY()
@@ -25,95 +62,87 @@ public:
 
 	AWT_GeneratorCore();
 
-	void SetChunkSize(int NewSize) { ChunkSize = NewSize; }
-	int GetChunkSize() { return ChunkSize; }
+
+	void BuildGrid();
 
 
-	class AWT_WorldChunk* GetChunk(FVector2D Coordinate) { return ChunkList[Coordinate]; }
+	
 
-	void AddChunk(FVector2D Coordinate, class AWT_WorldChunk* Chunk);
-
-	void ClearChunkList() {
-		for (int x = 0; x < ChunkSize; x++)
+	bool GetCellState(FVector Pos)
+	{
+		if (Grid_Data.Find(Pos))
 		{
-			for (int y = 0; y < ChunkSize; y++)
-			{
-				ChunkList[FVector2D(x, y)]->Destroy();
-			}
+			return Grid_Data[Pos];
 		}
-		ChunkList.Empty();
+		else return false;
+	}
+	void SetCellState(FVector Pos, bool bNewState)
+	{
+		if (Grid_Data.Find(Pos))
+		{
+			Grid_Data[Pos] = bNewState;
+		}
+		
 	}
 
 
-	void UpdateChunks();
+	FGridVisual GetTileData(FVector Pos)
+	{
+		FGridVisual Return;
+		if (Grid_Visual.Find(Pos))
+		{
+			return Grid_Visual[Pos];
+		}
+		else return Return;
+	}
 
-	void StoreChunks();
-
-
-	void SetGridScale(FVector2D Grid, FVector2D Chunk) { ChunkScale = Chunk; GridScale = Grid; }
-
-	bool GetGridData(FVector2D Position) { return GridData[Position]; }
-
-	void ApplyToGrid(FVector2D Position, bool bIsOccupied) { GridData[Position] = bIsOccupied; }
-
-	void BuildEnviroment(int GridX, int GridY, int ChunkX, int ChunkY);
-
-
-	void StoreLandmark(class AWT_Landmark_Base* Landmark) { StoredLandmarks.Add(Landmark); }
-
-
-protected: 
+	void StoreLandmark(class AWT_Landmark_Base* In) { SubLandmarks.Add(In); }
 
 	
+	bool IsEmptyAdjacent(FVector Pos);
+
+protected:
+
+	void GenerateGeometryMap();
+	void GenerateFloorMap();
 
 
-	int ChunkSize;
+	void AddChunk(FVector Position);
+
+	UPROPERTY(EditAnywhere, Category = "Grid Setup")
+	FVector GridScale;
+	UPROPERTY(EditAnywhere, Category = "Grid Setup")
+	FVector ChunkScale;
+	UPROPERTY(EditAnywhere, Category = "Grid Setup")
+	int FillHeight;
 
 
 
-	TMap<FVector2D,class AWT_WorldChunk*> ChunkList;
-	TArray<class AWT_Landmark_Base*> StoredLandmarks;
-	//TArray<FCachedLandmarks> StoredLandmarkData;
+	UPROPERTY()
+	TMap<FVector, bool> Grid_Data;
+	UPROPERTY()
+	TMap<FVector, EWT_SpaceID> Grid_Structure;
+	UPROPERTY()
+	TMap<FVector, FGridVisual> Grid_Visual;
+
+
+	UPROPERTY()
+	TArray<class AWT_Landmark_Base*> SubLandmarks;
+	UPROPERTY()
+	TArray<class AWT_Landmark_Base*> AddLandmarks;
+	UPROPERTY()
+	TMap<FVector, class AWT_WorldChunk*> ChunkList;
+
+
+	bool IsEdge(FVector Pos);
+	bool IsFloor(FVector Pos);
 
 
 
-	FVector2D ChunkScale;
-	FVector2D GridScale;
-
-
-	TMap<FVector2D, bool> GridData;
-	
 
 
 };
 
 
-/*
-
-STRUCT() struct FCachedLandmarks
-{
-	GENERATED_BODY()
-
-		FLandmarkData Data;
-
-	EWT_LandMarkType Type;
-	
-		
-};
-
-
-UENUM(BlueprintType)
-enum class EWT_TileTypes : uint8
-{
-	TT_Empty		UMETA(DisplayName = "None"),
-	TT_Edge		UMETA(DisplayName = "None"),
-	TT_EdgeCorner		UMETA(DisplayName = "None"),
-	TT_Floor		UMETA(DisplayName = "None"),
-	TT_FloorCorner		UMETA(DisplayName = "None"),
-	
-
-};
-
-*/
 
 

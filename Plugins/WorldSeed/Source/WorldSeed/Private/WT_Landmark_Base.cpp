@@ -17,7 +17,7 @@ AWT_Landmark_Base::AWT_Landmark_Base()
 	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(SceneRoot);
 
-	LandmarkScale = FVector2D(5, 5);
+	LandmarkScale = FVector(5, 5, 1);
 
 
 
@@ -52,16 +52,21 @@ void AWT_Landmark_Base::OnMovementDetected()
 
 void AWT_Landmark_Base::ApplyLandmark(class AWT_GeneratorCore* Generator)
 {
-	FVector2D ConvertedPosition = FVector2D(GetActorLocation().X, GetActorLocation().Y);
+	FVector ConvertedPosition = FVector(0, 0, 0);
 
-	ConvertedPosition.X = (int)(ConvertedPosition.X / TileScale);
-	ConvertedPosition.Y = (int)(ConvertedPosition.Y / TileScale);
+	ConvertedPosition.X = (int)(GetActorLocation().X / TileScale);
+	ConvertedPosition.Y = (int)(GetActorLocation().Y / TileScale);
+	ConvertedPosition.Z = (int)(GetActorLocation().Z / TileScale);
 
-	for (int x = 0; x < LandmarkScale.X; x++)
+
+	for (int z = 0; z < LandmarkScale.Z; z++)
 	{
-		for (int y = 0; y < LandmarkScale.Y; y++)
+		for (int x = 0; x < LandmarkScale.X; x++)
 		{
-			Generator->ApplyToGrid(ConvertedPosition + FVector2D(x, y), true);
+			for (int y = 0; y < LandmarkScale.Y; y++)
+			{
+				Generator->SetCellState(ConvertedPosition + FVector(x, y, z), false);
+			}
 		}
 	}
 }
