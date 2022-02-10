@@ -12,15 +12,19 @@ AWT_GeneratorCore::AWT_GeneratorCore()
 
 void AWT_GeneratorCore::BuildGrid()
 {
+	Reset();
 	int GridX = GridScale.X;
 	int GridY = GridScale.Y;
 	int GridZ = GridScale.Z;
 
 	int ChunkX = ChunkScale.X;
 	int ChunkY = ChunkScale.Y;
-	int ChunkZ = ChunkScale.Z;
 
-	if ((GridX != 0 && GridY != 0 && GridZ != 0) && (ChunkX != 0 && ChunkY != 0 && ChunkZ != 0))
+	Stored_GridScale = GridScale;
+	Stored_ChunkScale = ChunkScale;
+
+
+	if ((GridX != 0 && GridY != 0 && GridZ != 0) && (ChunkX != 0 && ChunkY != 0))
 	{
 
 
@@ -75,25 +79,62 @@ void AWT_GeneratorCore::BuildGrid()
 
 		GenerateGeometryMap();
 
-		for (int z = 0; z < ChunkZ; ++z)
+		
+
+		for (int x = 0; x < GridX / ChunkX; ++x)
 		{
-			for (int x = 0; x < ChunkX; ++x)
+			for (int y = 0; y < GridY / ChunkY; ++y)
 			{
-				for (int y = 0; y < ChunkY; ++y)
-				{
-					ChunkList[FVector(x, y, 0)]->GenerateChunk(this, ChunkScale);
-				}
+				ChunkList[FVector(x, y, 0)]->GenerateChunk(this, ChunkScale, GridZ);
 			}
+
 		}
+
 	}
 
 }
 void AWT_GeneratorCore::AddChunk(FVector Position)
 {
-	ChunkList.Add(Position, GetWorld()->SpawnActor<AWT_WorldChunk>(FVector(((Position.X * (GridScale.X / ChunkScale.X)) * TileScale), ((Position.Y * (GridScale.Y / ChunkScale.Y)) * TileScale), 0.0f), FRotator(0, 0, 0)));
+	if (!ChunkList.Find(Position))
+	{
+		ChunkList.Add(Position, GetWorld()->SpawnActor<AWT_WorldChunk>(FVector(((Position.X * ChunkScale.X) * TileScale), ((Position.Y * ChunkScale.Y) * TileScale), 0.0f), FRotator(0, 0, 0)));
+	}
 }
 
 
+
+void AWT_GeneratorCore::Reset()
+{
+	if (ChunkList.Num() > 0)
+	{
+		for (int x = 0; x < Stored_GridScale.X / Stored_ChunkScale.X; ++x)
+		{
+			for (int y = 0; y < Stored_GridScale.Y / Stored_ChunkScale.Y; ++y)
+			{
+				ChunkList[FVector(x, y, 0)]->Destroy();
+			}
+
+		}
+		ChunkList.Empty();
+	}
+	if (Grid_Data.Num() > 0)
+	{
+		Grid_Data.Empty();
+	}
+
+	if (Grid_Visual.Num() > 0)
+	{
+		Grid_Visual.Empty();
+	}
+	if (Grid_Structure.Num() > 0)
+	{
+		Grid_Structure.Empty();
+	 }
+
+	
+	
+
+}
 
 void AWT_GeneratorCore::GenerateGeometryMap()
 {
@@ -103,7 +144,7 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 
 	int ChunkX = ChunkScale.X;
 	int ChunkY = ChunkScale.Y;
-	int ChunkZ = ChunkScale.Z;
+
 	
 	for (int z = 0; z < GridZ; ++z)
 	{

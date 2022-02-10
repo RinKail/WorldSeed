@@ -87,9 +87,9 @@ void AWT_WorldChunk::InitialiseMeshComponents()
 	}
 }
 
-void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector ChunkScale)
+void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale, int WorldHeight)
 {
-	for (int z = 0; z < ChunkScale.Z; ++z)
+	for (int z = 0; z < WorldHeight; ++z)
 	{
 		for (int x = 0; x < ChunkScale.X; ++x)
 		{

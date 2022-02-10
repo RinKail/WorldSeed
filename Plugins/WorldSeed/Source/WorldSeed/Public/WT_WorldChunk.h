@@ -111,7 +111,7 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 
-	void GenerateChunk(class AWT_GeneratorCore* Gen, FVector ChunkScale);
+	void GenerateChunk(class AWT_GeneratorCore* Gen, FVector2D ChunkScale, int WorldHeight);
 
 	//void UpdateChunk(class AWT_GeneratorCore* Generator);
 

@@ -103,6 +103,9 @@ public:
 
 protected:
 
+
+	void Reset();
+
 	void GenerateGeometryMap();
 	void GenerateFloorMap();
 
@@ -112,7 +115,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Grid Setup")
 	FVector GridScale;
 	UPROPERTY(EditAnywhere, Category = "Grid Setup")
-	FVector ChunkScale;
+	FVector2D ChunkScale;
 	UPROPERTY(EditAnywhere, Category = "Grid Setup")
 	int FillHeight;
 
@@ -138,7 +141,10 @@ protected:
 	bool IsFloor(FVector Pos);
 
 
-
+	UPROPERTY();
+	FVector Stored_GridScale;
+	UPROPERTY();
+	FVector2D Stored_ChunkScale;
 
 
 };
