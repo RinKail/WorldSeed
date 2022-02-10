@@ -9,36 +9,6 @@
 #include "WT_GeneratorCore.generated.h"
 
 
-USTRUCT(BlueprintType)
-struct FGridVisual
-{
-	GENERATED_BODY()
-
-
-
-public:
-
-
-	FGridVisual()
-	{
-		TileID = EWT_GeomID::ID_Block;
-		StackID = EWT_StackID::ID_Bottom;
-		Channel = 0;
-		Rot = 0;
-	}
-	UPROPERTY()
-		float Rot;
-	UPROPERTY()
-		EWT_GeomID TileID;
-	UPROPERTY()
-		EWT_StackID StackID;
-	UPROPERTY()
-		int Channel;
-
-
-};
-
-
 
 
 
@@ -66,7 +36,7 @@ public:
 	void BuildGrid();
 
 
-	
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 	bool GetCellState(FVector Pos)
 	{
@@ -133,7 +103,7 @@ protected:
 	TArray<class AWT_Landmark_Base*> SubLandmarks;
 	UPROPERTY()
 	TArray<class AWT_Landmark_Base*> AddLandmarks;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	TMap<FVector, class AWT_WorldChunk*> ChunkList;
 
 

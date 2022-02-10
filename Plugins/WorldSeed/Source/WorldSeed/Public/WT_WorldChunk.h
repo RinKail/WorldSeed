@@ -10,6 +10,36 @@
 #include "WT_WorldChunk.generated.h"
 
 
+USTRUCT(BlueprintType)
+struct FGridVisual
+{
+	GENERATED_BODY()
+
+
+
+public:
+
+
+	FGridVisual()
+	{
+		TileID = EWT_GeomID::ID_Block;
+		StackID = EWT_StackID::ID_Bottom;
+		Channel = 0;
+		Rot = 0;
+	}
+	UPROPERTY(EditAnywhere)
+		float Rot;
+	UPROPERTY(EditAnywhere)
+		EWT_GeomID TileID;
+	UPROPERTY(EditAnywhere)
+		EWT_StackID StackID;
+	UPROPERTY(EditAnywhere)
+		int Channel;
+
+
+};
+
+
 
 USTRUCT(BlueprintType)
 struct FTile_AssetTypes
@@ -110,10 +140,15 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
+	virtual void BeginPlay() override;
+
 
 	void GenerateChunk(class AWT_GeneratorCore* Gen, FVector2D ChunkScale, int WorldHeight);
 
 	//void UpdateChunk(class AWT_GeneratorCore* Generator);
+
+
+	void InitialiseChunk();
 
 protected:
 
@@ -125,15 +160,26 @@ protected:
 	
 
 
-	UPROPERTY(EditAnywhere)
+	
 	TMap<EWT_GeomID, FTile_ComponentData> ComponentList;
 
+
 	UPROPERTY(EditAnywhere)
+	TMap<FVector,  FGridVisual> StoredData;
+	UPROPERTY(EditAnywhere)
+	FVector GridSize;
+
+
+
+	
 	TMap<FVector, FTileKey> TileKeys;
 
-	void UpdateTile(FVector Position, struct FGridVisual Data);
+	void UpdateTile(FVector Position,  FGridVisual Data);
 	
 	void InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FString CompName);
+
+
+
 
 
 	void InitialiseMeshComponents();
