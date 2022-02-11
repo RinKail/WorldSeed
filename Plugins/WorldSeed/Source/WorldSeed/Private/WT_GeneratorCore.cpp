@@ -61,10 +61,7 @@ void AWT_GeneratorCore::BuildGrid()
 			{
 
 
-				for (int i = 0; i < FillHeight; i++)
-				{
-					Grid_Data.Add(FVector(x, y, i), true);
-				}
+				Grid_Data.Add(FVector(x, y, 0), true);
 				
 
 			}
@@ -95,10 +92,6 @@ void AWT_GeneratorCore::BuildGrid()
 
 	}
 
-}
-void AWT_GeneratorCore::OnConstruction(const FTransform& Transform)
-{
-	BuildGrid();
 }
 void AWT_GeneratorCore::AddChunk(FVector Position)
 {

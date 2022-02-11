@@ -89,9 +89,6 @@ void AWT_WorldChunk::InitialiseMeshComponents()
 
 void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale, int WorldHeight)
 {
-	GridSize = FVector(ChunkScale.X, ChunkScale.Y, WorldHeight);
-
-
 	for (int z = 0; z < WorldHeight; ++z)
 	{
 		for (int x = 0; x < ChunkScale.X; ++x)
@@ -99,49 +96,33 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale,
 			for (int y = 0; y < ChunkScale.Y; ++y)
 			{
 				FVector CurrentPos = FVector(x, y, z) + (GetActorLocation() / TileScale);
-			
-
-
-				FGridVisual Visual;
 
 				EWT_GeomID ID = Gen->GetTileData(CurrentPos).TileID;
 				if (ID != EWT_GeomID::ID_Empty && ID != EWT_GeomID::ID_Floor && Gen->IsEmptyAdjacent(CurrentPos))
 				{
-					Visual = Gen->GetTileData(CurrentPos);
-					
+					UE_LOG(LogTemp, Warning, TEXT("Updating Tile: (%d | %d | %d): %s"), x, y, z, *UEnum::GetValueAsString<EWT_GeomID>(ID));
+					FGridVisual Temp;
+					Temp.TileID = EWT_GeomID::ID_Wall;
+					Temp.Channel = 0;
+					Temp.StackID = EWT_StackID::ID_Mid;
+					Temp.Rot = 0;
 
-					UpdateTile(CurrentPos, Gen->GetTileData(CurrentPos));
+					UpdateTile(CurrentPos, Temp);
 
 					//Gen->GetTileData(CurrentPos)
 
 				}
-				else
-				{
-					Visual.TileID = EWT_GeomID::ID_Empty;
-				}
 				
 
-				StoredData.Add(FVector(x, y, z), Visual);
 
 			}
 		}
 	}
 }
 
-void AWT_WorldChunk::BeginPlay()
-{
-	Super::BeginPlay();
-
-	//InitialiseChunk(GetActorLocation());
-
-	//UE_LOG(LogTemp, Warning, TEXT("BEGIN PLAY"));
-}
-
 void AWT_WorldChunk::OnConstruction(const FTransform& Transform)
 {
-	//InitialiseChunk();
-
-	UE_LOG(LogTemp, Warning, TEXT("RUNNING CONSTRUCTOR"));
+	
 }
 
 
@@ -181,38 +162,6 @@ void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asse
 
 	
 	ComponentList.Add(TileID, TempData);
-}
-
-void AWT_WorldChunk::InitialiseChunk()
-{
-	if (StoredData.Num() > 0)
-	{
-		for (int z = 0; z < GridSize.Z; ++z)
-		{
-			for (int x = 0; x < GridSize.X; ++x)
-			{
-				for (int y = 0; y < GridSize.Y; ++y)
-				{
-					FVector CurrentPos = FVector(x, y, z) + (GetActorLocation() / TileScale);
-
-					EWT_GeomID ID = StoredData[FVector(x, y, z)].TileID;
-					if (ID != EWT_GeomID::ID_Empty && ID != EWT_GeomID::ID_Floor)
-					{
-
-
-
-						UpdateTile(FVector(x, y, z), StoredData[FVector(x, y, z)]);
-
-						//Gen->GetTileData(CurrentPos)
-
-					}
-
-
-
-				}
-			}
-		}
-	}
 }
 
 

@@ -65,7 +65,7 @@ void AWT_Landmark_Base::ApplyLandmark(class AWT_GeneratorCore* Generator)
 		{
 			for (int y = 0; y < LandmarkScale.Y; y++)
 			{
-				Generator->SetCellState(ConvertedPosition + FVector(x, y, z), true);
+				Generator->SetCellState(ConvertedPosition + FVector(x, y, z), false);
 			}
 		}
 	}
