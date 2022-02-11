@@ -117,20 +117,11 @@ void FWorldSeedEdMode::ClearLandmarks()
 
 void FWorldSeedEdMode::GenerateGrid(int GridX, int GridY, int ChunkX, int ChunkY)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Chunk Scale: "), GridX, GridY);
-	UE_LOG(LogTemp, Warning, TEXT("Grid Scale: "), ChunkX, ChunkY);
-
-	//ActiveGenerator->ClearChunkList();
-	for (int x = 0; x < GridX; x++)
+	
+	if (ActiveGenerator)
 	{
-		for (int y = 0; y < GridY; y++)
-		{
-			
-			//ActiveGenerator->AddChunk(FVector2D(x,y), GetWorld()->SpawnActor<AWT_WorldChunk>(FVector((ChunkX * TileScale) * x, (ChunkY * TileScale) * y, 0), FRotator(0, 0, 0)));
-
-		}
+		ActiveGenerator->BuildGrid();
 	}
-	ActiveGenerator->BuildGrid();
 }
 
 bool FWorldSeedEdMode::IsALandmarkSelected()

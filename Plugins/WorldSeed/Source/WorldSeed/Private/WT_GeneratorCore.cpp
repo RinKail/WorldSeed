@@ -4,6 +4,7 @@
 #include "WT_GeneratorCore.h"
 #include "WorldSeed/Public/WT_WorldChunk.h"
 #include "WorldSeed/Public/WT_Landmark_Base.h"
+#include "Kismet/GameplayStatics.h"
 
 AWT_GeneratorCore::AWT_GeneratorCore()
 {
@@ -12,6 +13,10 @@ AWT_GeneratorCore::AWT_GeneratorCore()
 
 void AWT_GeneratorCore::BuildGrid()
 {
+	
+
+
+
 	Reset();
 	int GridX = GridScale.X;
 	int GridY = GridScale.Y;
@@ -96,6 +101,12 @@ void AWT_GeneratorCore::BuildGrid()
 	}
 
 }
+
+void AWT_GeneratorCore::BeginPlay()
+{
+	BuildGrid();
+}
+
 void AWT_GeneratorCore::OnConstruction(const FTransform& Transform)
 {
 	BuildGrid();
@@ -118,7 +129,7 @@ void AWT_GeneratorCore::Reset()
 		{
 			for (int y = 0; y < Stored_GridScale.Y / Stored_ChunkScale.Y; ++y)
 			{
-				ChunkList[FVector(x, y, 0)]->Destroy();
+				if (ChunkList.Find(FVector(x,y,0)))ChunkList[FVector(x, y, 0)]->Destroy();
 			}
 
 		}
@@ -246,6 +257,19 @@ bool AWT_GeneratorCore::IsFloor(FVector Pos)
 {
 	if (!GetCellState(Pos) && GetCellState(Pos + FVector(0, 0, -1)) && !GetCellState(Pos + FVector(0, 0, 1))) return true;
 	else return false;
+}
+
+void AWT_GeneratorCore::StoreLandmark(AWT_Landmark_Base* In)
+{
+	if (In->IsLandmarkAdditive())
+	{
+		AddLandmarks.Add(In);
+	}
+	else
+	{
+		SubLandmarks.Add(In);
+	}
+
 }
 
 bool AWT_GeneratorCore::IsEmptyAdjacent(FVector Pos)

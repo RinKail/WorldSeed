@@ -62,6 +62,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Landmark")
 	FVector2D LandmarkPosition;
 
+	//Determines whether the landmark is additive or subtractive.
+	UPROPERTY(EditAnywhere, Category = "Landmark")
+	bool bAdditive;
+
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -69,6 +73,8 @@ protected:
 public:	
 
 	
+	bool IsLandmarkAdditive() { return bAdditive; }
+
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -38,6 +38,8 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
+	virtual void BeginPlay() override;
+
 	bool GetCellState(FVector Pos)
 	{
 		if (Grid_Data.Find(Pos))
@@ -66,7 +68,7 @@ public:
 		else return Return;
 	}
 
-	void StoreLandmark(class AWT_Landmark_Base* In) { SubLandmarks.Add(In); }
+	void StoreLandmark(class AWT_Landmark_Base* In);
 
 	
 	bool IsEmptyAdjacent(FVector Pos);
@@ -103,6 +105,8 @@ protected:
 	TArray<class AWT_Landmark_Base*> SubLandmarks;
 	UPROPERTY()
 	TArray<class AWT_Landmark_Base*> AddLandmarks;
+
+
 	UPROPERTY(EditAnywhere)
 	TMap<FVector, class AWT_WorldChunk*> ChunkList;
 

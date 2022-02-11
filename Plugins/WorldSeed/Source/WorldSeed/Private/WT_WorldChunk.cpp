@@ -132,7 +132,10 @@ void AWT_WorldChunk::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//InitialiseChunk(GetActorLocation());
+
+	//InitialiseChunk();
+
+	
 
 	//UE_LOG(LogTemp, Warning, TEXT("BEGIN PLAY"));
 }
@@ -159,7 +162,6 @@ void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asse
 	TempData.BottomComponent = NewObject<UInstancedStaticMeshComponent>(this, Bot);
 	TempData.BottomComponent->SetupAttachment(SceneRoot);
 	TempData.BottomComponent->RegisterComponent();
-
 	TempData.BottomComponent->SetStaticMesh(Asset.Bottom);
 
 	TempData.MiddleComponent = NewObject<UInstancedStaticMeshComponent>(this, Mid);
