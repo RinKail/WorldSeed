@@ -164,7 +164,7 @@ protected:
 	TMap<EWT_GeomID, FTile_ComponentData> ComponentList;
 
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TMap<FVector,  FGridVisual> StoredData;
 	UPROPERTY(EditAnywhere)
 	FVector GridSize;
