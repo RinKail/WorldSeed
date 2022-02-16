@@ -115,7 +115,8 @@ void AWT_GeneratorCore::AddChunk(FVector Position)
 {
 	if (!ChunkList.Find(Position))
 	{
-		ChunkList.Add(Position, GetWorld()->SpawnActor<AWT_WorldChunk>(FVector(((Position.X * ChunkScale.X) * TileScale), ((Position.Y * ChunkScale.Y) * TileScale), 0.0f), FRotator(0, 0, 0)));
+		AWT_WorldChunk* Chunk = GetWorld()->SpawnActor<AWT_WorldChunk>(FVector(((Position.X * ChunkScale.X) * TileScale), ((Position.Y * ChunkScale.Y) * TileScale), 0.0f), FRotator(0, 0, 0));
+		ChunkList.Add(Position, Chunk);
 	}
 }
 

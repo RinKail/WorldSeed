@@ -134,6 +134,12 @@ class WORLDSEED_API AWT_WorldChunk : public AActor
 	GENERATED_BODY()
 	
 public:	
+
+	class AWT_GeneratorCore* Generator;
+
+
+	void SetGenerator(class AWT_GeneratorCore* In) { Generator = In; }
+
 	// Sets default values for this actor's properties
 	AWT_WorldChunk();
 

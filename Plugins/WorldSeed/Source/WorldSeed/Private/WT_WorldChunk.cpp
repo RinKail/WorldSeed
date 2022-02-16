@@ -5,6 +5,7 @@
 #include "WorldSeed/Public/WT_Resources.h"
 #include "WorldSeed/Public/WT_GeneratorCore.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 AWT_WorldChunk::AWT_WorldChunk()
 {
@@ -133,8 +134,12 @@ void AWT_WorldChunk::BeginPlay()
 	Super::BeginPlay();
 
 
-	//InitialiseChunk();
-
+	TArray<AActor*> ActorList;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWT_GeneratorCore::StaticClass(), ActorList);
+	if (ActorList.Num() > 0)
+	{
+		Cast<AWT_GeneratorCore>(ActorList[0])->BuildGrid();
+	}
 	
 
 	//UE_LOG(LogTemp, Warning, TEXT("BEGIN PLAY"));
@@ -143,6 +148,8 @@ void AWT_WorldChunk::BeginPlay()
 void AWT_WorldChunk::OnConstruction(const FTransform& Transform)
 {
 	//InitialiseChunk();
+
+	Generator->BuildGrid();
 
 	UE_LOG(LogTemp, Warning, TEXT("RUNNING CONSTRUCTOR"));
 }
