@@ -5,10 +5,25 @@
 #include "WorldSeed/Public/WT_WorldChunk.h"
 #include "WorldSeed/Public/WT_Landmark_Base.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/DataTable.h"
+#include "UObject/ConstructorHelpers.h"
 
 AWT_GeneratorCore::AWT_GeneratorCore()
 {
+	static ConstructorHelpers::FObjectFinder<UDataTable> Table(TEXT("DataTable'/WorldSeed/DT_WorldSeed_TileData.DT_WorldSeed_TileData'"));
 
+
+	FAttachmentTransformRules Rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, false);
+	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(SceneRoot);
+
+	if (Table.Succeeded())
+	{
+		DataTable_Geometry = Table.Object;
+	}
+
+
+	InitialiseMeshComponents();
 }
 
 void AWT_GeneratorCore::BuildGrid()
@@ -22,25 +37,17 @@ void AWT_GeneratorCore::BuildGrid()
 	int GridY = GridScale.Y;
 	int GridZ = GridScale.Z;
 
-	int ChunkX = ChunkScale.X;
-	int ChunkY = ChunkScale.Y;
+	
 
 	Stored_GridScale = GridScale;
 	Stored_ChunkScale = ChunkScale;
 
 
-	if ((GridX != 0 && GridY != 0 && GridZ != 0) && (ChunkX != 0 && ChunkY != 0))
+	if ((GridX != 0 && GridY != 0 && GridZ != 0))
 	{
 
 
-		for (int x = 0; x < GridX / ChunkX; ++x)
-		{
-			for (int y = 0; y < GridY / ChunkY; ++y)
-			{
-				AddChunk(FVector(x,y,0));
-			}
-
-		}
+		
 
 
 
@@ -75,6 +82,10 @@ void AWT_GeneratorCore::BuildGrid()
 			}
 		}
 
+
+		//Seperates the landmarks by type, this is required to make sure that additive landmarks are no completly overwritten by subtractive ones.
+		//To-DO:- Look into other methods of seperating, perhaps using layers.
+
 		for (int i = 0; i < SubLandmarks.Num(); i++)
 		{
 			SubLandmarks[i]->ApplyLandmark(this);
@@ -87,16 +98,33 @@ void AWT_GeneratorCore::BuildGrid()
 
 		GenerateGeometryMap();
 
-		
-
-		for (int x = 0; x < GridX / ChunkX; ++x)
+		for (int z = 0; z < GridZ; ++z)
 		{
-			for (int y = 0; y < GridY / ChunkY; ++y)
+			for (int x = 0; x < GridY; ++x)
 			{
-				ChunkList[FVector(x, y, 0)]->GenerateChunk(this, ChunkScale, GridZ);
-			}
+				for (int y = 0; y < GridX; ++y)
+				{
+					FVector CurrentPos = FVector(x, y, z) + (GetActorLocation() / TileScale);
 
+					EWT_GeomID ID = GetTileData(FVector(x, y, z)).TileID;
+					if (ID != EWT_GeomID::ID_Empty && ID != EWT_GeomID::ID_Floor && IsEmptyAdjacent(FVector(x,y,z)))
+					{
+
+
+
+						UpdateTile(FVector(x, y, z), GetTileData(FVector(x, y, z)));
+
+						//Gen->GetTileData(CurrentPos)
+
+					}
+
+
+
+				}
+			}
 		}
+
+		
 
 	}
 
@@ -109,32 +137,53 @@ void AWT_GeneratorCore::BeginPlay()
 
 void AWT_GeneratorCore::OnConstruction(const FTransform& Transform)
 {
+	
+
+
 	BuildGrid();
+	
+	
 }
 void AWT_GeneratorCore::AddChunk(FVector Position)
 {
-	if (!ChunkList.Find(Position))
-	{
-		ChunkList.Add(Position, GetWorld()->SpawnActor<AWT_WorldChunk>(FVector(((Position.X * ChunkScale.X) * TileScale), ((Position.Y * ChunkScale.Y) * TileScale), 0.0f), FRotator(0, 0, 0)));
-	}
+	
 }
 
 
 
 void AWT_GeneratorCore::Reset()
 {
-	if (ChunkList.Num() > 0)
+	if (TileKeys.Num() > 0)
 	{
-		for (int x = 0; x < Stored_GridScale.X / Stored_ChunkScale.X; ++x)
-		{
-			for (int y = 0; y < Stored_GridScale.Y / Stored_ChunkScale.Y; ++y)
-			{
-				if (ChunkList.Find(FVector(x,y,0)))ChunkList[FVector(x, y, 0)]->Destroy();
-			}
 
+		for (int z = 0; z < GridScale.Z; ++z)
+		{
+			for (int x = 0; x < GridScale.Y; ++x)
+			{
+				for (int y = 0; y < GridScale.X; ++y)
+				{
+					FVector Position = FVector(x, y, z);
+
+
+					if (TileKeys.Find(Position) != nullptr)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Key Found, removing instance: [%f | %f | %f]"), Position.X, Position.Y, Position.Z);
+						if (TileKeys[Position].Comp != nullptr)
+						{
+							TileKeys[Position].Comp->RemoveInstance(TileKeys[Position].Index);
+						}
+
+						TileKeys[Position].Index = 0;
+						TileKeys[Position].Comp = nullptr;
+					}
+
+				}
+			}
 		}
-		ChunkList.Empty();
+
+
 	}
+
 	if (Grid_Data.Num() > 0)
 	{
 		Grid_Data.Empty();
@@ -293,4 +342,142 @@ bool AWT_GeneratorCore::IsEmptyAdjacent(FVector Pos)
 		if (!GetCellState(Pos + PosList[i])) return true;
 	}
 	return false;
+}
+
+
+
+
+
+
+//
+// TILE SETUP
+//
+
+
+void AWT_GeneratorCore::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FString CompName)
+{
+	FInstanceStack TempStack;
+
+	FTile_ComponentData TempData;
+
+	FName Top = FName(CompName + ".Top");
+	FName Mid = FName(CompName + ".Mid");
+	FName Bot = FName(CompName + ".Bot");
+
+	TempData.BottomComponent = NewObject<UInstancedStaticMeshComponent>(this, Bot);
+	TempData.BottomComponent->SetupAttachment(SceneRoot);
+	TempData.BottomComponent->RegisterComponent();
+	TempData.BottomComponent->SetStaticMesh(Asset.Bottom);
+
+	TempData.MiddleComponent = NewObject<UInstancedStaticMeshComponent>(this, Mid);
+	TempData.MiddleComponent->SetupAttachment(SceneRoot);
+	TempData.MiddleComponent->RegisterComponent();
+	TempData.MiddleComponent->SetStaticMesh(Asset.Middle);
+
+
+	TempData.TopComponent = NewObject<UInstancedStaticMeshComponent>(this, Top);
+	TempData.TopComponent->SetupAttachment(SceneRoot);
+	TempData.TopComponent->RegisterComponent();
+	TempData.TopComponent->SetStaticMesh(Asset.Top);
+
+	if (TempData.MiddleComponent != nullptr && TempData.TopComponent != nullptr && TempData.BottomComponent != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Components created successfully"));
+	}
+
+
+
+	ComponentList.Add(TileID, TempData);
+}
+
+
+
+
+
+void AWT_GeneratorCore::UpdateTile(FVector Position, FGridVisual Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Updating Tile"));
+
+	if (TileKeys.Find(Position) != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Key Found, removing instance: [%f | %f | %f]"), Position.X, Position.Y, Position.Z);
+		if (TileKeys[Position].Comp != nullptr)TileKeys[Position].Comp->RemoveInstance(TileKeys[Position].Index);
+
+		TileKeys[Position].Index = 0;
+		TileKeys[Position].Comp = nullptr;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No key found, Creating key: [%f | %f | %f]"), Position.X, Position.Y, Position.Z);
+		TileKeys.Add(Position);
+		TileKeys[Position].Comp = nullptr;
+		TileKeys[Position].Index = 0;
+	}
+
+	if (ComponentList.Find(Data.TileID))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Component List located: "));
+
+	}
+
+	switch (Data.StackID)
+	{
+	case EWT_StackID::ID_Bottom:
+		TileKeys[Position].Index = ComponentList[Data.TileID].BottomComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].BottomComponent;
+		break;
+	case EWT_StackID::ID_Mid:
+		TileKeys[Position].Index = ComponentList[Data.TileID].MiddleComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].MiddleComponent;
+		break;
+	case EWT_StackID::ID_Top:
+		TileKeys[Position].Index = ComponentList[Data.TileID].TopComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].TopComponent;
+		break;
+
+	}
+
+
+
+
+
+
+}
+
+
+
+void AWT_GeneratorCore::InitialiseMeshComponents()
+{
+	static const FString ContextString(TEXT(""));
+	FTile_TableRow* TableRow = DataTable_Geometry->FindRow<FTile_TableRow>(FName(TEXT("Placeholder")), ContextString, true);
+	if (TableRow)
+	{
+		InitialiseTileData(EWT_GeomID::ID_Raised, TableRow->Raised, "RaisedComponents");
+
+		InitialiseTileData(EWT_GeomID::ID_Wall, TableRow->Wall, "WallComponents");
+
+
+		InitialiseTileData(EWT_GeomID::ID_WallCorner, TableRow->WallCorner, "WallCornerComponents");
+
+
+
+		InitialiseTileData(EWT_GeomID::ID_InnerCorner, TableRow->InnerCorner, "InnerCornerComponents");
+		InitialiseTileData(EWT_GeomID::ID_OuterCorner, TableRow->OuterCorner, "OuterCornerComponents");
+
+
+
+		InitialiseTileData(EWT_GeomID::ID_ThinCorner, TableRow->ThinCorner, "ThinCornerComponents");
+		InitialiseTileData(EWT_GeomID::ID_ThinWall, TableRow->ThinWall, "ThinWallComponents");
+		InitialiseTileData(EWT_GeomID::ID_ThinWallEnd, TableRow->ThinWallEnd, "ThinWallEndComponents");
+
+		InitialiseTileData(EWT_GeomID::ID_TConnector, TableRow->TConnector, "TConnectorComponents");
+		InitialiseTileData(EWT_GeomID::ID_XConnector, TableRow->XConnector, "XConnectorComponents");
+		InitialiseTileData(EWT_GeomID::ID_Block, TableRow->Block, "BlockComponents");
+
+
+
+
+
+
+	}
 }

@@ -119,7 +119,7 @@ struct FTileKey
 {
 	GENERATED_BODY()
 public:
-		int Index;
+		int32 Index;
 	class UInstancedStaticMeshComponent* Comp;
 	
 };
@@ -161,7 +161,7 @@ protected:
 
 
 	
-	TMap<EWT_GeomID, FTile_ComponentData> ComponentList;
+	
 
 
 	UPROPERTY(EditAnywhere)
@@ -171,7 +171,7 @@ protected:
 
 
 
-	
+	TMap<EWT_GeomID, FTile_ComponentData> ComponentList;
 	TMap<FVector, FTileKey> TileKeys;
 
 	void UpdateTile(FVector Position,  FGridVisual Data);

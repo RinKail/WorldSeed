@@ -25,7 +25,11 @@ class WORLDSEED_API AWT_GeneratorCore : public AActor
 
 
 		
+public: 
 
+	class USceneComponent* SceneRoot;
+
+	TMap<EWT_GeomID, FTile_ComponentData> ComponentList;
 
 public: 
 
@@ -75,7 +79,17 @@ public:
 
 protected:
 
+	void InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FString CompName);
 
+
+	void UpdateTile(FVector Position, FGridVisual Data);
+
+
+	void InitialiseMeshComponents();
+
+
+
+protected:
 	void Reset();
 
 	void GenerateGeometryMap();
@@ -91,7 +105,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Grid Setup")
 	int FillHeight;
 
+	UPROPERTY(EditAnywhere)
+	bool bClear;
 
+	UPROPERTY()
+		class UDataTable* DataTable_Geometry;
 
 	UPROPERTY()
 	TMap<FVector, bool> Grid_Data;
@@ -100,6 +118,10 @@ protected:
 	UPROPERTY()
 	TMap<FVector, FGridVisual> Grid_Visual;
 
+
+
+	
+	TMap<FVector, FTileKey> TileKeys;
 
 	UPROPERTY()
 	TArray<class AWT_Landmark_Base*> SubLandmarks;

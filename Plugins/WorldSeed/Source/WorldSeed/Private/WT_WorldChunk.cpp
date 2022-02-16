@@ -92,11 +92,11 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale,
 	GridSize = FVector(ChunkScale.X, ChunkScale.Y, WorldHeight);
 
 
-	for (int z = 0; z < WorldHeight; ++z)
+	for (int z = 0; z < WorldHeight; z++)
 	{
-		for (int x = 0; x < ChunkScale.X; ++x)
+		for (int x = 0; x < ChunkScale.X; x++)
 		{
-			for (int y = 0; y < ChunkScale.Y; ++y)
+			for (int y = 0; y < ChunkScale.Y; y++)
 			{
 				FVector CurrentPos = FVector(x, y, z) + (GetActorLocation() / TileScale);
 			
