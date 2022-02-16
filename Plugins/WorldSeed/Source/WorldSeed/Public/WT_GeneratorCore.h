@@ -35,6 +35,7 @@ public:
 
 	void BuildGrid();
 
+	void RefreshContainers();
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
@@ -108,7 +109,8 @@ protected:
 
 
 	UPROPERTY(EditAnywhere)
-	TMap<FVector, class AWT_WorldChunk*> ChunkList;
+	TArray<class AWT_WorldChunk*> ChunkList;
+	TArray<FVector> ChunkPositions;
 
 
 	bool IsEdge(FVector Pos);

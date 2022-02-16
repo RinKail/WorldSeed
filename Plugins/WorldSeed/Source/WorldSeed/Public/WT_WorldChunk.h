@@ -166,9 +166,11 @@ protected:
 
 	UPROPERTY()
 	TMap<FVector,  FGridVisual> StoredData;
-	UPROPERTY(EditAnywhere)
+	
 	FVector GridSize;
 
+	UPROPERTY(EditAnywhere)
+	FVector2D Size;
 
 
 	

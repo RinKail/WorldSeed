@@ -28,20 +28,13 @@ void AWT_GeneratorCore::BuildGrid()
 	Stored_GridScale = GridScale;
 	Stored_ChunkScale = ChunkScale;
 
+	RefreshContainers();
 
 	if ((GridX != 0 && GridY != 0 && GridZ != 0) && (ChunkX != 0 && ChunkY != 0))
 	{
 
-
-		for (int x = 0; x < GridX / ChunkX; ++x)
-		{
-			for (int y = 0; y < GridY / ChunkY; ++y)
-			{
-				AddChunk(FVector(x,y,0));
-			}
-
-		}
-
+		
+		
 
 
 		for (int z = 0; z < GridZ; ++z)
@@ -89,16 +82,57 @@ void AWT_GeneratorCore::BuildGrid()
 
 		
 
-		for (int x = 0; x < GridX / ChunkX; ++x)
+		for (int i = 0; i < ChunkList.Num(); i++)
 		{
-			for (int y = 0; y < GridY / ChunkY; ++y)
-			{
-				ChunkList[FVector(x, y, 0)]->GenerateChunk(this, ChunkScale, GridZ);
-			}
+			ChunkList[i]->GenerateChunk(this, ChunkScale, GridZ);
 
 		}
 
 	}
+
+}
+
+void AWT_GeneratorCore::RefreshContainers()
+{
+
+	ChunkList.Empty();
+	AddLandmarks.Empty();
+	SubLandmarks.Empty();
+
+	TArray<AActor*> ChunkActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWT_WorldChunk::StaticClass(), ChunkActors);
+	if (ChunkActors.Num() > 0 )
+	{
+		for (int i = 0; i < ChunkActors.Num(); i++)
+		{
+			ChunkList.Add(Cast<AWT_WorldChunk>(ChunkActors[i]));
+			ChunkPositions.Add(ChunkActors[i]->GetActorLocation());
+		}
+		
+	}
+	TArray<AActor*> LandmarksActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWT_Landmark_Base::StaticClass(), LandmarksActors);
+	if (LandmarksActors.Num() > 0)
+	{
+		for (int i = 0; i < LandmarksActors.Num(); i++)
+		{
+			AWT_Landmark_Base* Temp = Cast<AWT_Landmark_Base>(ChunkActors[i]);
+			if (Temp->IsLandmarkAdditive())
+			{
+				AddLandmarks.Add(Temp);
+			}
+			else
+			{
+				SubLandmarks.Add(Temp);
+			}
+
+			
+		}
+
+	}
+
+
+
 
 }
 
@@ -113,28 +147,27 @@ void AWT_GeneratorCore::OnConstruction(const FTransform& Transform)
 }
 void AWT_GeneratorCore::AddChunk(FVector Position)
 {
-	if (!ChunkList.Find(Position))
-	{
-		ChunkList.Add(Position, GetWorld()->SpawnActor<AWT_WorldChunk>(FVector(((Position.X * ChunkScale.X) * TileScale), ((Position.Y * ChunkScale.Y) * TileScale), 0.0f), FRotator(0, 0, 0)));
-	}
+	
 }
 
 
 
 void AWT_GeneratorCore::Reset()
 {
-	if (ChunkList.Num() > 0)
+	ChunkPositions.Empty();
+	FActorSpawnParameters SpawnParams;
+	for (int i = 0; i < ChunkList.Num(); i++)
 	{
-		for (int x = 0; x < Stored_GridScale.X / Stored_ChunkScale.X; ++x)
-		{
-			for (int y = 0; y < Stored_GridScale.Y / Stored_ChunkScale.Y; ++y)
-			{
-				if (ChunkList.Find(FVector(x,y,0)))ChunkList[FVector(x, y, 0)]->Destroy();
-			}
+		FVector Pos = ChunkList[i]->GetActorLocation();
+		
+		ChunkList[i]->Destroy();
 
-		}
-		ChunkList.Empty();
+		AWT_WorldChunk* Temp = GetWorld()->SpawnActor<AWT_WorldChunk>();
+		Temp->SetActorLocation(ChunkPositions[i]);
+
 	}
+
+
 	if (Grid_Data.Num() > 0)
 	{
 		Grid_Data.Empty();
