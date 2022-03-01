@@ -149,7 +149,7 @@ void AWT_WorldChunk::OnConstruction(const FTransform& Transform)
 {
 	//InitialiseChunk();
 
-	Generator->BuildGrid();
+	//Generator->BuildGrid();
 
 	UE_LOG(LogTemp, Warning, TEXT("RUNNING CONSTRUCTOR"));
 }
