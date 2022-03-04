@@ -16,6 +16,35 @@
  * 
  */
 
+USTRUCT(BlueprintType)
+struct FTileSolverData
+{
+	GENERATED_BODY()
+
+
+
+public:
+
+
+	FTileSolverData()
+	{
+		
+		StackID = EWT_StackID::ID_Bottom;
+		
+		Rot = 0;
+	}
+	UPROPERTY(EditAnywhere)
+		float Rot;
+	UPROPERTY(EditAnywhere)
+		EWT_StackID StackID;
+	
+
+
+};
+
+
+
+
 
 UCLASS(hidecategories = (Rendering, Replication, Collision, Input, Actor, LOD, Cooking))
 class WORLDSEED_API AWT_GeneratorCore : public AActor
@@ -57,6 +86,10 @@ public:
 		
 	}
 
+	bool IsValidCoordinate(FVector Pos)
+	{
+		return (Pos.X > 0 && Pos.Y > 0 && Pos.Z > 0) && (Pos.X < GridScale.X&& Pos.Y < GridScale.Y&& Pos.Z < GridScale.Z);
+	}
 
 	FGridVisual GetTileData(FVector Pos)
 	{
@@ -73,6 +106,16 @@ public:
 	
 	bool IsEmptyAdjacent(FVector Pos);
 
+
+	FVector GetAdjacentEmpty_Directional(FVector Position);
+
+	FVector GetAdjacent_Directional(FVector2D Position, EWT_GeomID GeomType);
+
+
+
+	void AssignVisual_Edge(FVector Position);
+	void AssignVisual_Corner();
+
 protected:
 
 
@@ -80,6 +123,10 @@ protected:
 
 	void GenerateGeometryMap();
 	void GenerateFloorMap();
+
+
+
+
 
 
 	void AddChunk(FVector Position);
@@ -119,6 +166,13 @@ protected:
 	FVector Stored_GridScale;
 	UPROPERTY();
 	FVector2D Stored_ChunkScale;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TileSolver");
+	TMap<FVector, FTileSolverData> TileSolver_EdgeTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TileSolver");
+	TMap<FVector, FTileSolverData> TileSolver_CornerTable;
 
 
 };
