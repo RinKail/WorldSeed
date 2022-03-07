@@ -384,15 +384,193 @@ FVector AWT_GeneratorCore::GetAdjacentEmpty_Directional(FVector Position)
 	return ReturnValue;
 }
 
+FVector AWT_GeneratorCore::GetAdjacentAir_Directional(FVector Position)
+{
+	FVector ReturnValue = FVector(0, 0, 0);
+	/*
+	* if (IsTileType(Position + FVector(0, 0, 1), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(0, 0, 1), EWT_SpaceID::ID_Floor))
+	{
+		ReturnValue.Z = 1;
+		if (IsTileType(Position + FVector(0, 0, -1), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(0, 0, 1), EWT_SpaceID::ID_Floor))
+		{
+			ReturnValue.Z = 2;
+		}
+	}
+	else if (IsTileType(Position + FVector(0, 0, -1), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(0, 0, -1), EWT_SpaceID::ID_Floor))
+	{
+		ReturnValue.Z = -1;
+		if (IsTileType(Position + FVector(0, 0, 1), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(0, 0, 1), EWT_SpaceID::ID_Floor))
+		{
+			ReturnValue.Z = 2;
+		}
+	}
+	if (IsTileType(Position + FVector(0, 1, 0), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(0, 1, 0), EWT_SpaceID::ID_Floor))
+	{
+		ReturnValue.Y = 1;
+		if (IsTileType(Position + FVector(0, -1, 0), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(0, -1, 0), EWT_SpaceID::ID_Floor))
+		{
+			ReturnValue.Y = 2;
+		}
+	}
+	else if (IsTileType(Position + FVector(0, -1, 0), EWT_SpaceID::ID_Empty) || IsTileType(FVector(0, -1, 0), EWT_SpaceID::ID_Floor))
+	{
+		ReturnValue.Y = -1;
+		if (IsTileType(Position + FVector(0, 1, 0), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(0, 1, 0), EWT_SpaceID::ID_Floor))
+		{
+			ReturnValue.Y = 2;
+		}
+	}
+	if (IsTileType(Position + FVector(1, 0, 0), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(1, 0, 0), EWT_SpaceID::ID_Floor))
+	{
+		ReturnValue.X = 1;
+		if (IsTileType(Position + FVector(-1, 0, 0), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(-1, 0, 0), EWT_SpaceID::ID_Floor))
+		{
+			ReturnValue.X = 2;
+		}
+	}
+	else if (IsTileType(Position + FVector(-1, 0, 0), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(-1, 0, 0), EWT_SpaceID::ID_Floor))
+	{
+		ReturnValue.X = -1;
+		if (IsTileType(Position + FVector(1, 0, 0), EWT_SpaceID::ID_Empty) || IsTileType(Position + FVector(1, 0, 0), EWT_SpaceID::ID_Floor))
+		{
+			ReturnValue.X = 2;
+		}
+	}
+	*/
+
+
+	if (IsTileType(Position + FVector(0, 0, 1), EWT_SpaceID::ID_Raised))
+	{
+		ReturnValue.Z = 1;
+		if (IsTileType(Position + FVector(0, 0, -1), EWT_SpaceID::ID_Raised))
+		{
+			ReturnValue.Z = 2;
+		}
+	}
+	else if (IsTileType(Position + FVector(0, 0, -1), EWT_SpaceID::ID_Raised) )
+	{
+		ReturnValue.Z = -1;
+		if (IsTileType(Position + FVector(0, 0, 1), EWT_SpaceID::ID_Raised) )
+		{
+			ReturnValue.Z = 2;
+		}
+	}
+	if (IsTileType(Position + FVector(0, 1, 0), EWT_SpaceID::ID_Raised))
+	{
+		ReturnValue.Y = 1;
+		if (IsTileType(Position + FVector(0, -1, 0), EWT_SpaceID::ID_Raised))
+		{
+			ReturnValue.Y = 2;
+		}
+	}
+	else if (IsTileType(Position + FVector(0, -1, 0), EWT_SpaceID::ID_Raised))
+	{
+		ReturnValue.Y = -1;
+		if (IsTileType(Position + FVector(0, 1, 0), EWT_SpaceID::ID_Raised))
+		{
+			ReturnValue.Y = 2;
+		}
+	}
+	if (IsTileType(Position + FVector(1, 0, 0), EWT_SpaceID::ID_Raised))
+	{
+		ReturnValue.X = 1;
+		if (IsTileType(Position + FVector(-1, 0, 0), EWT_SpaceID::ID_Raised))
+		{
+			ReturnValue.X = 2;
+		}
+	}
+	else if (IsTileType(Position + FVector(-1, 0, 0), EWT_SpaceID::ID_Raised) )
+	{
+		ReturnValue.X = -1;
+		if (IsTileType(Position + FVector(1, 0, 0), EWT_SpaceID::ID_Raised) )
+		{
+			ReturnValue.X = 2;
+		}
+	}
+
+
+	return ReturnValue;
+}
+
+FVector AWT_GeneratorCore::GetEdgeAdjacent_Directional(FVector Position)
+{
+	FVector ReturnValue = FVector(0, 0, 0);
+	if (IsValidCoordinate(Position))
+	{
+		if (IsValidCoordinate(Position + FVector(0, 0, 1)) && Grid_Structure[Position + FVector(0, 0, 1)] == EWT_SpaceID::ID_Edge)
+		{
+			ReturnValue.Z = 1;
+			if (IsValidCoordinate(Position + FVector(0, 0, -1)) && Grid_Structure[Position + FVector(0, 0, -1)] == EWT_SpaceID::ID_Edge)
+			{
+				ReturnValue.Z = 2;
+			}
+		}
+		else if (IsValidCoordinate(Position + FVector(0, 0, -1)) && Grid_Structure[Position + FVector(0, 0, -1)] == EWT_SpaceID::ID_Edge)
+		{
+			ReturnValue.Z = -1;
+			if (IsValidCoordinate(Position + FVector(0, 0, 1)) && Grid_Structure[Position + FVector(0, 0, 1)] == EWT_SpaceID::ID_Edge)
+			{
+				ReturnValue.Z = 2;
+			}
+		}
+
+
+	}
+	if (IsValidCoordinate(Position))
+	{
+		if (IsValidCoordinate(Position + FVector(0, 1, 0)) && Grid_Structure[Position + FVector(0, 1, 0)] == EWT_SpaceID::ID_Edge)
+		{
+			ReturnValue.Y = 1;
+			if (IsValidCoordinate(Position + FVector(0, -1, 0)) && Grid_Structure[Position + FVector(0, -1, 0)] == EWT_SpaceID::ID_Edge)
+			{
+				ReturnValue.Y = 2;
+			}
+		}
+		else if (IsValidCoordinate(Position + FVector(0, -1, 0)) && Grid_Structure[Position + FVector(0, -1, 0)] == EWT_SpaceID::ID_Edge)
+		{
+			ReturnValue.Y = -1;
+			if (IsValidCoordinate(Position + FVector(0, 1, 0)) && Grid_Structure[Position + FVector(0, 1, 0)] == EWT_SpaceID::ID_Edge)
+			{
+				ReturnValue.Y = 2;
+			}
+		}
+
+
+	}
+	if (IsValidCoordinate(Position))
+	{
+		if (IsValidCoordinate(Position + FVector(1, 0, 0)) && Grid_Structure[Position + FVector(1, 0, 0)] == EWT_SpaceID::ID_Edge)
+		{
+			ReturnValue.X = 1;
+			if (IsValidCoordinate(Position + FVector(-1, 0, 0)) && Grid_Structure[Position + FVector(-1, 0, 0)] == EWT_SpaceID::ID_Edge)
+			{
+				ReturnValue.X = 2;
+			}
+		}
+		else if (IsValidCoordinate(Position + FVector(-1, 0, 0)) && Grid_Structure[Position + FVector(-1, 0, 0)] == EWT_SpaceID::ID_Edge)
+		{
+			ReturnValue.X = -1;
+			if (IsValidCoordinate(Position + FVector(1, 0, 0)) && Grid_Structure[Position + FVector(1, 0, 0)] == EWT_SpaceID::ID_Edge)
+			{
+				ReturnValue.X = 2;
+			}
+		}
+
+
+	}
+
+	return ReturnValue;
+}
+
 void AWT_GeneratorCore::AssignVisual_Edge(FVector Position)
 {
 
-	FVector EmptyAdjacent = GetAdjacentEmpty_Directional(Position);
+	FVector EmptyAdjacent = GetAdjacentAir_Directional(Position);
 
 	if (TileSolver_EdgeTable.Find(EmptyAdjacent))
 	{
 		Grid_Visual[Position].Rot = TileSolver_EdgeTable[EmptyAdjacent].Rot;
-		Grid_Visual[Position].StackID = TileSolver_EdgeTable[EmptyAdjacent].StackID;
+		
 	}
 
 

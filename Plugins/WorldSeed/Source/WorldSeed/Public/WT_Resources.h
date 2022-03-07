@@ -51,10 +51,10 @@ enum class EWT_GeomID : uint8
 UENUM()
 enum class EWT_StackID : uint8
 {
-	ID_Bottom		 UMETA(DisplayName = "Empty"),
-	ID_Mid		 UMETA(DisplayName = "Floor"),
-	ID_Top			 UMETA(DisplayName = "Wall"),
-	ID_Single			 UMETA(DisplayName = "Wall")
+	ID_Bottom		 UMETA(DisplayName = "Bottom"),
+	ID_Mid		 UMETA(DisplayName = "Mid"),
+	ID_Top			 UMETA(DisplayName = "Top"),
+	ID_Single			 UMETA(DisplayName = "Single")
 		
 
 };

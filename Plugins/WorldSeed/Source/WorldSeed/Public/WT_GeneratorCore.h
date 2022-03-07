@@ -109,7 +109,16 @@ public:
 
 	FVector GetAdjacentEmpty_Directional(FVector Position);
 
-	FVector GetAdjacent_Directional(FVector2D Position, EWT_GeomID GeomType);
+	FVector GetAdjacentAir_Directional(FVector Position);
+
+	FVector GetAdjacent_Directional(FVector Position, EWT_GeomID GeomType);
+
+	FVector GetEdgeAdjacent_Directional(FVector Position);
+
+	bool IsTileType(FVector Position, EWT_SpaceID ID)
+	{
+		return (IsValidCoordinate(Position) && Grid_Structure[Position] == ID);
+	}
 
 
 

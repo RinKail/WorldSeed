@@ -254,15 +254,15 @@ void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 	switch (Data.StackID)
 	{
 	case EWT_StackID::ID_Bottom:
-		TileKeys[Position].Index = ComponentList[Data.TileID].BottomComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1,1,1)));
+		TileKeys[Position].Index = ComponentList[Data.TileID].BottomComponent->AddInstance(FTransform(FRotator(0, Data.Rot, 0), Position * TileScale, FVector(1,1,1)));
 		TileKeys[Position].Comp = ComponentList[Data.TileID].BottomComponent;
 		break;
 	case EWT_StackID::ID_Mid:
-		TileKeys[Position].Index = ComponentList[Data.TileID].MiddleComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Index = ComponentList[Data.TileID].MiddleComponent->AddInstance(FTransform(FRotator(0, Data.Rot, 0), Position * TileScale, FVector(1, 1, 1)));
 		TileKeys[Position].Comp = ComponentList[Data.TileID].MiddleComponent;
 		break;
 	case EWT_StackID::ID_Top:
-		TileKeys[Position].Index = 	ComponentList[Data.TileID].TopComponent->AddInstance(FTransform(FRotator(0, 0, Data.Rot), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Index = 	ComponentList[Data.TileID].TopComponent->AddInstance(FTransform(FRotator(0, Data.Rot, 0), Position * TileScale, FVector(1, 1, 1)));
 		TileKeys[Position].Comp = ComponentList[Data.TileID].TopComponent;
 		break;
 
