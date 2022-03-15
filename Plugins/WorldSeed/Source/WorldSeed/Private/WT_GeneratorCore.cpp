@@ -230,8 +230,11 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 					Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Floor;
 					break;
 				case EWT_SpaceID::ID_Edge:
-					Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Wall;
-				
+					
+					
+
+
+
 					AssignVisual_Edge(FVector(x,y,z));
 
 
@@ -514,10 +517,6 @@ FVector AWT_GeneratorCore::GetEdgeAdjacent_Directional(FVector Position)
 			}
 		}
 
-
-	}
-	if (IsValidCoordinate(Position))
-	{
 		if (IsValidCoordinate(Position + FVector(0, 1, 0)) && Grid_Structure[Position + FVector(0, 1, 0)] == EWT_SpaceID::ID_Edge)
 		{
 			ReturnValue.Y = 1;
@@ -536,9 +535,6 @@ FVector AWT_GeneratorCore::GetEdgeAdjacent_Directional(FVector Position)
 		}
 
 
-	}
-	if (IsValidCoordinate(Position))
-	{
 		if (IsValidCoordinate(Position + FVector(1, 0, 0)) && Grid_Structure[Position + FVector(1, 0, 0)] == EWT_SpaceID::ID_Edge)
 		{
 			ReturnValue.X = 1;
@@ -558,20 +554,117 @@ FVector AWT_GeneratorCore::GetEdgeAdjacent_Directional(FVector Position)
 
 
 	}
+	
 
 	return ReturnValue;
+}
+
+bool AWT_GeneratorCore::IsCorner(FVector Pos)
+{
+	if (IsValidCoordinate(Pos))
+	{
+		if (IsTileType(Pos + FVector(0, 1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(1, 0, 0), EWT_SpaceID::ID_Edge))
+		{
+			if (IsTileType(Pos + FVector(1, 1, 0), EWT_SpaceID::ID_Floor))
+			{
+
+			}
+			else if (IsTileType(Pos + FVector(-1, -1, 0), EWT_SpaceID::ID_Floor))
+			{
+
+			}
+		}
+
+
+	}
+
+
+
+	return false;
 }
 
 void AWT_GeneratorCore::AssignVisual_Edge(FVector Position)
 {
 
-	FVector EmptyAdjacent = GetAdjacentAir_Directional(Position);
+	FVector Temp = GetAdjacentAir_Directional(Position);
+	FVector2D EmptyAdjacent = FVector2D(Temp.X, Temp.Y);
 
 	if (TileSolver_EdgeTable.Find(EmptyAdjacent))
 	{
 		Grid_Visual[Position].Rot = TileSolver_EdgeTable[EmptyAdjacent].Rot;
+		Grid_Visual[Position].TileID = EWT_GeomID::ID_Wall;
 		
+	}
+	else
+	{
+		AssignVisual_Corner(Position);
 	}
 
 
+}
+
+void AWT_GeneratorCore::AssignVisual_Corner(FVector Pos)
+{
+	
+	if (IsValidCoordinate(Pos))
+	{
+		bool bInnerCorner = true;
+		FVector Temp = GetEdgeAdjacent_Directional(Pos);
+
+		FVector2D Adjacent = FVector2D(Temp.X, Temp.Y);
+
+		if (IsTileType(Pos + FVector(0, 1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(1, 0, 0), EWT_SpaceID::ID_Edge))
+		{
+			if (IsFloor(Pos + FVector(1, 1, 0)))
+			{
+				bInnerCorner = false;
+			}
+			
+		}
+		else if (IsTileType(Pos + FVector(0, 1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(-1, 0, 0), EWT_SpaceID::ID_Edge))
+		{
+			if (IsFloor(Pos + FVector(-1, 1, 0)))
+			{
+				bInnerCorner = false;
+			}
+			
+		}
+		else if (IsTileType(Pos + FVector(0, -1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(1, 0, 0), EWT_SpaceID::ID_Edge))
+		{
+			if (IsFloor(Pos + FVector(1, -1, 0)))
+			{
+				bInnerCorner = false;
+			}
+			
+		}
+		else if (IsTileType(Pos + FVector(0, -1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(-1, 0, 0), EWT_SpaceID::ID_Edge))
+		{
+			if (IsFloor(Pos + FVector(-1, -1, 0)))
+			{
+				bInnerCorner = false;
+
+			}
+			
+		}
+
+
+		if (bInnerCorner)
+		{
+			if (TileSolver_OuterCornerTable.Find(Adjacent))
+			{
+				Grid_Visual[Pos].Rot = TileSolver_OuterCornerTable[Adjacent].Rot;
+				Grid_Visual[Pos].TileID = EWT_GeomID::ID_OuterCorner;
+			}
+		}
+		else
+		{
+			if (TileSolver_InnerCornerTable.Find(Adjacent))
+			{
+				Grid_Visual[Pos].Rot = TileSolver_InnerCornerTable[Adjacent].Rot;
+				Grid_Visual[Pos].TileID = EWT_GeomID::ID_InnerCorner;;
+
+			}
+		}
+		
+	}
 }

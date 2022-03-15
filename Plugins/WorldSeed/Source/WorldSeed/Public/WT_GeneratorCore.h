@@ -75,7 +75,7 @@ public:
 		{
 			return Grid_Data[Pos];
 		}
-		else return false;
+		else return true;
 	}
 	void SetCellState(FVector Pos, bool bNewState)
 	{
@@ -120,10 +120,12 @@ public:
 		return (IsValidCoordinate(Position) && Grid_Structure[Position] == ID);
 	}
 
+	bool IsCorner(FVector Pos);
+
 
 
 	void AssignVisual_Edge(FVector Position);
-	void AssignVisual_Corner();
+	void AssignVisual_Corner(FVector Pos);
 
 protected:
 
@@ -178,10 +180,12 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TileSolver");
-	TMap<FVector, FTileSolverData> TileSolver_EdgeTable;
+	TMap<FVector2D, FTileSolverData> TileSolver_EdgeTable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TileSolver");
-	TMap<FVector, FTileSolverData> TileSolver_CornerTable;
+	TMap<FVector2D, FTileSolverData> TileSolver_InnerCornerTable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TileSolver");
+	TMap<FVector2D, FTileSolverData> TileSolver_OuterCornerTable;
 
 
 };
