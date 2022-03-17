@@ -8,7 +8,7 @@
 
 AWT_GeneratorCore::AWT_GeneratorCore()
 {
-
+	LoadTileSolverTable();
 }
 
 void AWT_GeneratorCore::BuildGrid()
@@ -72,6 +72,19 @@ void AWT_GeneratorCore::BuildGrid()
 				}
 				
 
+			}
+		}
+
+		for (int i = 0; i < LandmarkChannels.Num(); i++)
+		{
+			for (int x = 0; x < LandmarkChannels[i].AddLandmarks.Num(); x++)
+			{
+				LandmarkChannels[i].AddLandmarks[x]->ApplyLandmark(this);
+			}
+
+			for (int y = 0; y < LandmarkChannels[i].SubLandmarks.Num(); y++)
+			{
+				LandmarkChannels[i].SubLandmarks[y]->ApplyLandmark(this);
 			}
 		}
 
@@ -231,11 +244,10 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 					break;
 				case EWT_SpaceID::ID_Edge:
 					
-					
 
-
-
+					AssignLayer_Edge(FVector(x, y, z));
 					AssignVisual_Edge(FVector(x,y,z));
+				
 
 
 
@@ -249,6 +261,25 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 
 
 
+}
+
+void AWT_GeneratorCore::LoadTileSolverTable()
+{
+
+	TileSolver_EdgeTable.Add(FVector2D(1,0), FTileSolverData(90));
+	TileSolver_EdgeTable.Add(FVector2D(-1, 0), FTileSolverData(-90));
+	TileSolver_EdgeTable.Add(FVector2D(0, 1), FTileSolverData(180));
+	TileSolver_EdgeTable.Add(FVector2D(0, -1), FTileSolverData(0));
+
+	TileSolver_OuterCornerTable.Add(FVector2D(1,1), FTileSolverData(-90));
+	TileSolver_OuterCornerTable.Add(FVector2D(-1, -1), FTileSolverData(90));
+	TileSolver_OuterCornerTable.Add(FVector2D(1, -1), FTileSolverData(180));
+	TileSolver_OuterCornerTable.Add(FVector2D(-1, 1), FTileSolverData(0));
+
+	TileSolver_InnerCornerTable .Add(FVector2D(1, 1), FTileSolverData(90));
+	TileSolver_InnerCornerTable.Add(FVector2D(-1, -1), FTileSolverData(-90));
+	TileSolver_InnerCornerTable.Add(FVector2D(1, -1), FTileSolverData(0));
+	TileSolver_InnerCornerTable.Add(FVector2D(-1, 1), FTileSolverData(180));
 }
 
 bool AWT_GeneratorCore::IsEdge(FVector Pos)
@@ -311,6 +342,37 @@ bool AWT_GeneratorCore::IsEmptyAdjacent(FVector Pos)
 		if (!GetCellState(Pos + PosList[i])) return true;
 	}
 	return false;
+}
+
+bool AWT_GeneratorCore::IsFloorAdjacent(FVector Pos)
+{
+	TArray<FVector> PosList;
+	PosList.Add(FVector(1, -1, 0));
+	PosList.Add(FVector(-1, 1, 0));
+	PosList.Add(FVector(-1, -1, 0));
+	PosList.Add(FVector(1, 1, 0));
+
+	PosList.Add(FVector(0, -1, 0));
+	PosList.Add(FVector(-1, 0, 0));
+	PosList.Add(FVector(0, 1, 0));
+	PosList.Add(FVector(1, 0, 0));
+
+	PosList.Add(FVector(0, 0, 1));
+	PosList.Add(FVector(0, 0, -1));
+
+	for (int i = 0; i < PosList.Num(); i++)
+	{
+		if (GetStructureData(PosList[i]) == EWT_SpaceID::ID_Floor) return true;
+	}
+	return false;
+
+	
+}
+
+bool AWT_GeneratorCore::IsWalkable(FVector Pos)
+{
+	EWT_SpaceID Space = GetStructureData(Pos);
+	return (Space == EWT_SpaceID::ID_Empty || Space == EWT_SpaceID::ID_Floor);
 }
 
 FVector AWT_GeneratorCore::GetAdjacentEmpty_Directional(FVector Position)
@@ -608,40 +670,40 @@ void AWT_GeneratorCore::AssignVisual_Corner(FVector Pos)
 	
 	if (IsValidCoordinate(Pos))
 	{
-		bool bInnerCorner = true;
+		bool bInnerCorner = false;
 		FVector Temp = GetEdgeAdjacent_Directional(Pos);
 
 		FVector2D Adjacent = FVector2D(Temp.X, Temp.Y);
 
 		if (IsTileType(Pos + FVector(0, 1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(1, 0, 0), EWT_SpaceID::ID_Edge))
 		{
-			if (IsFloor(Pos + FVector(1, 1, 0)))
+			if (IsWalkable(Pos + FVector(1, 1, 0)))
 			{
-				bInnerCorner = false;
+				bInnerCorner = true;
 			}
 			
 		}
 		else if (IsTileType(Pos + FVector(0, 1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(-1, 0, 0), EWT_SpaceID::ID_Edge))
 		{
-			if (IsFloor(Pos + FVector(-1, 1, 0)))
+			if (IsWalkable(Pos + FVector(-1, 1, 0)))
 			{
-				bInnerCorner = false;
+				bInnerCorner = true;
 			}
 			
 		}
 		else if (IsTileType(Pos + FVector(0, -1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(1, 0, 0), EWT_SpaceID::ID_Edge))
 		{
-			if (IsFloor(Pos + FVector(1, -1, 0)))
+			if (IsWalkable(Pos + FVector(1, -1, 0)))
 			{
-				bInnerCorner = false;
+				bInnerCorner = true;
 			}
 			
 		}
 		else if (IsTileType(Pos + FVector(0, -1, 0), EWT_SpaceID::ID_Edge) && IsTileType(Pos + FVector(-1, 0, 0), EWT_SpaceID::ID_Edge))
 		{
-			if (IsFloor(Pos + FVector(-1, -1, 0)))
+			if (IsWalkable(Pos + FVector(-1, -1, 0)))
 			{
-				bInnerCorner = false;
+				bInnerCorner = true;
 
 			}
 			
@@ -654,6 +716,12 @@ void AWT_GeneratorCore::AssignVisual_Corner(FVector Pos)
 			{
 				Grid_Visual[Pos].Rot = TileSolver_OuterCornerTable[Adjacent].Rot;
 				Grid_Visual[Pos].TileID = EWT_GeomID::ID_OuterCorner;
+
+
+				EWT_SpaceID TopID = GetStructureData(Pos + FVector(0, 0, 1));
+				EWT_StackID StackID = Grid_Visual[Pos].StackID;
+
+				if (TopID == EWT_SpaceID::ID_Edge && StackID == EWT_StackID::ID_Mid) 	Grid_Visual[Pos].StackID = EWT_StackID::ID_Top;
 			}
 		}
 		else
@@ -661,10 +729,48 @@ void AWT_GeneratorCore::AssignVisual_Corner(FVector Pos)
 			if (TileSolver_InnerCornerTable.Find(Adjacent))
 			{
 				Grid_Visual[Pos].Rot = TileSolver_InnerCornerTable[Adjacent].Rot;
-				Grid_Visual[Pos].TileID = EWT_GeomID::ID_InnerCorner;;
+				Grid_Visual[Pos].TileID = EWT_GeomID::ID_InnerCorner;
+
+				EWT_SpaceID TopID = GetStructureData(Pos + FVector(0, 0, 1));
+				EWT_StackID StackID = Grid_Visual[Pos].StackID;
+
+				if (TopID == EWT_SpaceID::ID_Edge && StackID == EWT_StackID::ID_Mid) 	Grid_Visual[Pos].StackID = EWT_StackID::ID_Top;
 
 			}
 		}
+
+		
 		
 	}
+}
+
+
+
+void AWT_GeneratorCore::AssignLayer_Edge(FVector Pos)
+{
+	EWT_SpaceID TopID = GetStructureData(Pos + FVector(0, 0, 1));
+	EWT_SpaceID BotID = GetStructureData(Pos + FVector(0, 0, -1));
+	bool bFloorAdjacent = IsFloorAdjacent(Pos);
+	bool bEmptyAdjacent = IsEmptyAdjacent(Pos);
+
+	switch (TopID)
+	{
+	case EWT_SpaceID::ID_Floor:
+	case EWT_SpaceID::ID_Empty:
+		if (bFloorAdjacent) 
+			Grid_Visual[Pos].StackID = EWT_StackID::ID_Single;
+		else
+			Grid_Visual[Pos].StackID = EWT_StackID::ID_Top;
+		break;
+	case EWT_SpaceID::ID_Edge:
+		if (BotID != EWT_SpaceID::ID_Edge)
+			Grid_Visual[Pos].StackID = EWT_StackID::ID_Bottom;
+		else
+			Grid_Visual[Pos].StackID = EWT_StackID::ID_Mid;
+		break;
+	}
+
+
+	
+	
 }

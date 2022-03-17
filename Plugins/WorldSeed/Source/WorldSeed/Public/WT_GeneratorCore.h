@@ -33,6 +33,11 @@ public:
 		
 		Rot = 0;
 	}
+	FTileSolverData(float Rotation)
+	{
+		Rot = Rotation;
+		StackID = EWT_StackID::ID_Bottom;
+	}
 	UPROPERTY(EditAnywhere)
 		float Rot;
 	UPROPERTY(EditAnywhere)
@@ -40,6 +45,16 @@ public:
 	
 
 
+};
+
+USTRUCT(BlueprintType)
+struct FLandmarkChannel
+{
+	GENERATED_BODY()
+		UPROPERTY()
+		TArray<class AWT_Landmark_Base*> SubLandmarks;
+	UPROPERTY()
+		TArray<class AWT_Landmark_Base*> AddLandmarks;
 };
 
 
@@ -101,10 +116,25 @@ public:
 		else return Return;
 	}
 
+
+	EWT_SpaceID GetStructureData(FVector Pos)
+	{
+	
+		if (Grid_Structure.Find(Pos))
+		{
+			return Grid_Structure[Pos];
+		}
+		else return EWT_SpaceID::ID_Null;
+	}
+
 	void StoreLandmark(class AWT_Landmark_Base* In);
 
 	
 	bool IsEmptyAdjacent(FVector Pos);
+	bool IsFloorAdjacent(FVector Pos);
+	bool IsWalkable(FVector Pos);
+
+	bool IsCorner(FVector Pos);
 
 
 	FVector GetAdjacentEmpty_Directional(FVector Position);
@@ -120,12 +150,13 @@ public:
 		return (IsValidCoordinate(Position) && Grid_Structure[Position] == ID);
 	}
 
-	bool IsCorner(FVector Pos);
+	
 
 
 
 	void AssignVisual_Edge(FVector Position);
 	void AssignVisual_Corner(FVector Pos);
+	void AssignLayer_Edge(FVector Pos);
 
 protected:
 
@@ -136,6 +167,7 @@ protected:
 	void GenerateFloorMap();
 
 
+	void LoadTileSolverTable();
 
 
 
@@ -158,6 +190,8 @@ protected:
 	UPROPERTY()
 	TMap<FVector, FGridVisual> Grid_Visual;
 
+
+	TArray<FLandmarkChannel> LandmarkChannels;
 
 	UPROPERTY()
 	TArray<class AWT_Landmark_Base*> SubLandmarks;

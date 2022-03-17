@@ -181,8 +181,18 @@ void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asse
 	TempData.TopComponent->SetupAttachment(SceneRoot);
 	TempData.TopComponent->RegisterComponent();
 	TempData.TopComponent->SetStaticMesh(Asset.Top);
+
+	TempData.SingleComponent = NewObject<UInstancedStaticMeshComponent>(this, Mid);
+	TempData.SingleComponent->SetupAttachment(SceneRoot);
+	TempData.SingleComponent->RegisterComponent();
+	TempData.SingleComponent->SetStaticMesh(Asset.Single);
+
+	TempData.TopUnwalkableComponent = NewObject<UInstancedStaticMeshComponent>(this, Mid);
+	TempData.TopUnwalkableComponent->SetupAttachment(SceneRoot);
+	TempData.TopUnwalkableComponent->RegisterComponent();
+	TempData.TopUnwalkableComponent->SetStaticMesh(Asset.UnwalkableTop);
 	
-	if (TempData.MiddleComponent != nullptr && TempData.TopComponent != nullptr && TempData.BottomComponent != nullptr)
+	if (TempData.MiddleComponent != nullptr && TempData.TopComponent != nullptr && TempData.BottomComponent != nullptr && TempData.TopUnwalkableComponent != nullptr && TempData.SingleComponent != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Components created successfully"));
 	}

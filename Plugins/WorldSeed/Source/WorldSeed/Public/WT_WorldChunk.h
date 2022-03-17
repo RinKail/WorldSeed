@@ -47,11 +47,15 @@ struct FTile_AssetTypes
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* Single;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		 UStaticMesh* Bottom;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		 UStaticMesh* Middle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		 UStaticMesh* Top;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* UnwalkableTop;
 };
 
 
@@ -101,6 +105,10 @@ public:
 		class UInstancedStaticMeshComponent* MiddleComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UInstancedStaticMeshComponent* TopComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UInstancedStaticMeshComponent* TopUnwalkableComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UInstancedStaticMeshComponent* SingleComponent;
 };
 
 
