@@ -757,14 +757,26 @@ void AWT_GeneratorCore::AssignLayer_Edge(FVector Pos)
 	{
 	case EWT_SpaceID::ID_Floor:
 	case EWT_SpaceID::ID_Empty:
-		if (bFloorAdjacent) 
+		if (bFloorAdjacent)
 			Grid_Visual[Pos].StackID = EWT_StackID::ID_Single;
 		else
 			Grid_Visual[Pos].StackID = EWT_StackID::ID_Top;
+
+
 		break;
 	case EWT_SpaceID::ID_Edge:
 		if (BotID != EWT_SpaceID::ID_Edge)
-			Grid_Visual[Pos].StackID = EWT_StackID::ID_Bottom;
+		{
+			if (TopID != EWT_SpaceID::ID_Edge)
+			{
+				Grid_Visual[Pos].StackID = EWT_StackID::ID_Single;
+			}
+			else
+			{
+				Grid_Visual[Pos].StackID = EWT_StackID::ID_Bottom;
+			}
+			
+		}
 		else
 			Grid_Visual[Pos].StackID = EWT_StackID::ID_Mid;
 		break;

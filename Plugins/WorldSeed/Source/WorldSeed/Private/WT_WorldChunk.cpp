@@ -134,12 +134,7 @@ void AWT_WorldChunk::BeginPlay()
 	Super::BeginPlay();
 
 
-	TArray<AActor*> ActorList;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWT_GeneratorCore::StaticClass(), ActorList);
-	if (ActorList.Num() > 0)
-	{
-		Cast<AWT_GeneratorCore>(ActorList[0])->BuildGrid();
-	}
+	
 	
 
 	//UE_LOG(LogTemp, Warning, TEXT("BEGIN PLAY"));
@@ -165,6 +160,8 @@ void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asse
 	FName Top = FName(CompName + ".Top");
 	FName Mid = FName(CompName + ".Mid");
 	FName Bot = FName(CompName + ".Bot");
+	FName TopUnwalk = FName(CompName + ".TopUnwalkable");
+	FName Single = FName(CompName + ".Single");
 
 	TempData.BottomComponent = NewObject<UInstancedStaticMeshComponent>(this, Bot);
 	TempData.BottomComponent->SetupAttachment(SceneRoot);
@@ -182,12 +179,12 @@ void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asse
 	TempData.TopComponent->RegisterComponent();
 	TempData.TopComponent->SetStaticMesh(Asset.Top);
 
-	TempData.SingleComponent = NewObject<UInstancedStaticMeshComponent>(this, Mid);
+	TempData.SingleComponent = NewObject<UInstancedStaticMeshComponent>(this, Single);
 	TempData.SingleComponent->SetupAttachment(SceneRoot);
 	TempData.SingleComponent->RegisterComponent();
 	TempData.SingleComponent->SetStaticMesh(Asset.Single);
 
-	TempData.TopUnwalkableComponent = NewObject<UInstancedStaticMeshComponent>(this, Mid);
+	TempData.TopUnwalkableComponent = NewObject<UInstancedStaticMeshComponent>(this, TopUnwalk);
 	TempData.TopUnwalkableComponent->SetupAttachment(SceneRoot);
 	TempData.TopUnwalkableComponent->RegisterComponent();
 	TempData.TopUnwalkableComponent->SetStaticMesh(Asset.UnwalkableTop);
