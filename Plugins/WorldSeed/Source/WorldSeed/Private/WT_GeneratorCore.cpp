@@ -32,6 +32,7 @@ void AWT_GeneratorCore::BuildGrid()
 	if ((GridX != 0 && GridY != 0 && GridZ != 0) && (ChunkX != 0 && ChunkY != 0))
 	{
 
+		OrganiseLandmarks();
 
 		for (int x = 0; x < GridX / ChunkX; ++x)
 		{
@@ -77,26 +78,20 @@ void AWT_GeneratorCore::BuildGrid()
 
 		for (int i = 0; i < LandmarkChannels.Num(); i++)
 		{
-			for (int x = 0; x < LandmarkChannels[i].AddLandmarks.Num(); x++)
-			{
-				LandmarkChannels[i].AddLandmarks[x]->ApplyLandmark(this);
-			}
+			
 
 			for (int y = 0; y < LandmarkChannels[i].SubLandmarks.Num(); y++)
 			{
 				LandmarkChannels[i].SubLandmarks[y]->ApplyLandmark(this);
 			}
+
+			for (int x = 0; x < LandmarkChannels[i].AddLandmarks.Num(); x++)
+			{
+				LandmarkChannels[i].AddLandmarks[x]->ApplyLandmark(this);
+			}
 		}
 
-		for (int i = 0; i < SubLandmarks.Num(); i++)
-		{
-			SubLandmarks[i]->ApplyLandmark(this);
-		}
-
-		for (int i = 0; i < AddLandmarks.Num(); i++)
-		{
-			AddLandmarks[i]->ApplyLandmark(this);
-		}
+		
 
 		GenerateGeometryMap();
 
@@ -310,15 +305,33 @@ bool AWT_GeneratorCore::IsFloor(FVector Pos)
 
 void AWT_GeneratorCore::StoreLandmark(AWT_Landmark_Base* In)
 {
-	if (In->IsLandmarkAdditive())
-	{
-		AddLandmarks.Add(In);
-	}
-	else
-	{
-		SubLandmarks.Add(In);
-	}
+	LandmarkList.Add(In);
 
+}
+
+void AWT_GeneratorCore::OrganiseLandmarks()
+{
+	LandmarkChannels.Empty();
+	LandmarkChannels.SetNum(5);
+	for (int i = 0; i < LandmarkList.Num(); i++)
+	{
+		int InChannel = LandmarkList[i]->GetChannel();
+
+		if (InChannel > LandmarkChannels.Num())
+		{
+			LandmarkChannels.SetNum(InChannel, false);
+
+		}
+
+		if (LandmarkList[i]->IsLandmarkAdditive())
+		{
+			LandmarkChannels[InChannel].AddLandmarks.Add(LandmarkList[i]);
+		}
+		else
+		{
+			LandmarkChannels[InChannel].SubLandmarks.Add(LandmarkList[i]);
+		}
+	}
 }
 
 bool AWT_GeneratorCore::IsEmptyAdjacent(FVector Pos)

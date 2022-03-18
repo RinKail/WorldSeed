@@ -57,12 +57,16 @@ protected:
 
 	class USceneComponent* SceneRoot;
 
+	//Determines when the landmark is applied to the grid, There is no limit on landmarks per channel.
+	UPROPERTY(EditAnywhere, Category = "Landmark")
+		int Channel;
+
 	UPROPERTY(EditAnywhere, Category = "Landmark")
 	FVector LandmarkScale;
 	UPROPERTY(EditAnywhere, Category = "Landmark")
 	FVector2D LandmarkPosition;
 
-	//Determines whether the landmark is additive or subtractive.
+	//Determines whether the landmark is additive or subtractive. 
 	UPROPERTY(EditAnywhere, Category = "Landmark")
 	bool bAdditive;
 
@@ -74,7 +78,7 @@ public:
 
 	
 	bool IsLandmarkAdditive() { return bAdditive; }
-
+	int GetChannel() { return Channel; }
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

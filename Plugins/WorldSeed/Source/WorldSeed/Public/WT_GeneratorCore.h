@@ -129,6 +129,9 @@ public:
 
 	void StoreLandmark(class AWT_Landmark_Base* In);
 
+
+	void OrganiseLandmarks();
+
 	
 	bool IsEmptyAdjacent(FVector Pos);
 	bool IsFloorAdjacent(FVector Pos);
@@ -190,13 +193,12 @@ protected:
 	UPROPERTY()
 	TMap<FVector, FGridVisual> Grid_Visual;
 
-
+	UPROPERTY()
 	TArray<FLandmarkChannel> LandmarkChannels;
 
+	
 	UPROPERTY()
-	TArray<class AWT_Landmark_Base*> SubLandmarks;
-	UPROPERTY()
-	TArray<class AWT_Landmark_Base*> AddLandmarks;
+	TArray<class AWT_Landmark_Base*> LandmarkList;
 
 
 	UPROPERTY(EditAnywhere)
