@@ -25,6 +25,42 @@ FVector UWT_GenerationStyle_Dungeon::GetPositionInRange(FVector Position, FVecto
 
 bool UWT_GenerationStyle_Dungeon::AddRoom(FVector Position, FVector Scale, bool bCanOverlapRooms)
 {
+
+    FVector PosEnd = Position + Scale;
+
+    if ((Position.X > GridBoundaries && PosEnd.X < ActiveGridSpace.X) ||
+        (Position.Y > GridBoundaries && PosEnd.Y < ActiveGridSpace.Y) ||
+        (Position.Z > GridBoundaries && PosEnd.Z < ActiveGridSpace.Z))
+    {
+        AWT_Landmark_Base* Room = GetWorld()->SpawnActor<AWT_Landmark_Base>(AWT_Landmark_Base::StaticClass());
+
+        Room->SetLandmarkPosition(Position);
+        Room->SetLandmarkScale(Position);
+
+        bool bValidRoom = true;
+        if (bCanOverlapRooms)
+        {
+            for (int i = 0; i < LandmarkList.Num(); i++)
+            {
+                if (DoRoomsOverlap(Position, Scale, LandmarkList[i]->GetLandmarkPosition(), LandmarkList[i]->GetLandmarkScale()))
+                {
+                    bValidRoom = false;
+                    break;
+                }
+
+            }
+        }
+        if (bValidRoom)
+        {
+            LandmarkList.Add(Room);
+            return true;
+        }
+        else return false;
+    }
+   
+   
+
+
     return false;
 }
 

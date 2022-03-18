@@ -54,7 +54,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Grid")
 	int GridBoundaries;
 
-
+	FVector ActiveGridSpace;
 
 
 
@@ -82,10 +82,21 @@ protected:
 
 
 
-
+	TArray<class AWT_Landmark_Base*> LandmarkList;
 
 
 private: 
 
+
+
+	bool DoRoomsOverlap(FVector PosA, FVector ScaleA, FVector PosB, FVector ScaleB)
+	{
+		FVector PosAEnd = PosA + ScaleA;
+		FVector PosBEnd = PosB + ScaleB;
+		return (PosA.X <= PosBEnd.X && PosAEnd.X >= PosB.X &&
+			PosA.Y <= PosBEnd.Y && PosAEnd.Y >= PosB.Y &&
+			PosA.Z <= PosBEnd.Z && PosAEnd.Z >= PosB.Z
+			)
+	}
 
 };

@@ -64,7 +64,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Landmark")
 	FVector LandmarkScale;
 	UPROPERTY(EditAnywhere, Category = "Landmark")
-	FVector2D LandmarkPosition;
+	FVector LandmarkPosition;
 
 	//Determines whether the landmark is additive or subtractive. 
 	UPROPERTY(EditAnywhere, Category = "Landmark")
@@ -75,6 +75,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	void SetLandmarkScale(FVector Scale) { LandmarkScale = Scale; }
+	void SetLandmarkPosition(FVector Position) {
+		LandmarkPosition = Position;
+		SetActorLocation(Position);
+	}
+
+	FVector GetLandmarkScale() { return LandmarkScale; }
+	FVector GetLandmarkPosition() { return LandmarkPosition; }
 
 	
 	bool IsLandmarkAdditive() { return bAdditive; }
