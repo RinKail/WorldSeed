@@ -96,7 +96,7 @@ private:
 		return (PosA.X <= PosBEnd.X && PosAEnd.X >= PosB.X &&
 			PosA.Y <= PosBEnd.Y && PosAEnd.Y >= PosB.Y &&
 			PosA.Z <= PosBEnd.Z && PosAEnd.Z >= PosB.Z
-			)
+			);
 	}
 
 };

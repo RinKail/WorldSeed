@@ -7,6 +7,7 @@
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/Input/SEditableTextBox.h"
 #include "Engine/World.h"
+#include "WorldSeed/public/WT_Landmark_Corridor.h"
 
 
 #include "EditorModeManager.h"
@@ -342,6 +343,8 @@ FReply FWorldSeedEdModeToolkit::SetLandmark()
 	case 2:
 		LandmarkType = AWT_Landmark_Base::StaticClass();
 		break;
+	case 4: 
+		LandmarkType = AWT_Landmark_Corridor::StaticClass();
 	}
 
 

@@ -32,13 +32,10 @@ bool UWT_GenerationStyle_Dungeon::AddRoom(FVector Position, FVector Scale, bool 
         (Position.Y > GridBoundaries && PosEnd.Y < ActiveGridSpace.Y) ||
         (Position.Z > GridBoundaries && PosEnd.Z < ActiveGridSpace.Z))
     {
-        AWT_Landmark_Base* Room = GetWorld()->SpawnActor<AWT_Landmark_Base>(AWT_Landmark_Base::StaticClass());
-
-        Room->SetLandmarkPosition(Position);
-        Room->SetLandmarkScale(Position);
+        
 
         bool bValidRoom = true;
-        if (bCanOverlapRooms)
+        if (!bCanOverlapRooms)
         {
             for (int i = 0; i < LandmarkList.Num(); i++)
             {
@@ -52,6 +49,12 @@ bool UWT_GenerationStyle_Dungeon::AddRoom(FVector Position, FVector Scale, bool 
         }
         if (bValidRoom)
         {
+
+            AWT_Landmark_Base* Room = GetWorld()->SpawnActor<AWT_Landmark_Base>(AWT_Landmark_Base::StaticClass());
+
+            Room->SetLandmarkPosition(Position);
+            Room->SetLandmarkScale(Position);
+
             LandmarkList.Add(Room);
             return true;
         }
