@@ -18,8 +18,11 @@ UCLASS()
 class WORLDSEED_API AWT_Landmark_Corridor : public AWT_Landmark_Base
 {
 	GENERATED_BODY()
-
+public:
 		AWT_Landmark_Corridor();
+
+		void InitialiseCorridor(FVector Start, FVector End, TArray<FVector> AnchorPositions);
+protected: 
 
 
 	UPROPERTY()
@@ -36,6 +39,8 @@ class WORLDSEED_API AWT_Landmark_Corridor : public AWT_Landmark_Base
 		void AddAnchor();
 	
 
+		
+
 	UPROPERTY(EditAnywhere, Category = "Visuals")
 	int CorridorThickness;
 	UPROPERTY(EditAnywhere, Category = "Visuals")
@@ -46,18 +51,22 @@ class WORLDSEED_API AWT_Landmark_Corridor : public AWT_Landmark_Base
 
 
 	UPROPERTY(EditAnywhere, Category = "Anchors")
-	TArray<UBillboardComponent*> Anchors;
+	TArray<class AWT_LandmarkAnchor_Base*> Anchors;
 
 
 	
 
 
+	void ApplySpace(FVector Position, class AWT_GeneratorCore* Gen);
 
+	TArray<FVector> GetSortedAnchors();
+
+public:
 
 	virtual void ApplyLandmark(class AWT_GeneratorCore* Generator);
 	
 
-	TArray<FVector> GetSortedAnchors();
+
 
 
 };

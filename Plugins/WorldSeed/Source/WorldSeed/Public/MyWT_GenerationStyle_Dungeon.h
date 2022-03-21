@@ -44,7 +44,7 @@ class WORLDSEED_API UWT_GenerationStyle_Dungeon : public UWT_GenerationStyle
 public: 
 
 
-	
+	UWT_GenerationStyle_Dungeon();
 
 	
 	
@@ -55,6 +55,10 @@ protected:
 	int GridBoundaries;
 
 	FVector ActiveGridSpace;
+
+
+	virtual void RunBackend() override;
+	
 
 
 
@@ -78,7 +82,7 @@ protected:
 
 	//Adds a corridor onto the grid.
 	UFUNCTION(BlueprintCallable, Category = "Layout")
-		void AddCorridor(FVector StartPosition, FVector EndPosition);
+	void AddCorridor(FVector StartPosition, FVector EndPosition, TArray<FVector> AnchorPoints);
 
 
 

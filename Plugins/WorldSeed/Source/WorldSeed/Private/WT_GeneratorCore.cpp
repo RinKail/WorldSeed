@@ -4,6 +4,7 @@
 #include "WT_GeneratorCore.h"
 #include "WorldSeed/Public/WT_WorldChunk.h"
 #include "WorldSeed/Public/WT_Landmark_Base.h"
+#include "WorldSeed/Public/WT_GenerationStyle.h"
 #include "Kismet/GameplayStatics.h"
 
 AWT_GeneratorCore::AWT_GeneratorCore()
@@ -126,6 +127,15 @@ void AWT_GeneratorCore::AddChunk(FVector Position)
 		AWT_WorldChunk* Chunk = GetWorld()->SpawnActor<AWT_WorldChunk>(FVector(((Position.X * ChunkScale.X) * TileScale), ((Position.Y * ChunkScale.Y) * TileScale), 0.0f), FRotator(0, 0, 0));
 		ChunkList.Add(Position, Chunk);
 	}
+}
+
+void AWT_GeneratorCore::GenerateLevel()
+{
+	UWT_GenerationStyle* Style = NewObject<UWT_GenerationStyle>(this, GenerationStyle);
+	Style->GenerateStyle(this);
+
+
+
 }
 
 

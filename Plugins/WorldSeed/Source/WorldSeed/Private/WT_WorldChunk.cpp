@@ -189,10 +189,7 @@ void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asse
 	TempData.TopUnwalkableComponent->RegisterComponent();
 	TempData.TopUnwalkableComponent->SetStaticMesh(Asset.UnwalkableTop);
 	
-	if (TempData.MiddleComponent != nullptr && TempData.TopComponent != nullptr && TempData.BottomComponent != nullptr && TempData.TopUnwalkableComponent != nullptr && TempData.SingleComponent != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Components created successfully"));
-	}
+	
 
 
 	
@@ -234,11 +231,11 @@ void AWT_WorldChunk::InitialiseChunk()
 
 void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Updating Tile"));
+	
 
 	if (TileKeys.Find(Position))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Key Found, removing instance"));
+		
 		TileKeys[Position].Comp->RemoveInstance(TileKeys[Position].Index);
 
 		TileKeys[Position].Index = 0;
@@ -246,7 +243,7 @@ void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No key found, Creating key"));
+		
 		TileKeys.Add(Position);
 		TileKeys[Position].Comp = nullptr;
 		TileKeys[Position].Index = 0;
@@ -254,7 +251,7 @@ void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 	
 	if (ComponentList.Find(Data.TileID))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Component List located: "));
+		
 		
 	}
 

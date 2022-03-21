@@ -177,12 +177,20 @@ protected:
 
 	void AddChunk(FVector Position);
 
+
+	UFUNCTION(CallInEditor, Category = "Generation Style")
+	void GenerateLevel();
+
 	UPROPERTY(EditAnywhere, Category = "Grid Setup")
 	FVector GridScale;
 	UPROPERTY(EditAnywhere, Category = "Grid Setup")
 	FVector2D ChunkScale;
 	UPROPERTY(EditAnywhere, Category = "Grid Setup")
 	int FillHeight;
+
+
+	UPROPERTY(EditAnywhere, Category = "Generation Style")
+	TSubclassOf<class UWT_GenerationStyle> GenerationStyle;
 
 
 

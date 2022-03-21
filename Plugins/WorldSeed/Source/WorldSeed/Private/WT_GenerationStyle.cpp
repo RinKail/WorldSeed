@@ -8,7 +8,7 @@
 
 UWT_GenerationStyle::UWT_GenerationStyle()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("Normal Type instantiated"));
 }
 
 void UWT_GenerationStyle::GenerateStyle(AWT_GeneratorCore* Core)
@@ -16,5 +16,15 @@ void UWT_GenerationStyle::GenerateStyle(AWT_GeneratorCore* Core)
 
 	GenCore = Core;
 
+
+	UE_LOG(LogTemp, Warning, TEXT("Running Style"));
+
 	Run();
+
+	RunBackend();
+}
+
+void UWT_GenerationStyle::RunBackend()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Running base backend"));
 }

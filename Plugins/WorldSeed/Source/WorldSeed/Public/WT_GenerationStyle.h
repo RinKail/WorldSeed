@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class WORLDSEED_API UWT_GenerationStyle : public UObject
 {
 	GENERATED_BODY()
@@ -26,6 +26,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 		void Run();
 
+	virtual void RunBackend();
 
 protected: 
 	UPROPERTY()
