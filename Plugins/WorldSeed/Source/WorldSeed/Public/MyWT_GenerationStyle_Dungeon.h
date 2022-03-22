@@ -51,10 +51,7 @@ public:
 
 protected: 
 	
-	UPROPERTY(EditAnywhere, Category = "Grid")
-	int GridBoundaries;
 
-	FVector ActiveGridSpace;
 
 
 	virtual void RunBackend() override;
@@ -64,16 +61,7 @@ protected:
 
 protected: 
 
-	//Useful functions releated to the grid
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-	FVector GetGridBounds();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-	FVector GetRandomScale(FVector Scale);
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-	FVector GetPositionInRange(FVector Position, FVector Range);
+	
 
 
 	//Attempts to add a room to the grid, returns false if parts of the room went out of bounds.

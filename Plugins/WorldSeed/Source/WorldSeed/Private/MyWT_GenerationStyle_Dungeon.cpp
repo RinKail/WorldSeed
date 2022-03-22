@@ -18,20 +18,8 @@ void UWT_GenerationStyle_Dungeon::RunBackend()
     AddRoom(FVector(50,50,3), FVector (20,20,5), true);
 }
 
-FVector UWT_GenerationStyle_Dungeon::GetGridBounds()
-{
-    return FVector();
-}
 
-FVector UWT_GenerationStyle_Dungeon::GetRandomScale(FVector Scale)
-{
-    return FVector();
-}
 
-FVector UWT_GenerationStyle_Dungeon::GetPositionInRange(FVector Position, FVector Range)
-{
-    return FVector();
-}
 
 bool UWT_GenerationStyle_Dungeon::AddRoom(FVector Position, FVector Scale, bool bCanOverlapRooms)
 {
