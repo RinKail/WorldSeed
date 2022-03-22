@@ -90,3 +90,13 @@ void UWT_GenerationStyle_Dungeon::AddCorridor(FVector StartPosition, FVector End
 
 
 }
+
+void UWT_GenerationStyle_Dungeon::CalculateRoomData()
+{
+    for (int i = 0; i < LandmarkList.Num(); i++)
+    {
+        
+    }
+
+
+}

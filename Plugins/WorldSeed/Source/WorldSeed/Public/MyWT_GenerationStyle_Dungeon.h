@@ -11,9 +11,9 @@
  */
 
 
-/*
-* USTRUCT(BlueprintType)
-struct FGenerationStyleData
+
+ USTRUCT(BlueprintType)
+struct FRoomData
 {
 	GENERATED_BODY()
 
@@ -21,16 +21,20 @@ struct FGenerationStyleData
 
 public:
 
-	FGenerationStyleData();
+	FRoomData();
 
-	TArray<class AWT_Landmark_Base*> LandmarkList;
+	//Array of landmarks that make up this room
+	TArray<class AWT_Landmark_Base*> Landmarks;
+
+
+	FVector AveragePosition;
 
 
 
 };
 
 
-*/
+
 
 
 
@@ -74,7 +78,7 @@ protected:
 
 
 
-
+	void CalculateRoomData();
 
 
 private: 
