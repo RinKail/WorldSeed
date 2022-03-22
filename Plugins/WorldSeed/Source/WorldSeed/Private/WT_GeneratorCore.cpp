@@ -325,21 +325,24 @@ void AWT_GeneratorCore::OrganiseLandmarks()
 	LandmarkChannels.SetNum(5);
 	for (int i = 0; i < LandmarkList.Num(); i++)
 	{
-		int InChannel = LandmarkList[i]->GetChannel();
-
-		if (InChannel > LandmarkChannels.Num())
+		if (IsValid(LandmarkList[i]))
 		{
-			LandmarkChannels.SetNum(InChannel, false);
+			int InChannel = LandmarkList[i]->GetChannel();
 
-		}
+			if (InChannel > LandmarkChannels.Num())
+			{
+				LandmarkChannels.SetNum(InChannel, false);
 
-		if (LandmarkList[i]->IsLandmarkAdditive())
-		{
-			LandmarkChannels[InChannel].AddLandmarks.Add(LandmarkList[i]);
-		}
-		else
-		{
-			LandmarkChannels[InChannel].SubLandmarks.Add(LandmarkList[i]);
+			}
+
+			if (LandmarkList[i]->IsLandmarkAdditive())
+			{
+				LandmarkChannels[InChannel].AddLandmarks.Add(LandmarkList[i]);
+			}
+			else
+			{
+				LandmarkChannels[InChannel].SubLandmarks.Add(LandmarkList[i]);
+			}
 		}
 	}
 }

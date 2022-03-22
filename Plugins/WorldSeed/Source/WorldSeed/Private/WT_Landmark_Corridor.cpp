@@ -152,7 +152,7 @@ TArray<FVector> AWT_Landmark_Corridor::GetSortedAnchors()
 	FVector CurrentAnchor = CorridorStart->GetComponentLocation() / TileScale;
 	for (int i = 0; i < Anchors.Num(); i++)
 	{
-		SortedAnchors.Add(Anchors[i]->GetActorLocation());
+		if (IsValid(Anchors[i])) SortedAnchors.Add(Anchors[i]->GetActorLocation());
 
 	}
 

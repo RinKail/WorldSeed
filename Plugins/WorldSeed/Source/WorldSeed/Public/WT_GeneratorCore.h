@@ -164,6 +164,20 @@ public:
 protected:
 
 
+	UPROPERTY(EditAnywhere, Category = "Generation Style")
+		TSubclassOf<class UWT_GenerationStyle> GenerationStyle;
+
+	UFUNCTION(CallInEditor, Category = "Generation Style")
+	void RebuildGrid() 
+	{
+		BuildGrid();
+	}
+
+
+	UFUNCTION(CallInEditor, Category = "Generation Style")
+		void GenerateLevel();
+
+
 	void Reset();
 
 	void GenerateGeometryMap();
@@ -178,8 +192,7 @@ protected:
 	void AddChunk(FVector Position);
 
 
-	UFUNCTION(CallInEditor, Category = "Generation Style")
-	void GenerateLevel();
+	
 
 	UPROPERTY(EditAnywhere, Category = "Grid Setup")
 	FVector GridScale;
@@ -189,8 +202,7 @@ protected:
 	int FillHeight;
 
 
-	UPROPERTY(EditAnywhere, Category = "Generation Style")
-	TSubclassOf<class UWT_GenerationStyle> GenerationStyle;
+	
 
 
 
