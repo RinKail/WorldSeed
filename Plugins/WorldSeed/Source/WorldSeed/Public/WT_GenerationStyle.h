@@ -68,5 +68,8 @@ protected:
 protected: 
 	UPROPERTY()
 		class AWT_GeneratorCore* GenCore;
+
+	UPROPERTY()
+	TArray<class AWT_Landmark_Base*> LandmarkList;
 	
 };

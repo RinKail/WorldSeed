@@ -129,6 +129,8 @@ public:
 
 	void StoreLandmark(class AWT_Landmark_Base* In);
 
+	void LoadStyleLandmarks(TArray<class AWT_Landmark_Base*> InLandmarks);
+
 
 	void OrganiseLandmarks();
 
@@ -219,6 +221,9 @@ protected:
 	
 	UPROPERTY()
 	TArray<class AWT_Landmark_Base*> LandmarkList;
+
+	UPROPERTY()
+	TArray<class AWT_Landmark_Base*> StyleLandmarks;
 
 
 	UPROPERTY(EditAnywhere)

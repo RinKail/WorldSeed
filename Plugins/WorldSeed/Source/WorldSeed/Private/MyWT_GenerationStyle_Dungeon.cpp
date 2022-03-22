@@ -14,8 +14,8 @@ UWT_GenerationStyle_Dungeon::UWT_GenerationStyle_Dungeon()
 
 void UWT_GenerationStyle_Dungeon::RunBackend()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Running Dungeon Style"));
-    AddRoom(FVector(50,50,3), FVector (20,20,5), true);
+   
+   
 }
 
 
@@ -64,8 +64,9 @@ bool UWT_GenerationStyle_Dungeon::AddRoom(FVector Position, FVector Scale, bool 
 
     AWT_Landmark_Base* Room = GenCore->GetWorld()->SpawnActor<AWT_Landmark_Base>(AWT_Landmark_Base::StaticClass());
 
-    Room->SetLandmarkPosition(Position);
-    Room->SetLandmarkScale(Position);
+    Room->SetLandmarkPosition(Position * TileScale);
+    Room->SetActorLocation(Position * TileScale);
+    Room->SetLandmarkScale(Scale);
 
     LandmarkList.Add(Room);
    

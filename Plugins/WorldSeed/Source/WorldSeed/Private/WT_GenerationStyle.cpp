@@ -24,6 +24,8 @@ void UWT_GenerationStyle::GenerateStyle(AWT_GeneratorCore* Core)
 	Run();
 
 	RunBackend();
+
+	Core->LoadStyleLandmarks(LandmarkList);
 }
 
 
@@ -37,7 +39,7 @@ FVector UWT_GenerationStyle::GetPositionInRange(FVector Position, FVector Range)
 {
 	FVector TempResult = FVector(0, 0, 0);
 	bool bValidPosition = false;
-	while (bValidPosition)
+	while (!bValidPosition)
 	{
 		TempResult = FVector((int)FMath::RandRange((int)-Range.X, (int)Range.X), (int)FMath::RandRange((int)-Range.Y, (int)Range.Y), (int)FMath::RandRange((int)-Range.Z, (int)Range.Y));
 		bValidPosition = IsPositionValid(TempResult);

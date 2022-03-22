@@ -319,10 +319,44 @@ void AWT_GeneratorCore::StoreLandmark(AWT_Landmark_Base* In)
 
 }
 
+void AWT_GeneratorCore::LoadStyleLandmarks(TArray<class AWT_Landmark_Base*> InLandmarks)
+{
+	for (int i = 0; i < StyleLandmarks.Num(); i++)
+	{
+		if (IsValid(StyleLandmarks[i])) StyleLandmarks[i]->Destroy();
+	}
+	StyleLandmarks.Empty();
+	StyleLandmarks = InLandmarks;
+}
+
 void AWT_GeneratorCore::OrganiseLandmarks()
 {
 	LandmarkChannels.Empty();
 	LandmarkChannels.SetNum(5);
+
+	for (int i = 0; i < StyleLandmarks.Num(); i++)
+	{
+		if (IsValid(StyleLandmarks[i]))
+		{
+			int InChannel = StyleLandmarks[i]->GetChannel();
+
+			if (InChannel > LandmarkChannels.Num())
+			{
+				LandmarkChannels.SetNum(InChannel, false);
+
+			}
+
+			if (StyleLandmarks[i]->IsLandmarkAdditive())
+			{
+				LandmarkChannels[InChannel].AddLandmarks.Add(StyleLandmarks[i]);
+			}
+			else
+			{
+				LandmarkChannels[InChannel].SubLandmarks.Add(StyleLandmarks[i]);
+			}
+		}
+	}
+
 	for (int i = 0; i < LandmarkList.Num(); i++)
 	{
 		if (IsValid(LandmarkList[i]))
