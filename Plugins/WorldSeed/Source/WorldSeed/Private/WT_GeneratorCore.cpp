@@ -83,12 +83,12 @@ void AWT_GeneratorCore::BuildGrid()
 
 			for (int y = 0; y < LandmarkChannels[i].SubLandmarks.Num(); y++)
 			{
-				LandmarkChannels[i].SubLandmarks[y]->ApplyLandmark(this);
+				if (IsValid(LandmarkChannels[i].SubLandmarks[y])) LandmarkChannels[i].SubLandmarks[y]->ApplyLandmark(this);
 			}
 
 			for (int x = 0; x < LandmarkChannels[i].AddLandmarks.Num(); x++)
 			{
-				LandmarkChannels[i].AddLandmarks[x]->ApplyLandmark(this);
+				if (IsValid(LandmarkChannels[i].AddLandmarks[x]))LandmarkChannels[i].AddLandmarks[x]->ApplyLandmark(this);
 			}
 		}
 
@@ -131,8 +131,17 @@ void AWT_GeneratorCore::AddChunk(FVector Position)
 
 void AWT_GeneratorCore::GenerateLevel()
 {
-	UWT_GenerationStyle* Style = NewObject<UWT_GenerationStyle>(this, GenerationStyle);
-	Style->GenerateStyle(this);
+	if (!IsValid(GenerationStyle_Object))
+	{
+		GenerationStyle_Object = NewObject<UWT_GenerationStyle>(this, GenerationStyle);
+	}
+	if (IsValid(GenerationStyle_Object))
+	{
+		GenerationStyle_Object->ClearLandmarks();
+		GenerationStyle_Object->GenerateStyle(this);
+	}
+
+	BuildGrid();
 
 
 
@@ -327,6 +336,8 @@ void AWT_GeneratorCore::LoadStyleLandmarks(TArray<class AWT_Landmark_Base*> InLa
 	}
 	StyleLandmarks.Empty();
 	StyleLandmarks = InLandmarks;
+	UE_LOG(LogTemp, Warning, TEXT("In Landmark Total: %d"), InLandmarks.Num());
+	UE_LOG(LogTemp, Warning, TEXT("Style landmark Total: %d"), StyleLandmarks.Num());
 }
 
 void AWT_GeneratorCore::OrganiseLandmarks()

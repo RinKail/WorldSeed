@@ -156,7 +156,7 @@ public:
 	}
 
 	
-
+	FVector GetGridScale() { return GridScale; }
 
 
 	void AssignVisual_Edge(FVector Position);
@@ -168,6 +168,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Generation Style")
 		TSubclassOf<class UWT_GenerationStyle> GenerationStyle;
+
+	class UWT_GenerationStyle* GenerationStyle_Object;
 
 	UFUNCTION(CallInEditor, Category = "Generation Style")
 	void RebuildGrid() 

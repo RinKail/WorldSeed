@@ -25,6 +25,9 @@ public:
 
 		 void GenerateStyle(class AWT_GeneratorCore* Core);
 
+
+		 void ClearLandmarks();
+
 protected:
 
 
@@ -39,19 +42,23 @@ protected:
 	UFUNCTION(BlueprintPure, Category = "Grid Manipulation")
 	bool IsPositionValid(FVector Position)
 	{
-		return (Position.X > GridBoundaries && Position.Y > GridBoundaries && Position.Z > GridBoundaries &&
-			Position.X > (GridScale.X - GridBoundaries) && Position.Y > (GridScale.Y - GridBoundaries) && Position.Z > (GridScale.Z - GridBoundaries));
+		return (Position.X > GridBoundaries && Position.Y > GridBoundaries &&
+			Position.X < (GridScale.X - GridBoundaries) && Position.Y < (GridScale.Y - GridBoundaries));
 	}
 
 
 	//Useful functions releated to the grid
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-		FVector GetGridBounds() { return FVector(GridScale.X - GridBoundaries, GridScale.Y - GridBoundaries, GridScale.Y - GridBoundaries); }
+		FVector GetGridBounds() { return FVector((int)GridScale.X - GridBoundaries, (int)GridScale.Y - GridBoundaries, (int)GridScale.Y - GridBoundaries); }
 
 	//Returns a scale between 0 and provided value
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
 		FVector GetRandomScale(FVector Scale);
+
+	//Returns a scale between 0 and provided value
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
+		FVector GetRandomScaleInRange(FVector Start, FVector End);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
 		FVector GetPositionInRange(FVector Position, FVector Range);
@@ -64,6 +71,9 @@ protected:
 		void Run();
 
 	virtual void RunBackend();
+
+
+
 
 protected: 
 	UPROPERTY()

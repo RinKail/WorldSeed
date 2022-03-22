@@ -74,7 +74,7 @@ protected:
 
 
 
-	TArray<class AWT_Landmark_Base*> LandmarkList;
+
 
 
 private: 
