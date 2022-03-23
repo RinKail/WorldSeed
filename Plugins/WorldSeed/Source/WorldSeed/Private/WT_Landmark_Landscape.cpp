@@ -24,14 +24,17 @@ void AWT_Landmark_Landscape::ApplyLandmark(AWT_GeneratorCore* Generator)
 	{
 		for (int y = 0; y < Generator->GetGridScale().Y; y++)
 		{
-			FVector2D Position = FVector2D(x * TileScale, y * TileScale);
-			float NoiseValue = FMath::PerlinNoise2D(Position);
-
-			int Height = (Generator->GetGridScale().Z / 2) * NoiseValue;
+			
 			for (int z = 0; z < Generator->GetGridScale().Z; z++)
 			{
-				if (Height >= z) Generator->SetCellState(FVector(x, y, z), true);
+				FVector Position = FVector( Offset.X + ((float)x / Frequency.X), Offset.Y + ((float)y / Frequency.Y), Offset.Z + ((float)z / Frequency.Z));
+				float NoiseValue = FMath::PerlinNoise3D(Position);
+				UE_LOG(LogTemp, Warning, TEXT("Position: : [%f | %f | %f], NoiseValue: %f"), Position.X, Position.Y, Position.Z, NoiseValue);
+				if (NoiseValue <= HeightCap) Generator->SetCellState(FVector(x, y, z), true);
 				else Generator->SetCellState(FVector(x, y, z), false);
+
+
+				
 
 			}
 		}

@@ -26,6 +26,13 @@ class WORLDSEED_API AWT_Landmark_Landscape : public AWT_Landmark_Base
 
 	FRandomStream SeedData;
 
+	UPROPERTY(EditAnywhere, Category = "Noise")
+		FVector Frequency;
+	UPROPERTY(EditAnywhere, Category = "Noise")
+	FVector Offset;
+	UPROPERTY(EditAnywhere, Category = "Noise")
+	float HeightCap;
+
 public:
 
 
