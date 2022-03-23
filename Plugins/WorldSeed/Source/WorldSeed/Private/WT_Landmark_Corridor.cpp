@@ -22,14 +22,15 @@ AWT_Landmark_Corridor::AWT_Landmark_Corridor()
 	CorridorEnd = CreateDefaultSubobject<USceneComponent>(TEXT("CorridorEnd"));
 	CorridorEnd->SetupAttachment(RootComponent);
 	Channel = 0;
+	CorridorHeight = 5;
 	bAdditive = false;
 
 }
 
 void AWT_Landmark_Corridor::InitialiseCorridor(FVector Start, FVector End, TArray<FVector> AnchorPositions)
 {
-	CorridorStart->SetWorldLocation(Start);
-	CorridorEnd->SetWorldLocation(End);
+	CorridorStart->SetWorldLocation(FVector((int)Start.X * TileScale, (int)Start.Y * TileScale, (int)Start.Z * TileScale));
+	CorridorEnd->SetWorldLocation(FVector((int)End.X * TileScale, (int)End.Y * TileScale, (int)End.Z * TileScale));
 
 	for (int i = 0; i < AnchorPositions.Num(); i++)
 	{
@@ -37,11 +38,22 @@ void AWT_Landmark_Corridor::InitialiseCorridor(FVector Start, FVector End, TArra
 
 		FAttachmentTransformRules AttachRules = FAttachmentTransformRules(EAttachmentRule::KeepRelative, false);
 		NewAnchor->AttachToActor(this, AttachRules);
-		NewAnchor->SetActorLocation(AnchorPositions[i]);
+		NewAnchor->SetActorLocation(FVector((int)AnchorPositions[i].X * TileScale, (int)AnchorPositions[i].Y * TileScale, (int)AnchorPositions[i].Z * TileScale));
 		Anchors.Add(NewAnchor);
 	}
 
 }
+
+void AWT_Landmark_Corridor::Destroy()
+{
+	for (int i = 0; i < Anchors.Num(); i++)
+	{
+		Anchors[i]->Destroy();
+	}
+	Super::Destroy();
+}
+
+
 
 void AWT_Landmark_Corridor::AddAnchor()
 {
@@ -89,7 +101,7 @@ void AWT_Landmark_Corridor::ApplyLandmark(class AWT_GeneratorCore* Generator)
 		Directions.Add(FVector(0, 0, 1));
 		Directions.Add(FVector(0, 0, -1));
 
-		int PathCap = 100;
+		int PathCap = 1000;
 
 		UE_LOG(LogTemp, Warning, TEXT("Start: [%f | %f], End: [%f | %f]"), Start.X, Start.Y, End.X, End.Y);
 

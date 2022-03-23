@@ -66,13 +66,15 @@ protected:
 
 
 
-
+	//Generic generation function. This runs before any style specific events. 
 	UFUNCTION(BlueprintImplementableEvent)
 		void Run();
 
 	virtual void RunBackend();
 
-
+	//Generic generation functions, this runs after any style speficic events. 
+	UFUNCTION(BlueprintImplementableEvent)
+		void Finish();
 
 
 protected: 
@@ -81,5 +83,11 @@ protected:
 
 	UPROPERTY()
 	TArray<class AWT_Landmark_Base*> LandmarkList;
+
+	UPROPERTY()
+		TArray<class AWT_Landmark_Base*> Landmark_CorridorList;
+
+	UPROPERTY()
+		TArray<class AWT_Landmark_Base*> Landmark_RoomList;
 	
 };

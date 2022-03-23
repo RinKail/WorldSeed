@@ -26,6 +26,8 @@ void UWT_GenerationStyle::GenerateStyle(AWT_GeneratorCore* Core)
 
 	RunBackend();
 
+	Finish();
+
 
 	Core->LoadStyleLandmarks(LandmarkList);
 

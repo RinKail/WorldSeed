@@ -22,7 +22,13 @@ public:
 		AWT_Landmark_Corridor();
 
 		void InitialiseCorridor(FVector Start, FVector End, TArray<FVector> AnchorPositions);
+
+
+		virtual void Destroy();
 protected: 
+
+
+
 
 
 	UPROPERTY()

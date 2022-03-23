@@ -21,14 +21,23 @@ struct FRoomData
 
 public:
 
-	FRoomData();
+	FRoomData()
+	{
+		AveragePosition = FVector(0, 0, 0);
+	}
+
 
 	//Array of landmarks that make up this room
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	TArray<class AWT_Landmark_Base*> Landmarks;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	FVector AveragePosition;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
+	TArray<FRoomData> ConnectedRooms;
+
+	int RoomId;
 
 
 };
@@ -56,11 +65,14 @@ public:
 protected: 
 	
 
-
-
-	virtual void RunBackend() override;
+	//Generate Rooms using this event.
+	UFUNCTION(BlueprintImplementableEvent)
+	void GenerateRooms();
+	//Generate Corridors using this event. The room array provides a list of all the rooms created in the first generation pass.
+	UFUNCTION(BlueprintImplementableEvent)
+		void GenerateCorridors(const TArray<FRoomData>& Rooms);
 	
-
+	virtual void RunBackend();
 
 
 protected: 
@@ -77,8 +89,19 @@ protected:
 	void AddCorridor(FVector StartPosition, FVector EndPosition, TArray<FVector> AnchorPoints);
 
 
+	//Directly connects two rooms, this should be used over AddCorridor when building links between a lot of rooms. Will not connect rooms already directly connected
+	UFUNCTION(BlueprintCallable, Category = "Layout")
+	bool ConnectRoom(FRoomData Room, FRoomData Room2);
 
-	void CalculateRoomData();
+	UFUNCTION(BlueprintPure, Category = "Grid")
+	FRoomData FindRandomRoom();
+
+
+	UFUNCTION(BlueprintCallable, Category = "Rooms")
+	TArray<FRoomData> CalculateRoomData();
+
+
+	TArray<FRoomData> RoomList;
 
 
 private: 
