@@ -106,6 +106,107 @@ FRoomData UWT_GenerationStyle_Dungeon::FindRandomRoom()
     return RoomList[Index];
 }
 
+FRoomData UWT_GenerationStyle_Dungeon::FindNearestValidRoom(FRoomData Room)
+{
+    TArray<FRoomData> OrderedDistance = GetSortedList_Distance(Room.AveragePosition);
+    
+   
+
+    UE_LOG(LogTemp, Warning, TEXT("Ordered List Length: %d"), OrderedDistance.Num());
+
+    for (int i = 0; i < OrderedDistance.Num(); i++)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Building Corridor, Room 1: %d | Room 2: %d"), Room.RoomId, OrderedDistance[i].RoomId);
+
+        if (Room.RoomId != OrderedDistance[i].RoomId)
+        {
+            bool bValid = true;
+            for (int x = 0; x < Room.ConnectedRooms.Num(); x++)
+            {
+              
+                if (Room.ConnectedRooms[x].RoomId == OrderedDistance[i].RoomId)
+                {
+                    bValid = false;
+                }
+
+                
+            }
+            if (bValid)
+            {
+                return OrderedDistance[i];
+            }
+
+
+            
+
+        }
+
+        
+    }
+
+    return OrderedDistance[0];
+   
+
+
+
+  
+}
+
+TArray<FRoomData> UWT_GenerationStyle_Dungeon::GetRoomList()
+{
+    for (int i = 0; i < RoomList.Num(); i++)
+    {
+        if (RoomList[i].ConnectedRooms.Num() > 0) RoomList[i].bIsConnected = true;
+        else RoomList[i].bIsConnected = false;
+    }
+    return RoomList;
+}
+
+TArray<FRoomData> UWT_GenerationStyle_Dungeon::GetSortedList_Distance(FVector Position)
+{
+    TArray<FRoomData> SortedList = RoomList;
+
+    bool bSorted = false;
+    while (!bSorted)
+    {
+        bSorted = true;
+        for (int i = 0; i < SortedList.Num(); i++)
+        {
+            if ((i + 1) < (SortedList.Num() - 1))
+            {
+                if (FVector::Distance(Position, SortedList[i].AveragePosition) > FVector::Distance(Position, SortedList[i + 1].AveragePosition))
+                {
+                    FRoomData Temp = SortedList[i + 1];
+                    SortedList[i + 1] = SortedList[i];
+                    SortedList[i] = Temp;
+
+                    bSorted = false;
+                    
+                }
+            }
+        }
+    }
+
+
+    return SortedList;
+}
+
+float UWT_GenerationStyle_Dungeon::GetRoomDistance(FRoomData R1, FRoomData R2)
+{
+    return FVector::Distance(R1.AveragePosition, R2.AveragePosition);
+}
+
+void UWT_GenerationStyle_Dungeon::ApplyRoomChanges(FRoomData Room)
+{
+    for (int i = 0; i < RoomList.Num(); i++)
+    {
+        if (RoomList[i].RoomId == Room.RoomId)
+        {
+            RoomList[i] = Room;
+        }
+    }
+}
+
 bool UWT_GenerationStyle_Dungeon::ConnectRoom(FRoomData Room, FRoomData Room2)
 {
     bool bValidRoomFound = false;
@@ -131,7 +232,9 @@ bool UWT_GenerationStyle_Dungeon::ConnectRoom(FRoomData Room, FRoomData Room2)
         AddCorridor(Pos1, Pos2, AnchorList);
 
         Room.ConnectedRooms.Add(Room2);
+        ApplyRoomChanges(Room);
         Room2.ConnectedRooms.Add(Room);
+        ApplyRoomChanges(Room2);
        
     }
 
@@ -167,11 +270,12 @@ TArray<FRoomData> UWT_GenerationStyle_Dungeon::CalculateRoomData()
             FVector AveragePosition = FVector(0, 0, 0);
             for (int x = 0; x < CurrentRoom.Landmarks.Num(); x++)
             {
-                
-                AveragePosition += CurrentRoom.Landmarks[x]->GetActorLocation();
+                FVector HalfScale = FVector((int)CurrentRoom.Landmarks[x]->GetLandmarkScale().X / 2, (int)CurrentRoom.Landmarks[x]->GetLandmarkScale().Y / 2, 0);
+                FVector ConvertedPosition = FVector((int)CurrentRoom.Landmarks[x]->GetActorLocation().X / TileScale, (int)CurrentRoom.Landmarks[x]->GetActorLocation().Y / TileScale, (int)CurrentRoom.Landmarks[x]->GetActorLocation().Z / TileScale);
+                AveragePosition += ConvertedPosition + HalfScale;
             }
             AveragePosition /= CurrentRoom.Landmarks.Num();
-            CurrentRoom.AveragePosition = FVector((int)AveragePosition.X / TileScale, (int)AveragePosition.Y / TileScale, (int)AveragePosition.Z / TileScale);
+            CurrentRoom.AveragePosition = FVector((int)AveragePosition.X, (int)AveragePosition.Y, (int)AveragePosition.Z);
             CurrentRoom.RoomId = ID;
             ReturnData.Add(CurrentRoom);
             ID++;

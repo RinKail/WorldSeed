@@ -37,6 +37,9 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	TArray<FRoomData> ConnectedRooms;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
+	bool bIsConnected;
+
 	int RoomId;
 
 
@@ -95,18 +98,28 @@ protected:
 
 	UFUNCTION(BlueprintPure, Category = "Grid")
 	FRoomData FindRandomRoom();
+	UFUNCTION(BlueprintPure, Category = "Grid")
+	FRoomData FindNearestValidRoom(FRoomData Room);
 
+	FRoomData FindNearestRoom();
 
 	UFUNCTION(BlueprintCallable, Category = "Rooms")
 	TArray<FRoomData> CalculateRoomData();
 
+	UFUNCTION(BlueprintPure, Category = "Rooms")
+		TArray<FRoomData> GetRoomList();
+
 
 	TArray<FRoomData> RoomList;
+
+	TArray<FRoomData> GetSortedList_Distance(FVector Position);
+
+	float GetRoomDistance(FRoomData R1, FRoomData R2);
 
 
 private: 
 
-
+	void ApplyRoomChanges(FRoomData Room);
 
 	bool DoRoomsOverlap(FVector PosA, FVector ScaleA, FVector PosB, FVector ScaleB)
 	{

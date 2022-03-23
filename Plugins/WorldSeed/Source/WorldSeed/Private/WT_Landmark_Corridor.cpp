@@ -23,7 +23,9 @@ AWT_Landmark_Corridor::AWT_Landmark_Corridor()
 	CorridorEnd->SetupAttachment(RootComponent);
 	Channel = 0;
 	CorridorHeight = 5;
+	CorridorThickness = 1;
 	bAdditive = false;
+	bCanOverlapExistingAreas = true;
 
 }
 
@@ -70,7 +72,13 @@ void AWT_Landmark_Corridor::ApplySpace(FVector Position, AWT_GeneratorCore* Gen)
 {
 	for (int z = 0; z < CorridorHeight; z++)
 	{
-		Gen->SetCellState(Position + FVector(0,0, z), bAdditive);
+		for (int x = 0; x < CorridorThickness; x++)
+		{
+			for (int y = 0; y < CorridorThickness; y++)
+			{
+				Gen->SetCellState(Position + FVector(x, y, z), bAdditive);
+			}
+		}
 	}
 
 
@@ -90,6 +98,8 @@ void AWT_Landmark_Corridor::ApplyLandmark(class AWT_GeneratorCore* Generator)
 		TArray<FVector> CorridorPositions;
 
 
+
+
 		TArray<FVector> AnchorList = GetSortedAnchors();
 		int CurrentTarget = 0;
 
@@ -103,7 +113,7 @@ void AWT_Landmark_Corridor::ApplyLandmark(class AWT_GeneratorCore* Generator)
 
 		int PathCap = 1000;
 
-		UE_LOG(LogTemp, Warning, TEXT("Start: [%f | %f], End: [%f | %f]"), Start.X, Start.Y, End.X, End.Y);
+		
 
 
 		while (CurrentPos != End)
@@ -112,7 +122,7 @@ void AWT_Landmark_Corridor::ApplyLandmark(class AWT_GeneratorCore* Generator)
 
 			if ((PathCap % 10) == 0)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Current Position: [%f | %f], Target Position: [%f | %f]"), CurrentPos.X, CurrentPos.Y, AnchorList[CurrentTarget].X, AnchorList[CurrentTarget].Y);
+				
 			}
 			float Distance = 100000000;
 			FVector Best = FVector(0,0,0);
@@ -141,7 +151,7 @@ void AWT_Landmark_Corridor::ApplyLandmark(class AWT_GeneratorCore* Generator)
 			}
 		}
 
-		UE_LOG(LogTemp, Warning, TEXT("Current Position: [%f | %f], Target Position: [%f | %f]"), CurrentPos.X, CurrentPos.Y, AnchorList[CurrentTarget].X, AnchorList[CurrentTarget].Y);
+		
 
 		
 

@@ -8,6 +8,7 @@
 #include "Widgets/Input/SEditableTextBox.h"
 #include "Engine/World.h"
 #include "WorldSeed/public/WT_Landmark_Corridor.h"
+#include "WorldSeed/public/WT_Landmark_Landscape.h"
 
 
 #include "EditorModeManager.h"
@@ -86,7 +87,7 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 	Options = {
 		LOCTEXT("Slice", "Slice"),
 			LOCTEXT("Add", "Add"),
-			LOCTEXT("Remove", "Remove"),
+			LOCTEXT("Landscape", "Landscape"),
 			LOCTEXT("Room", "Room"),
 			LOCTEXT("Corridor", "Corridor"),
 	};
@@ -341,7 +342,7 @@ FReply FWorldSeedEdModeToolkit::SetLandmark()
 		LandmarkType = AWT_Landmark_Base::StaticClass();
 		break;
 	case 2:
-		LandmarkType = AWT_Landmark_Base::StaticClass();
+		LandmarkType = AWT_Landmark_Landscape::StaticClass();
 		break;
 	case 4: 
 		LandmarkType = AWT_Landmark_Corridor::StaticClass();

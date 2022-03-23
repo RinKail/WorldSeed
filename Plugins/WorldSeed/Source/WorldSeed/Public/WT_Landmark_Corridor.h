@@ -55,12 +55,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Pathing")
 	bool bCanOverlapExistingAreas;
 
+	UPROPERTY(EditAnywhere, Category = "Pathing")
+	bool bForcedStraight;
+
 
 	UPROPERTY(EditAnywhere, Category = "Anchors")
 	TArray<class AWT_LandmarkAnchor_Base*> Anchors;
 
 
-	
+	void DiagonalCorridor();
+
+	void StraightCorridor();
 
 
 	void ApplySpace(FVector Position, class AWT_GeneratorCore* Gen);
