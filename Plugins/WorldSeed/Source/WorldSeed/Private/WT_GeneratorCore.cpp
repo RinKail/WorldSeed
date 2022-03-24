@@ -167,6 +167,10 @@ void AWT_GeneratorCore::Reset()
 	{
 		Grid_Data.Empty();
 	}
+	if (Grid_Data.Num() > 0)
+	{
+		Grid_FloorData.Empty();
+	}
 
 	if (Grid_Visual.Num() > 0)
 	{
@@ -211,7 +215,7 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 				}
 				else
 				{
-					if (IsFloor(FVector(x, y, z)))
+					if (Grid_FloorData.Find(FVector(x, y, z)))
 					{
 						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Floor;
 					}
@@ -219,7 +223,21 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 					{
 						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Empty;
 					}
+
+					
+					/*
+					* if (IsFloor(FVector(x, y, z)))
+					{
+						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Floor;
+					}
+					else
+					{
+						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Empty;
+					}
+					*/
+					
 				}
+				
 
 			}
 		}
@@ -254,7 +272,8 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 					Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Raised;
 					break;
 				case EWT_SpaceID::ID_Floor:
-					Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Floor;
+					Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Raised;
+					Grid_Visual[FVector(x, y, z)].StackID = EWT_StackID::ID_Bottom;
 					break;
 				case EWT_SpaceID::ID_Edge:
 					
@@ -819,38 +838,52 @@ void AWT_GeneratorCore::AssignVisual_Corner(FVector Pos)
 
 void AWT_GeneratorCore::AssignLayer_Edge(FVector Pos)
 {
-	EWT_SpaceID TopID = GetStructureData(Pos + FVector(0, 0, 1));
+	EWT_SpaceID TopID = GetStructureData(Pos + FVector(0, 0, (int)1));
 	EWT_SpaceID BotID = GetStructureData(Pos + FVector(0, 0, -1));
+	bool bTopFloorAdjacent = IsFloorAdjacent(Pos + FVector(0, 0, 1));
+	bool bTopEmptyAdjacent = IsFloorAdjacent(Pos + FVector(0, 0, -1));
 	bool bFloorAdjacent = IsFloorAdjacent(Pos);
 	bool bEmptyAdjacent = IsEmptyAdjacent(Pos);
 
 	switch (TopID)
 	{
 	case EWT_SpaceID::ID_Floor:
+
+		Grid_Visual[Pos].StackID = EWT_StackID::ID_TopWalkable;
+
+		break;
 	case EWT_SpaceID::ID_Empty:
-		if (bFloorAdjacent)
-			Grid_Visual[Pos].StackID = EWT_StackID::ID_Single;
-		else
+		/*
+		* if (bTopFloorAdjacent)
+		{
+			
+		}
+		else if (bTopEmptyAdjacent)
+		{
 			Grid_Visual[Pos].StackID = EWT_StackID::ID_Top;
+		}
+		else if (bFloorAdjacent)
+		{
+			//Grid_Visual[Pos].StackID = EWT_StackID::ID_Single;
+		}
+		*/
+
+		Grid_Visual[Pos].StackID = EWT_StackID::ID_Top;
 
 
 		break;
 	case EWT_SpaceID::ID_Edge:
 		if (BotID != EWT_SpaceID::ID_Edge)
 		{
-			if (TopID != EWT_SpaceID::ID_Edge)
-			{
-				Grid_Visual[Pos].StackID = EWT_StackID::ID_Single;
-			}
-			else
-			{
-				Grid_Visual[Pos].StackID = EWT_StackID::ID_Bottom;
-			}
+			Grid_Visual[Pos].StackID = EWT_StackID::ID_Bottom;
 			
 		}
 		else
+		{
 			Grid_Visual[Pos].StackID = EWT_StackID::ID_Mid;
+		}
 		break;
+		
 	}
 
 

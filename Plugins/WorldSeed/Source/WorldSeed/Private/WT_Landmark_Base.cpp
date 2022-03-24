@@ -66,8 +66,42 @@ void AWT_Landmark_Base::ApplyLandmark(class AWT_GeneratorCore* Generator)
 			for (int y = 0; y < LandmarkScale.Y; y++)
 			{
 				Generator->SetCellState(ConvertedPosition + FVector(x, y, z), bAdditive);
+				if (bIsWalkable)
+				{
+					if (bAdditive)
+					{
+						if (z >= LandmarkScale.Z - 1)
+						{
+							Generator->AddFloorCell(ConvertedPosition + FVector(x, y, z));
+						}
+					}
+					else
+					{
+						if (z == 0)
+						{
+							Generator->AddFloorCell(ConvertedPosition + FVector(x, y, z));
+						}
+					}
+				}
+				else
+				{
+					if (bAdditive)
+					{
+						if (z >= LandmarkScale.Z - 1)
+						{
+							Generator->RemoveFloorCell(ConvertedPosition + FVector(x, y, z));
+						}
+					}
+					else
+					{
+						if (z == 0)
+						{
+							Generator->RemoveFloorCell(ConvertedPosition + FVector(x, y, z));
+						}
+					}
+				}
 			}
 		}
 	}
-}
 
+}

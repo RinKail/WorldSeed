@@ -21,9 +21,10 @@ AWT_WorldChunk::AWT_WorldChunk()
 	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(SceneRoot);
 
-	 ConstructorHelpers::FObjectFinder<UStaticMesh> FloorMesh (TEXT("/Game/PlaceholderAssets/PlaceholderSet_Floor")); 
-	 ConstructorHelpers::FObjectFinder<UStaticMesh> RaisedMesh (TEXT("/Game/PlaceholderAssets/PlaceholderSet_Raised"));
-
+	 ConstructorHelpers::FObjectFinder<UStaticMesh> FloorMesh (TEXT("/Game/PlaceholderAssets/NewAssets/WorldSeedPlaceholder_Floor.WorldSeedPlaceholder_Floor")); 
+	 ConstructorHelpers::FObjectFinder<UStaticMesh> RaisedMesh (TEXT("/Game/PlaceholderAssets/NewAssets/WorldSeedPlaceholder_Raised.WorldSeedPlaceholder_Raised"));
+	
+	
 
 	
 	  static ConstructorHelpers::FObjectFinder<UDataTable> Table(TEXT("DataTable'/WorldSeed/DT_WorldSeed_TileData.DT_WorldSeed_TileData'"));
@@ -59,6 +60,8 @@ void AWT_WorldChunk::InitialiseMeshComponents()
 	if (TableRow)
 	{
 		InitialiseTileData(EWT_GeomID::ID_Raised, TableRow->Raised,"RaisedComponents");
+
+		InitialiseTileData(EWT_GeomID::ID_Floor, TableRow->Raised, "FloorComponents");
 
 		InitialiseTileData(EWT_GeomID::ID_Wall, TableRow->Wall, "WallComponents");
 		
@@ -106,6 +109,7 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale,
 				FGridVisual Visual;
 
 				EWT_GeomID ID = Gen->GetTileData(CurrentPos).TileID;
+				EWT_StackID Layer = Gen->GetTileData(CurrentPos).StackID;
 				if (ID != EWT_GeomID::ID_Empty && ID != EWT_GeomID::ID_Floor && Gen->IsEmptyAdjacent(CurrentPos))
 				{
 					Visual = Gen->GetTileData(CurrentPos);
@@ -119,6 +123,19 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale,
 				else
 				{
 					Visual.TileID = EWT_GeomID::ID_Empty;
+				}
+				if (ID == EWT_GeomID::ID_Floor && Layer == EWT_StackID::ID_Bottom)
+				{
+
+					Visual.StackID = EWT_StackID::ID_Bottom;
+					Visual.TileID = EWT_GeomID::ID_Floor;
+
+
+					UpdateTile(CurrentPos, Visual);
+
+
+
+					UE_LOG(LogTemp, Warning, TEXT("Floor Found"));
 				}
 				
 
@@ -209,7 +226,7 @@ void AWT_WorldChunk::InitialiseChunk()
 					FVector CurrentPos = FVector(x, y, z) + (GetActorLocation() / TileScale);
 
 					EWT_GeomID ID = StoredData[FVector(x, y, z)].TileID;
-					if (ID != EWT_GeomID::ID_Empty && ID != EWT_GeomID::ID_Floor)
+					if (ID != EWT_GeomID::ID_Empty)
 					{
 
 
@@ -266,8 +283,16 @@ void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
 		TileKeys[Position].Comp = ComponentList[Data.TileID].MiddleComponent;
 		break;
 	case EWT_StackID::ID_Top:
-		TileKeys[Position].Index = 	ComponentList[Data.TileID].TopComponent->AddInstance(FTransform(FRotator(0, Data.Rot, 0), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Index = 	ComponentList[Data.TileID].TopUnwalkableComponent->AddInstance(FTransform(FRotator(0, Data.Rot, 0), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].TopUnwalkableComponent;
+		break;
+	case EWT_StackID::ID_TopWalkable:
+		TileKeys[Position].Index = ComponentList[Data.TileID].TopComponent->AddInstance(FTransform(FRotator(0, Data.Rot, 0), Position * TileScale, FVector(1, 1, 1)));
 		TileKeys[Position].Comp = ComponentList[Data.TileID].TopComponent;
+		break;
+	case EWT_StackID::ID_Single:
+		TileKeys[Position].Index = ComponentList[Data.TileID].SingleComponent->AddInstance(FTransform(FRotator(0, Data.Rot, 0), Position * TileScale, FVector(1, 1, 1)));
+		TileKeys[Position].Comp = ComponentList[Data.TileID].SingleComponent;
 		break;
 
 	}

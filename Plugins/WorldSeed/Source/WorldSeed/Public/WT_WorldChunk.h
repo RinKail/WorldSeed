@@ -93,6 +93,49 @@ public:
 
 };
 
+USTRUCT(BlueprintType)
+struct FFloor_TableRow : public FTableRowBase
+{
+	GENERATED_BODY()
+		
+		
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* Standard;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* Central;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* Edge;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* InnerCorner;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* OuterCorner;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* ThinEdge;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* ThinCorner;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* TEdge;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* DoubleCorner;
+	
+
+
+
+	
+
+};
+
 
 USTRUCT(BlueprintType)
 struct FTile_ComponentData

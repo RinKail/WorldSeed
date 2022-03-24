@@ -104,6 +104,13 @@ public:
 	{
 		Grid_FloorData.Add(Pos, true);
 	}
+	void RemoveFloorCell(FVector Pos)
+	{
+		if (Grid_FloorData.Find(Pos))
+		{
+			Grid_FloorData.Remove(Pos);
+		}
+	}
 
 	bool IsValidCoordinate(FVector Pos)
 	{

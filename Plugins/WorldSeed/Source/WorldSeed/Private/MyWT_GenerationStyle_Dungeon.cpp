@@ -73,6 +73,7 @@ bool UWT_GenerationStyle_Dungeon::AddRoom(FVector Position, FVector Scale, bool 
 
             AWT_Landmark_Base* Room = GenCore->GetWorld()->SpawnActor<AWT_Landmark_Base>(AWT_Landmark_Base::StaticClass());
 
+            Room->SetWalkable(true);
             Room->SetLandmarkPosition(Position * TileScale);
             Room->SetActorLocation(Position * TileScale);
             Room->SetLandmarkScale(Scale);

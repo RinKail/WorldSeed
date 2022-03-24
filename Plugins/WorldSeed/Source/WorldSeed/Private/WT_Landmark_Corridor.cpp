@@ -25,6 +25,7 @@ AWT_Landmark_Corridor::AWT_Landmark_Corridor()
 	CorridorHeight = 5;
 	CorridorThickness = 1;
 	bAdditive = false;
+	bIsWalkable = true;
 	bCanOverlapExistingAreas = true;
 
 }
@@ -245,18 +246,21 @@ void AWT_Landmark_Corridor::ApplySpace(FVector Position, AWT_GeneratorCore* Gen)
 			{
 				Gen->SetCellState(Position + FVector(x, y, z), bAdditive);
 
-				if (bAdditive)
+				if (bIsWalkable)
 				{
-					if (z >= CorridorHeight - 1)
+					if (bAdditive)
 					{
-						Gen->AddFloorCell(Position + FVector(x, y, z));
+						if (z >= CorridorHeight - 1)
+						{
+							Gen->AddFloorCell(Position + FVector(x, y, z));
+						}
 					}
-				}
-				else
-				{
-					if (z == 0)
+					else
 					{
-						Gen->AddFloorCell(Position + FVector(x, y, z));
+						if (z == 0)
+						{
+							Gen->AddFloorCell(Position + FVector(x, y, z));
+						}
 					}
 				}
 			}

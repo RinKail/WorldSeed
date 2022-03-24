@@ -87,6 +87,7 @@ public:
 		SetActorLocation(Position);
 	}
 	void SetLandmarkAdditive(bool bIsAdditive) {  bAdditive = bIsAdditive; }
+	void SetWalkable(bool bWalkable) { bIsWalkable = bWalkable; }
 
 	FVector GetLandmarkScale() { return LandmarkScale; }
 	FVector GetLandmarkPosition() { return LandmarkPosition; }

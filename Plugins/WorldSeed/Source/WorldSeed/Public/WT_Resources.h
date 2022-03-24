@@ -55,6 +55,7 @@ enum class EWT_StackID : uint8
 	ID_Bottom		 UMETA(DisplayName = "Bottom"),
 	ID_Mid		 UMETA(DisplayName = "Mid"),
 	ID_Top			 UMETA(DisplayName = "Top"),
+	ID_TopWalkable			 UMETA(DisplayName = "Top Walkable"),
 	ID_Single			 UMETA(DisplayName = "Single")
 		
 

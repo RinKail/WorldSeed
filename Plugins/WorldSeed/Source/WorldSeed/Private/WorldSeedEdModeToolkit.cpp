@@ -353,7 +353,10 @@ FReply FWorldSeedEdModeToolkit::SetLandmark()
 	
 	GEditor->BeginTransaction(LOCTEXT("MoveActorsTransactionName", "MoveActors"));
 	//FWorldSeedEdMode* EditorMode = Cast<FWorldSeedEdMode>(GetEditorMode());
-	EditorReference->CreateLandmark(LandmarkType);
+	if (EditorReference != nullptr)
+	{
+		EditorReference->CreateLandmark(LandmarkType);
+	}
 
 	GEditor->EndTransaction();
 

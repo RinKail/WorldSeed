@@ -49,18 +49,21 @@ void AWT_Landmark_Circle::ApplyLandmark(class AWT_GeneratorCore* Generator)
 		FloodFill(Generator, Pos + FVector(0, 0, (int)Z));
 
 
-		if (bAdditive)
+		if (bIsWalkable)
 		{
-			if (Z >= Height - 1)
+			if (bAdditive)
 			{
-				FloodFill_Floor(Generator, Pos + FVector(0, 0, (int)Z));
+				if (Z >= Height - 1)
+				{
+					FloodFill_Floor(Generator, Pos + FVector(0, 0, (int)Z));
+				}
 			}
-		}
-		else
-		{
-			if (Z == 0)
+			else
 			{
-				FloodFill_Floor(Generator, Pos + FVector(0, 0, (int)Z));
+				if (Z == 0)
+				{
+					FloodFill_Floor(Generator, Pos + FVector(0, 0, (int)Z));
+				}
 			}
 		}
 
@@ -91,5 +94,12 @@ void AWT_Landmark_Circle::FloodFill(AWT_GeneratorCore* Generator, FVector Positi
 
 void AWT_Landmark_Circle::FloodFill_Floor(AWT_GeneratorCore* Generator, FVector Position)
 {
-
+	if (Generator->GetCellState(Position) != bAdditive)
+	{
+		Generator->AddFloorCell(Position);
+		FloodFill(Generator, (Position + FVector((int)1, (int)0, (int)0)));
+		FloodFill(Generator, (Position + FVector((int)-1, (int)0, (int)0)));
+		FloodFill(Generator, (Position + FVector((int)0, (int)1, (int)0)));
+		FloodFill(Generator, (Position + FVector((int)0, (int)-1, (int)0)));
+	}
 }
