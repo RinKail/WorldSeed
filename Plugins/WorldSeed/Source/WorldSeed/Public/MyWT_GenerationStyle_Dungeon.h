@@ -80,7 +80,7 @@ protected:
 
 protected: 
 
-	
+	int GetSurfaceHeight(FVector2D Pos);
 
 
 	//Attempts to add a room to the grid, returns false if parts of the room went out of bounds.
@@ -89,12 +89,15 @@ protected:
 
 	//Adds a corridor onto the grid.
 	UFUNCTION(BlueprintCallable, Category = "Layout")
-	void AddCorridor(FVector StartPosition, FVector EndPosition, TArray<FVector> AnchorPoints);
+	void AddCorridor(FVector StartPosition, FVector EndPosition, TArray<FVector> AnchorPoints, int Thickness, bool bCanOverlap, bool bPrioritiseStraight);
+
+	UFUNCTION(BlueprintCallable, Category = "Layout")
+	void AddCube(FVector Position, FVector Scale, bool bAdditive);
 
 
 	//Directly connects two rooms, this should be used over AddCorridor when building links between a lot of rooms. Will not connect rooms already directly connected
 	UFUNCTION(BlueprintCallable, Category = "Layout")
-	bool ConnectRoom(FRoomData Room, FRoomData Room2);
+	bool ConnectRoom(FRoomData Room, FRoomData Room2, int Thickness, bool bCanOverlap, bool bPrioritiseStraight);
 
 	UFUNCTION(BlueprintPure, Category = "Grid")
 	FRoomData FindRandomRoom();

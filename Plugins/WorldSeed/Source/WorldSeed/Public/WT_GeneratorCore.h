@@ -100,6 +100,10 @@ public:
 		}
 		
 	}
+	void AddFloorCell(FVector Pos)
+	{
+		Grid_FloorData.Add(Pos, true);
+	}
 
 	bool IsValidCoordinate(FVector Pos)
 	{
@@ -212,6 +216,8 @@ protected:
 
 	UPROPERTY()
 	TMap<FVector, bool> Grid_Data;
+	UPROPERTY()
+	TMap<FVector, bool> Grid_FloorData;
 	UPROPERTY()
 	TMap<FVector, EWT_SpaceID> Grid_Structure;
 	UPROPERTY()

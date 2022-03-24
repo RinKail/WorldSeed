@@ -89,5 +89,7 @@ protected:
 
 	UPROPERTY()
 		TArray<class AWT_Landmark_Base*> Landmark_RoomList;
+
+	
 	
 };

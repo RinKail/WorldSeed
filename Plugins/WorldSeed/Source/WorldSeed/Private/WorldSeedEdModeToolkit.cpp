@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "WorldSeed/public/WT_Landmark_Corridor.h"
 #include "WorldSeed/public/WT_Landmark_Landscape.h"
+#include "WorldSeed/public/WT_Landmark_Circle.h"
 
 
 #include "EditorModeManager.h"
@@ -86,7 +87,7 @@ void FWorldSeedEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHo
 
 	Options = {
 		LOCTEXT("Slice", "Slice"),
-			LOCTEXT("Add", "Add"),
+			LOCTEXT("Circle", "Circle"),
 			LOCTEXT("Landscape", "Landscape"),
 			LOCTEXT("Room", "Room"),
 			LOCTEXT("Corridor", "Corridor"),
@@ -339,7 +340,7 @@ FReply FWorldSeedEdModeToolkit::SetLandmark()
 
 		break;
 	case 1:
-		LandmarkType = AWT_Landmark_Base::StaticClass();
+		LandmarkType = AWT_Landmark_Circle::StaticClass();
 		break;
 	case 2:
 		LandmarkType = AWT_Landmark_Landscape::StaticClass();

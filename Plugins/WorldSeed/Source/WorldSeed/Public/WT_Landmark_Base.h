@@ -70,17 +70,23 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Landmark")
 	bool bAdditive;
 
+	UPROPERTY(EditAnywhere, Category = "Landmark")
+	bool bIsWalkable;
+
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
 
+
+
 	void SetLandmarkScale(FVector Scale) { LandmarkScale = Scale; }
 	void SetLandmarkPosition(FVector Position) {
 		LandmarkPosition = Position;
 		SetActorLocation(Position);
 	}
+	void SetLandmarkAdditive(bool bIsAdditive) {  bAdditive = bIsAdditive; }
 
 	FVector GetLandmarkScale() { return LandmarkScale; }
 	FVector GetLandmarkPosition() { return LandmarkPosition; }

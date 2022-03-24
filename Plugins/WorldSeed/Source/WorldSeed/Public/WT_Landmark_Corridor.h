@@ -21,7 +21,7 @@ class WORLDSEED_API AWT_Landmark_Corridor : public AWT_Landmark_Base
 public:
 		AWT_Landmark_Corridor();
 
-		void InitialiseCorridor(FVector Start, FVector End, TArray<FVector> AnchorPositions);
+		void InitialiseCorridor(FVector Start, FVector End, TArray<FVector> AnchorPositions, int Thickness, bool bCanOverlap, bool bPrioritiseStraight);
 
 
 		virtual void Destroy();
@@ -63,9 +63,9 @@ protected:
 	TArray<class AWT_LandmarkAnchor_Base*> Anchors;
 
 
-	void DiagonalCorridor();
+	void StandardCorridor(class AWT_GeneratorCore* Generator);
 
-	void StraightCorridor();
+	void StraightCorridor(class AWT_GeneratorCore* Generator);
 
 
 	void ApplySpace(FVector Position, class AWT_GeneratorCore* Gen);

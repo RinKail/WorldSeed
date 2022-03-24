@@ -22,6 +22,19 @@ void UWT_GenerationStyle_Dungeon::RunBackend()
    
 }
 
+int UWT_GenerationStyle_Dungeon::GetSurfaceHeight(FVector2D Pos)
+{
+    for (int z = GenCore->GetGridScale().Z - 1; z > 0; z--)
+    {
+        if (GenCore->GetCellState(FVector(Pos.X, Pos.Y, z)))
+        {
+            return z;
+        }
+    }
+    return GenCore->GetGridScale().Z;
+
+}
+
 
 
 
@@ -84,19 +97,30 @@ bool UWT_GenerationStyle_Dungeon::AddRoom(FVector Position, FVector Scale, bool 
     return false;
 }
 
-void UWT_GenerationStyle_Dungeon::AddCorridor(FVector StartPosition, FVector EndPosition, TArray<FVector> AnchorPositions)
+
+void UWT_GenerationStyle_Dungeon::AddCorridor(FVector StartPosition, FVector EndPosition, TArray<FVector> AnchorPositions, int Thickness, bool bCanOverlap, bool bPrioritiseStraight)
 {
 
     AWT_Landmark_Corridor* Corridor = GenCore->GetWorld()->SpawnActor<AWT_Landmark_Corridor>(AWT_Landmark_Corridor::StaticClass());
 
  //   Corridor->SetActorLocation(((StartPosition + EndPosition) / 2));
 
-    Corridor->InitialiseCorridor(StartPosition, EndPosition, AnchorPositions);
+    Corridor->InitialiseCorridor(StartPosition, EndPosition, AnchorPositions, Thickness, bCanOverlap, bPrioritiseStraight);
 
 
     Landmark_CorridorList.Add(Corridor);
     LandmarkList.Add(Corridor);
 
+
+}
+
+void UWT_GenerationStyle_Dungeon::AddCube(FVector Position, FVector Scale, bool bAdditive)
+{
+
+    AWT_Landmark_Base* Shape = GenCore->GetWorld()->SpawnActor<AWT_Landmark_Base>(AWT_Landmark_Base::StaticClass());
+    Shape->SetLandmarkPosition(Position);
+    Shape->SetLandmarkScale(Scale);
+    
 
 }
 
@@ -144,7 +168,7 @@ FRoomData UWT_GenerationStyle_Dungeon::FindNearestValidRoom(FRoomData Room)
         
     }
 
-    return OrderedDistance[0];
+    return OrderedDistance[(int)FMath::RandRange(0, (OrderedDistance.Num()- 1) / 3)];
    
 
 
@@ -207,7 +231,7 @@ void UWT_GenerationStyle_Dungeon::ApplyRoomChanges(FRoomData Room)
     }
 }
 
-bool UWT_GenerationStyle_Dungeon::ConnectRoom(FRoomData Room, FRoomData Room2)
+bool UWT_GenerationStyle_Dungeon::ConnectRoom(FRoomData Room, FRoomData Room2, int Thickness, bool bCanOverlap, bool bPrioritiseStraight)
 {
     bool bValidRoomFound = false;
   
@@ -229,7 +253,7 @@ bool UWT_GenerationStyle_Dungeon::ConnectRoom(FRoomData Room, FRoomData Room2)
         FVector Pos2 = Room2.AveragePosition;
 
         TArray<FVector> AnchorList;
-        AddCorridor(Pos1, Pos2, AnchorList);
+        AddCorridor(Pos1, Pos2, AnchorList, Thickness, bCanOverlap, bPrioritiseStraight);
 
         Room.ConnectedRooms.Add(Room2);
         ApplyRoomChanges(Room);
