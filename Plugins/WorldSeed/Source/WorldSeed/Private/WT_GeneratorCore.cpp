@@ -208,34 +208,22 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 					{
 						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Edge;
 					}
+					else if (Grid_FloorData.Find(FVector(x, y, z)))
+					{
+						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Floor;
+					}
 					else
 					{
 						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Raised;
 					}
 				}
+				else if (Grid_FloorData.Find(FVector(x, y, z)))
+				{
+					Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Floor;
+				}
 				else
 				{
-					if (Grid_FloorData.Find(FVector(x, y, z)))
-					{
-						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Floor;
-					}
-					else
-					{
-						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Empty;
-					}
-
-					
-					/*
-					* if (IsFloor(FVector(x, y, z)))
-					{
-						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Floor;
-					}
-					else
-					{
-						Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Empty;
-					}
-					*/
-					
+					Grid_Structure[FVector(x, y, z)] = EWT_SpaceID::ID_Empty;
 				}
 				
 
