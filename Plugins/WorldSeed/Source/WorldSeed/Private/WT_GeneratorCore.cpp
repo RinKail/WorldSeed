@@ -163,6 +163,10 @@ void AWT_GeneratorCore::Reset()
 		}
 		ChunkList.Empty();
 	}
+	if (Grid_FloorData.Num() > 0)
+	{
+		Grid_FloorData.Empty();
+	}
 	if (Grid_Data.Num() > 0)
 	{
 		Grid_Data.Empty();

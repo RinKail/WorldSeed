@@ -72,7 +72,7 @@ void AWT_Landmark_Base::ApplyLandmark(class AWT_GeneratorCore* Generator)
 					{
 						if (z >= LandmarkScale.Z - 1)
 						{
-							Generator->AddFloorCell(ConvertedPosition + FVector(x, y, z));
+							Generator->AddFloorCell(ConvertedPosition + FVector(x, y, z + 1));
 						}
 					}
 					else
@@ -83,23 +83,7 @@ void AWT_Landmark_Base::ApplyLandmark(class AWT_GeneratorCore* Generator)
 						}
 					}
 				}
-				else
-				{
-					if (bAdditive)
-					{
-						if (z >= LandmarkScale.Z - 1)
-						{
-							Generator->RemoveFloorCell(ConvertedPosition + FVector(x, y, z));
-						}
-					}
-					else
-					{
-						if (z == 0)
-						{
-							Generator->RemoveFloorCell(ConvertedPosition + FVector(x, y, z));
-						}
-					}
-				}
+				
 			}
 		}
 	}
