@@ -264,8 +264,15 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 					Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Raised;
 					break;
 				case EWT_SpaceID::ID_Floor:
-					Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Raised;
-					Grid_Visual[FVector(x, y, z)].StackID = EWT_StackID::ID_Bottom;
+					if (IsValidCoordinate(FVector(x,y,z - 1)) && Grid_Structure[FVector(x,y,z -1)] == EWT_SpaceID::ID_Edge)
+					{
+						Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Empty;
+					}
+					else
+					{
+						Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Raised;
+						Grid_Visual[FVector(x, y, z)].StackID = EWT_StackID::ID_Bottom;
+					}
 					break;
 				case EWT_SpaceID::ID_Edge:
 					
