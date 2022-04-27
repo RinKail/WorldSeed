@@ -224,18 +224,39 @@ void AWT_WorldChunk::InitialiseChunk()
 				for (int y = 0; y < GridSize.Y; ++y)
 				{
 					FVector CurrentPos = FVector(x, y, z) + (GetActorLocation() / TileScale);
+					FGridVisual Visual;
+
+				
+					EWT_StackID Layer = StoredData[FVector(x, y, z)].StackID;
 
 					EWT_GeomID ID = StoredData[FVector(x, y, z)].TileID;
 					if (ID != EWT_GeomID::ID_Empty)
 					{
+						if (ID == EWT_GeomID::ID_Floor && Layer == EWT_StackID::ID_Bottom)
+						{
+
+							Visual.StackID = EWT_StackID::ID_Bottom;
+							Visual.TileID = EWT_GeomID::ID_Floor;
+
+
+							UpdateTile(CurrentPos, Visual);
 
 
 
-						UpdateTile(FVector(x, y, z), StoredData[FVector(x, y, z)]);
+							UE_LOG(LogTemp, Warning, TEXT("Floor Found"));
+						}
+						else
+						{
+							UpdateTile(FVector(x, y, z), StoredData[FVector(x, y, z)]);
+						}
+
+						
 
 						//Gen->GetTileData(CurrentPos)
 
 					}
+					
+
 
 
 
