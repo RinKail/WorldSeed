@@ -206,6 +206,8 @@ protected:
 
 	void AddChunk(FVector Position);
 
+	void CreateLandmark();
+
 
 	
 

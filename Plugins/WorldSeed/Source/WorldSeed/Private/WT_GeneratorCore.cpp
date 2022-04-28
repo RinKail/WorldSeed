@@ -129,6 +129,11 @@ void AWT_GeneratorCore::AddChunk(FVector Position)
 	}
 }
 
+void AWT_GeneratorCore::CreateLandmark()
+{
+
+}
+
 void AWT_GeneratorCore::GenerateLevel()
 {
 	if (!IsValid(GenerationStyle_Object))
