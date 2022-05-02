@@ -50,8 +50,7 @@ bool UWT_GenerationStyle_Dungeon::AddRoom(FVector Position, FVector Scale, bool 
 
     
     if ((Position.X > GridBoundaries && PosEnd.X < GetGridBounds().X) &&
-        (Position.Y > GridBoundaries && PosEnd.Y < GetGridBounds().Y))
-        
+        (Position.Y > GridBoundaries && PosEnd.Y < GetGridBounds().Y))  
     {
         
         bool bValidRoom = true;

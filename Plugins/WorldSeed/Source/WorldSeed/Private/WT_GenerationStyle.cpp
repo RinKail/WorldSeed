@@ -4,6 +4,7 @@
 #include "WT_GenerationStyle.h"
 #include "WorldSeed/Public/WT_GeneratorCore.h"
 #include "WorldSeed/Public/WT_Landmark_Base.h"
+#include "WorldSeed/Public/WT_Landmark_Circle.h"
 
 
 
@@ -35,6 +36,43 @@ void UWT_GenerationStyle::GenerateStyle(AWT_GeneratorCore* Core)
 }
 
 
+
+bool UWT_GenerationStyle::AddBox(FVector Position, FVector Scale)
+{
+	FVector PosEnd = FVector((int)Position.X, (int)Position.Y, (int)Position.Z) + Scale;
+	if ((Position.X > GridBoundaries && PosEnd.X < GetGridBounds().X) &&
+		(Position.Y > GridBoundaries && PosEnd.Y < GetGridBounds().Y))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Generating Room"));
+
+		AWT_Landmark_Base* Room = GenCore->GetWorld()->SpawnActor<AWT_Landmark_Base>(AWT_Landmark_Base::StaticClass());
+
+		Room->SetWalkable(false);
+		Room->SetLandmarkPosition(Position * TileScale);
+		Room->SetActorLocation(Position * TileScale);
+		Room->SetLandmarkScale(Scale);
+		LandmarkList.Add(Room);
+
+		return true;
+	}
+	else return false;
+
+}
+
+bool UWT_GenerationStyle::AddCylinder(FVector Position, int Height, int Radius)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Generating Room"));
+
+	AWT_Landmark_Circle* Room = GenCore->GetWorld()->SpawnActor<AWT_Landmark_Circle>(AWT_Landmark_Circle::StaticClass());
+
+	Room->SetWalkable(false);
+	Room->SetLandmarkPosition(Position * TileScale);
+	Room->SetActorLocation(Position * TileScale);
+	Room->SetRadius(Radius);
+	Room->SetHeight(Height);
+
+	LandmarkList.Add(Room);
+}
 
 FVector UWT_GenerationStyle::GetRandomScale(FVector Scale)
 {

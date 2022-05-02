@@ -110,7 +110,7 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale,
 
 				EWT_GeomID ID = Gen->GetTileData(CurrentPos).TileID;
 				EWT_StackID Layer = Gen->GetTileData(CurrentPos).StackID;
-				if (ID != EWT_GeomID::ID_Empty && ID != EWT_GeomID::ID_Floor && Gen->IsEmptyAdjacent(CurrentPos))
+				if (ID != EWT_GeomID::ID_Empty && Gen->IsEmptyAdjacent(CurrentPos))
 				{
 					Visual = Gen->GetTileData(CurrentPos);
 					
@@ -124,7 +124,8 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale,
 				{
 					Visual.TileID = EWT_GeomID::ID_Empty;
 				}
-				if (ID == EWT_GeomID::ID_Floor && Layer == EWT_StackID::ID_Bottom)
+				/*
+				* if (ID == EWT_GeomID::ID_Floor && Layer == EWT_StackID::ID_Bottom)
 				{
 
 					Visual.StackID = EWT_StackID::ID_Bottom;
@@ -137,6 +138,8 @@ void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale,
 
 					UE_LOG(LogTemp, Warning, TEXT("Floor Found"));
 				}
+				*/
+				
 				
 
 				StoredData.Add(FVector(x, y, z), Visual);
