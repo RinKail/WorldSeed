@@ -37,7 +37,7 @@ void UWT_GenerationStyle::GenerateStyle(AWT_GeneratorCore* Core)
 
 
 
-bool UWT_GenerationStyle::AddBox(FVector Position, FVector Scale)
+AWT_Landmark_Base* UWT_GenerationStyle::AddBox(FVector Position, FVector Scale)
 {
 	FVector PosEnd = FVector((int)Position.X, (int)Position.Y, (int)Position.Z) + Scale;
 	if ((Position.X > GridBoundaries && PosEnd.X < GetGridBounds().X) &&
@@ -53,13 +53,13 @@ bool UWT_GenerationStyle::AddBox(FVector Position, FVector Scale)
 		Room->SetLandmarkScale(Scale);
 		LandmarkList.Add(Room);
 
-		return true;
+		return Room;
 	}
-	else return false;
+	else return nullptr;
 
 }
 
-bool UWT_GenerationStyle::AddCylinder(FVector Position, int Height, int Radius)
+AWT_Landmark_Circle* UWT_GenerationStyle::AddCylinder(FVector Position, int Height, int Radius)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Generating Room"));
 
@@ -72,6 +72,7 @@ bool UWT_GenerationStyle::AddCylinder(FVector Position, int Height, int Radius)
 	Room->SetHeight(Height);
 
 	LandmarkList.Add(Room);
+	return Room;
 }
 
 FVector UWT_GenerationStyle::GetRandomScale(FVector Scale)

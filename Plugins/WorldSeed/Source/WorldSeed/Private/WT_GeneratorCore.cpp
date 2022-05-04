@@ -266,7 +266,10 @@ void AWT_GeneratorCore::GenerateGeometryMap()
 				
 					break;
 				case EWT_SpaceID::ID_Raised:
-					Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Raised;
+					if (!IsFloorAdjacent(FVector(x,y,z)))
+					{
+						Grid_Visual[FVector(x, y, z)].TileID = EWT_GeomID::ID_Raised;
+					}
 					break;
 				case EWT_SpaceID::ID_Floor:
 					if (IsValidCoordinate(FVector(x,y,z - 1)) && Grid_Structure[FVector(x,y,z -1)] == EWT_SpaceID::ID_Edge)
@@ -441,6 +444,7 @@ bool AWT_GeneratorCore::IsEmptyAdjacent(FVector Pos)
 bool AWT_GeneratorCore::IsFloorAdjacent(FVector Pos)
 {
 	TArray<FVector> PosList;
+	PosList.Add(FVector(0, 0, 0));
 	PosList.Add(FVector(1, -1, 0));
 	PosList.Add(FVector(-1, 1, 0));
 	PosList.Add(FVector(-1, -1, 0));

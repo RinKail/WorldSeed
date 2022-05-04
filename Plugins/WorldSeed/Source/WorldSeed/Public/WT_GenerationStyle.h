@@ -47,9 +47,9 @@ protected:
 	}
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-	bool AddBox(FVector Position, FVector Scale);
+		class AWT_Landmark_Base* AddBox(FVector Position, FVector Scale);
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-	bool AddCylinder(FVector Position, int Height, int Radius);
+		class AWT_Landmark_Circle* AddCylinder(FVector Position, int Height, int Radius);
 
 
 	//Useful functions releated to the grid
