@@ -192,6 +192,16 @@ protected:
 	UFUNCTION(CallInEditor, Category = "Generation Style")
 		void GenerateLevel();
 
+	UFUNCTION(CallInEditor, Category = "Create Landmarks")
+		void CreateLandmark_Circle();
+	UFUNCTION(CallInEditor, Category = "Create Landmarks")
+		void CreateLandmark_Void();
+	UFUNCTION(CallInEditor, Category = "Create Landmarks")
+		void CreateLandmark_Standard();
+	UFUNCTION(CallInEditor, Category = "Create Landmarks")
+		void CreateLandmark_Corridor();
+
+
 
 	void Reset();
 

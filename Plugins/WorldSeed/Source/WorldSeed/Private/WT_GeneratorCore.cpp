@@ -4,6 +4,9 @@
 #include "WT_GeneratorCore.h"
 #include "WorldSeed/Public/WT_WorldChunk.h"
 #include "WorldSeed/Public/WT_Landmark_Base.h"
+#include "WorldSeed/Public/WT_Landmark_Circle.h"
+#include "WorldSeed/Public/WT_Landmark_Void.h"
+#include "WorldSeed/Public/WT_Landmark_Corridor.h"
 #include "WorldSeed/Public/WT_GenerationStyle.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -150,6 +153,34 @@ void AWT_GeneratorCore::GenerateLevel()
 
 
 
+}
+
+void AWT_GeneratorCore::CreateLandmark_Circle()
+{
+	AWT_Landmark_Circle* Temp = GetWorld()->SpawnActor<AWT_Landmark_Circle>();
+	
+	StoreLandmark(Temp);
+}
+
+void AWT_GeneratorCore::CreateLandmark_Void()
+{
+	AWT_Landmark_Void* Temp = GetWorld()->SpawnActor<AWT_Landmark_Void>();
+
+	StoreLandmark(Temp);
+}
+
+void AWT_GeneratorCore::CreateLandmark_Standard()
+{
+	AWT_Landmark_Base* Temp = GetWorld()->SpawnActor<AWT_Landmark_Base>();
+
+	StoreLandmark(Temp);
+}
+
+void AWT_GeneratorCore::CreateLandmark_Corridor()
+{
+	AWT_Landmark_Corridor* Temp = GetWorld()->SpawnActor<AWT_Landmark_Corridor>();
+
+	StoreLandmark(Temp);
 }
 
 
