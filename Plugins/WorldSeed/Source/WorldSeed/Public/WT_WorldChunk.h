@@ -26,6 +26,7 @@ public:
 		StackID = EWT_StackID::ID_Bottom;
 		Channel = 0;
 		Rot = 0;
+		bDoNotRender = false;
 	}
 	UPROPERTY(EditAnywhere)
 		float Rot;
@@ -35,6 +36,8 @@ public:
 		EWT_StackID StackID;
 	UPROPERTY(EditAnywhere)
 		int Channel;
+	UPROPERTY(EditAnywhere)
+		bool bDoNotRender;
 
 
 };

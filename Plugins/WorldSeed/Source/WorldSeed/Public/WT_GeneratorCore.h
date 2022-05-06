@@ -138,6 +138,16 @@ public:
 		else return EWT_SpaceID::ID_Null;
 	}
 
+	void SetCellRenderState(FVector Pos, bool bNewState)
+	{
+	
+		if (Grid_Visual.Find(Pos))
+		{
+			 Grid_Visual[Pos].bDoNotRender = bNewState;
+		}
+		
+	}
+
 	void StoreLandmark(class AWT_Landmark_Base* In);
 
 	void LoadStyleLandmarks(TArray<class AWT_Landmark_Base*> InLandmarks);
