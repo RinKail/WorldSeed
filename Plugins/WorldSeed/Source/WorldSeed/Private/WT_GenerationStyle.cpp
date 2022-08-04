@@ -37,7 +37,7 @@ void UWT_GenerationStyle::GenerateStyle(AWT_GeneratorCore* Core)
 
 
 
-AWT_Landmark_Base* UWT_GenerationStyle::AddBox(FVector Position, FVector Scale)
+AWT_Landmark_Base* UWT_GenerationStyle::AddBox(const FVector& Position, const FVector& Scale)
 {
 	FVector PosEnd = FVector((int)Position.X, (int)Position.Y, (int)Position.Z) + Scale;
 	if ((Position.X > GridBoundaries && PosEnd.X < GetGridBounds().X) &&
@@ -59,7 +59,7 @@ AWT_Landmark_Base* UWT_GenerationStyle::AddBox(FVector Position, FVector Scale)
 
 }
 
-AWT_Landmark_Circle* UWT_GenerationStyle::AddCylinder(FVector Position, int Height, int Radius)
+AWT_Landmark_Circle* UWT_GenerationStyle::AddCylinder(const FVector& Position, int Height, int Radius)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Generating Room"));
 
@@ -75,12 +75,12 @@ AWT_Landmark_Circle* UWT_GenerationStyle::AddCylinder(FVector Position, int Heig
 	return Room;
 }
 
-FVector UWT_GenerationStyle::GetRandomScale(FVector Scale)
+FVector UWT_GenerationStyle::GetRandomScale(const FVector& Scale)
 {
 	return FVector((int)FMath::RandRange(0, (int)Scale.X), (int)FMath::RandRange(0, (int)Scale.Y), (int)FMath::RandRange(0, (int)Scale.Y));
 }
 
-FVector UWT_GenerationStyle::GetRandomScaleInRange(FVector Start, FVector End)
+FVector UWT_GenerationStyle::GetRandomScaleInRange(const FVector& Start, const FVector& End)
 {
 	
 	return FVector((int)FMath::RandRange((int)Start.X, (int)End.X), (int)FMath::RandRange((int)Start.Y, (int)End.Y), (int)FMath::RandRange((int)Start.Z, (int)End.Y));
@@ -88,7 +88,7 @@ FVector UWT_GenerationStyle::GetRandomScaleInRange(FVector Start, FVector End)
 
 }
 
-FVector UWT_GenerationStyle::GetPositionInRange(FVector Position, FVector Range)
+FVector UWT_GenerationStyle::GetPositionInRange(const FVector& Position, const FVector& Range)
 {
 	FVector TempResult = FVector(0, 0, 0);
 	bool bValidPosition = false;

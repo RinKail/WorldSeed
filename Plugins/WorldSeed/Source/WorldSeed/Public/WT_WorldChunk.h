@@ -203,7 +203,7 @@ public:
 	virtual void BeginPlay() override;
 
 
-	void GenerateChunk(class AWT_GeneratorCore* Gen, FVector2D ChunkScale, int WorldHeight);
+	void GenerateChunk(class AWT_GeneratorCore* Gen, const FVector2D& ChunkScale, const int WorldHeight);
 
 	//void UpdateChunk(class AWT_GeneratorCore* Generator);
 
@@ -234,9 +234,9 @@ protected:
 	
 	TMap<FVector, FTileKey> TileKeys;
 
-	void UpdateTile(FVector Position,  FGridVisual Data);
+	void UpdateTile(const FVector& Position,  const FGridVisual& Data);
 	
-	void InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FString CompName);
+	void InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, const FString& CompName);
 
 
 

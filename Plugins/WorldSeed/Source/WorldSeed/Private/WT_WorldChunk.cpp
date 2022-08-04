@@ -91,7 +91,7 @@ void AWT_WorldChunk::InitialiseMeshComponents()
 	}
 }
 
-void AWT_WorldChunk::GenerateChunk(AWT_GeneratorCore* Gen, FVector2D ChunkScale, int WorldHeight)
+void AWT_WorldChunk::GenerateChunk( class AWT_GeneratorCore* Gen, const FVector2D& ChunkScale, const int WorldHeight)
 {
 	GridSize = FVector(ChunkScale.X, ChunkScale.Y, WorldHeight);
 
@@ -174,7 +174,7 @@ void AWT_WorldChunk::OnConstruction(const FTransform& Transform)
 
 
 
-void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, FString CompName)
+void AWT_WorldChunk::InitialiseTileData(EWT_GeomID TileID, FTile_AssetTypes Asset, const FString& CompName)
 {
 	FInstanceStack TempStack;
 
@@ -279,7 +279,7 @@ void AWT_WorldChunk::InitialiseChunk()
 }
 
 
-void AWT_WorldChunk::UpdateTile(FVector Position, FGridVisual Data)
+void AWT_WorldChunk::UpdateTile(const FVector& Position, const FGridVisual& Data)
 {
 	
 

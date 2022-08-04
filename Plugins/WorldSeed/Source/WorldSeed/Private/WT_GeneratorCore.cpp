@@ -123,7 +123,7 @@ void AWT_GeneratorCore::OnConstruction(const FTransform& Transform)
 {
 	BuildGrid();
 }
-void AWT_GeneratorCore::AddChunk(FVector Position)
+void AWT_GeneratorCore::AddChunk(const FVector& Position)
 {
 	if (!ChunkList.Find(Position))
 	{
@@ -353,7 +353,7 @@ void AWT_GeneratorCore::LoadTileSolverTable()
 	TileSolver_InnerCornerTable.Add(FVector2D(-1, 1), FTileSolverData(180));
 }
 
-bool AWT_GeneratorCore::IsEdge(FVector Pos)
+bool AWT_GeneratorCore::IsEdge(const FVector& Pos)
 {
 	TArray<FVector> PosList;
 	PosList.Add(FVector(1, -1, 0));
@@ -373,19 +373,19 @@ bool AWT_GeneratorCore::IsEdge(FVector Pos)
 	return false;
 }
 
-bool AWT_GeneratorCore::IsFloor(FVector Pos)
+bool AWT_GeneratorCore::IsFloor(const FVector& Pos)
 {
 	if (!GetCellState(Pos) && GetCellState(Pos + FVector(0, 0, -1)) && !GetCellState(Pos + FVector(0, 0, 1))) return true;
 	else return false;
 }
 
-void AWT_GeneratorCore::StoreLandmark(AWT_Landmark_Base* In)
+void AWT_GeneratorCore::StoreLandmark( AWT_Landmark_Base* In)
 {
 	LandmarkList.Add(In);
 
 }
 
-void AWT_GeneratorCore::LoadStyleLandmarks(TArray<class AWT_Landmark_Base*> InLandmarks)
+void AWT_GeneratorCore::LoadStyleLandmarks(TArray<class AWT_Landmark_Base*>& InLandmarks)
 {
 	for (int i = 0; i < StyleLandmarks.Num(); i++)
 	{
@@ -449,7 +449,7 @@ void AWT_GeneratorCore::OrganiseLandmarks()
 	}
 }
 
-bool AWT_GeneratorCore::IsEmptyAdjacent(FVector Pos)
+bool AWT_GeneratorCore::IsEmptyAdjacent(const FVector& Pos)
 {
 	TArray<FVector> PosList;
 	PosList.Add(FVector(1, -1, 0));
@@ -472,7 +472,7 @@ bool AWT_GeneratorCore::IsEmptyAdjacent(FVector Pos)
 	return false;
 }
 
-bool AWT_GeneratorCore::IsFloorAdjacent(FVector Pos)
+bool AWT_GeneratorCore::IsFloorAdjacent(const FVector& Pos)
 {
 	TArray<FVector> PosList;
 	PosList.Add(FVector(0, 0, 0));
@@ -498,13 +498,13 @@ bool AWT_GeneratorCore::IsFloorAdjacent(FVector Pos)
 	
 }
 
-bool AWT_GeneratorCore::IsWalkable(FVector Pos)
+bool AWT_GeneratorCore::IsWalkable(const FVector& Pos)
 {
 	EWT_SpaceID Space = GetStructureData(Pos);
 	return (Space == EWT_SpaceID::ID_Empty || Space == EWT_SpaceID::ID_Floor);
 }
 
-FVector AWT_GeneratorCore::GetAdjacentEmpty_Directional(FVector Position)
+FVector AWT_GeneratorCore::GetAdjacentEmpty_Directional(const FVector& Position)
 {
 	FVector ReturnValue = FVector(0, 0, 0);
 	if (IsValidCoordinate(Position))
@@ -578,7 +578,7 @@ FVector AWT_GeneratorCore::GetAdjacentEmpty_Directional(FVector Position)
 	return ReturnValue;
 }
 
-FVector AWT_GeneratorCore::GetAdjacentAir_Directional(FVector Position)
+FVector AWT_GeneratorCore::GetAdjacentAir_Directional(const FVector& Position)
 {
 	FVector ReturnValue = FVector(0, 0, 0);
 	/*
@@ -686,7 +686,7 @@ FVector AWT_GeneratorCore::GetAdjacentAir_Directional(FVector Position)
 	return ReturnValue;
 }
 
-FVector AWT_GeneratorCore::GetEdgeAdjacent_Directional(FVector Position)
+FVector AWT_GeneratorCore::GetEdgeAdjacent_Directional(const FVector& Position)
 {
 	FVector ReturnValue = FVector(0, 0, 0);
 	if (IsValidCoordinate(Position))
@@ -750,7 +750,7 @@ FVector AWT_GeneratorCore::GetEdgeAdjacent_Directional(FVector Position)
 	return ReturnValue;
 }
 
-bool AWT_GeneratorCore::IsCorner(FVector Pos)
+bool AWT_GeneratorCore::IsCorner(const FVector& Pos)
 {
 	if (IsValidCoordinate(Pos))
 	{
@@ -774,7 +774,7 @@ bool AWT_GeneratorCore::IsCorner(FVector Pos)
 	return false;
 }
 
-void AWT_GeneratorCore::AssignVisual_Edge(FVector Position)
+void AWT_GeneratorCore::AssignVisual_Edge(const FVector& Position)
 {
 
 	FVector Temp = GetAdjacentAir_Directional(Position);
@@ -794,7 +794,7 @@ void AWT_GeneratorCore::AssignVisual_Edge(FVector Position)
 
 }
 
-void AWT_GeneratorCore::AssignVisual_Corner(FVector Pos)
+void AWT_GeneratorCore::AssignVisual_Corner(const FVector& Pos)
 {
 	
 	if (IsValidCoordinate(Pos))
@@ -875,7 +875,7 @@ void AWT_GeneratorCore::AssignVisual_Corner(FVector Pos)
 
 
 
-void AWT_GeneratorCore::AssignLayer_Edge(FVector Pos)
+void AWT_GeneratorCore::AssignLayer_Edge(const FVector& Pos)
 {
 	EWT_SpaceID TopID = GetStructureData(Pos + FVector(0, 0, (int)1));
 	EWT_SpaceID BotID = GetStructureData(Pos + FVector(0, 0, -1));

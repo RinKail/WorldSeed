@@ -30,8 +30,8 @@ protected:
 	int Height;
 
 
-	void FloodFill(class AWT_GeneratorCore* Generator, FVector Position);
-	void FloodFill_Floor(class AWT_GeneratorCore* Generator, FVector Position);
+	void FloodFill(class AWT_GeneratorCore* Generator, const FVector& Position);
+	void FloodFill_Floor(class AWT_GeneratorCore* Generator, const FVector& Position);
 
 
 

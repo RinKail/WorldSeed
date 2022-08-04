@@ -84,7 +84,7 @@ public:
 
 	virtual void BeginPlay() override;
 
-	bool GetCellState(FVector Pos)
+	bool GetCellState(const FVector& Pos)
 	{
 		if (Grid_Data.Find(Pos))
 		{
@@ -92,7 +92,7 @@ public:
 		}
 		else return true;
 	}
-	void SetCellState(FVector Pos, bool bNewState)
+	void SetCellState(const FVector& Pos, bool bNewState)
 	{
 		if (Grid_Data.Find(Pos))
 		{
@@ -100,11 +100,11 @@ public:
 		}
 		
 	}
-	void AddFloorCell(FVector Pos)
+	void AddFloorCell(const FVector& Pos)
 	{
 		Grid_FloorData.Add(Pos, true);
 	}
-	void RemoveFloorCell(FVector Pos)
+	void RemoveFloorCell(const FVector& Pos)
 	{
 		if (Grid_FloorData.Find(Pos))
 		{
@@ -112,12 +112,12 @@ public:
 		}
 	}
 
-	bool IsValidCoordinate(FVector Pos)
+	bool IsValidCoordinate(const FVector& Pos)
 	{
 		return (Pos.X > 0 && Pos.Y > 0 && Pos.Z > 0) && (Pos.X < GridScale.X&& Pos.Y < GridScale.Y&& Pos.Z < GridScale.Z);
 	}
 
-	FGridVisual GetTileData(FVector Pos)
+	FGridVisual GetTileData(const FVector& Pos)
 	{
 		FGridVisual Return;
 		if (Grid_Visual.Find(Pos))
@@ -128,7 +128,7 @@ public:
 	}
 
 
-	EWT_SpaceID GetStructureData(FVector Pos)
+	EWT_SpaceID GetStructureData(const FVector& Pos)
 	{
 	
 		if (Grid_Structure.Find(Pos))
@@ -138,7 +138,7 @@ public:
 		else return EWT_SpaceID::ID_Null;
 	}
 
-	void SetCellRenderState(FVector Pos, bool bNewState)
+	void SetCellRenderState(const FVector& Pos, bool bNewState)
 	{
 	
 		if (Grid_Visual.Find(Pos))
@@ -150,39 +150,39 @@ public:
 
 	void StoreLandmark(class AWT_Landmark_Base* In);
 
-	void LoadStyleLandmarks(TArray<class AWT_Landmark_Base*> InLandmarks);
+	void LoadStyleLandmarks(TArray<class AWT_Landmark_Base*>& InLandmarks);
 
 
 	void OrganiseLandmarks();
 
 	
-	bool IsEmptyAdjacent(FVector Pos);
-	bool IsFloorAdjacent(FVector Pos);
-	bool IsWalkable(FVector Pos);
+	bool IsEmptyAdjacent(const FVector& Pos);
+	bool IsFloorAdjacent(const FVector& Pos);
+	bool IsWalkable(const FVector& Pos);
 
-	bool IsCorner(FVector Pos);
+	bool IsCorner(const FVector& Pos);
 
 
-	FVector GetAdjacentEmpty_Directional(FVector Position);
+	FVector GetAdjacentEmpty_Directional(const FVector& Pos);
 
-	FVector GetAdjacentAir_Directional(FVector Position);
+	FVector GetAdjacentAir_Directional(const FVector& Pos);
 
-	FVector GetAdjacent_Directional(FVector Position, EWT_GeomID GeomType);
+	FVector GetAdjacent_Directional(const FVector& Pos, EWT_GeomID GeomType);
 
-	FVector GetEdgeAdjacent_Directional(FVector Position);
+	FVector GetEdgeAdjacent_Directional(const FVector& Pos);
 
-	bool IsTileType(FVector Position, EWT_SpaceID ID)
+	bool IsTileType(const FVector& Pos, EWT_SpaceID ID)
 	{
-		return (IsValidCoordinate(Position) && Grid_Structure[Position] == ID);
+		return (IsValidCoordinate(Pos) && Grid_Structure[Pos] == ID);
 	}
 
 	
 	FVector GetGridScale() { return GridScale; }
 
 
-	void AssignVisual_Edge(FVector Position);
-	void AssignVisual_Corner(FVector Pos);
-	void AssignLayer_Edge(FVector Pos);
+	void AssignVisual_Edge(const FVector& Position);
+	void AssignVisual_Corner(const FVector& Pos);
+	void AssignLayer_Edge(const FVector& Pos);
 
 protected:
 
@@ -224,7 +224,7 @@ protected:
 
 
 
-	void AddChunk(FVector Position);
+	void AddChunk(const FVector& Position);
 
 	void CreateLandmark();
 
@@ -267,8 +267,8 @@ protected:
 	TMap<FVector, class AWT_WorldChunk*> ChunkList;
 
 
-	bool IsEdge(FVector Pos);
-	bool IsFloor(FVector Pos);
+	bool IsEdge(const FVector& Pos);
+	bool IsFloor(const FVector& Pos);
 
 
 	UPROPERTY();

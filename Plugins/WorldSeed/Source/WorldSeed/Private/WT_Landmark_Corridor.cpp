@@ -30,7 +30,7 @@ AWT_Landmark_Corridor::AWT_Landmark_Corridor()
 
 }
 
-void AWT_Landmark_Corridor::InitialiseCorridor(FVector Start, FVector End, TArray<FVector> AnchorPositions, int Thickness, bool bCanOverlap, bool bPrioritiseStraight)
+void AWT_Landmark_Corridor::InitialiseCorridor(const FVector& Start, const FVector& End, TArray<FVector>& AnchorPositions, int Thickness, bool bCanOverlap, bool bPrioritiseStraight)
 {
 	CorridorStart->SetWorldLocation(FVector((int)Start.X * TileScale, (int)Start.Y * TileScale, (int)Start.Z * TileScale));
 	CorridorEnd->SetWorldLocation(FVector((int)End.X * TileScale, (int)End.Y * TileScale, (int)End.Z * TileScale));
@@ -236,7 +236,7 @@ void AWT_Landmark_Corridor::StraightCorridor(AWT_GeneratorCore* Generator)
 
 }
 
-void AWT_Landmark_Corridor::ApplySpace(FVector Position, AWT_GeneratorCore* Gen)
+void AWT_Landmark_Corridor::ApplySpace(const FVector& Position, AWT_GeneratorCore* Gen)
 {
 	for (int z = 0; z < CorridorHeight; z++)
 	{

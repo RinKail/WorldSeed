@@ -40,16 +40,16 @@ protected:
 		FVector GridScale;
 
 	UFUNCTION(BlueprintPure, Category = "Grid Manipulation")
-	bool IsPositionValid(FVector Position)
+	bool IsPositionValid(const FVector& Position)
 	{
 		return (Position.X > GridBoundaries && Position.Y > GridBoundaries &&
 			Position.X < (GridScale.X - GridBoundaries) && Position.Y < (GridScale.Y - GridBoundaries));
 	}
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-		class AWT_Landmark_Base* AddBox(FVector Position, FVector Scale);
+		class AWT_Landmark_Base* AddBox(const FVector& Position, const FVector& Scale);
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-		class AWT_Landmark_Circle* AddCylinder(FVector Position, int Height, int Radius);
+		class AWT_Landmark_Circle* AddCylinder(const FVector& Position, int Height, int Radius);
 
 
 	//Useful functions releated to the grid
@@ -59,14 +59,14 @@ protected:
 
 	//Returns a scale between 0 and provided value
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-		FVector GetRandomScale(FVector Scale);
+		FVector GetRandomScale(const FVector& Scale);
 
 	//Returns a scale between 0 and provided value
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-		FVector GetRandomScaleInRange(FVector Start, FVector End);
+		FVector GetRandomScaleInRange(const FVector& Start, const FVector& End);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Grid")
-		FVector GetPositionInRange(FVector Position, FVector Range);
+		FVector GetPositionInRange(const FVector& Position, const FVector& Range);
 
 
 

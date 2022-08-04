@@ -77,7 +77,7 @@ void AWT_Landmark_Circle::ApplyLandmark(class AWT_GeneratorCore* Generator)
 
 }
 
-void AWT_Landmark_Circle::FloodFill(AWT_GeneratorCore* Generator, FVector Position)
+void AWT_Landmark_Circle::FloodFill(AWT_GeneratorCore* Generator, const FVector& Position)
 {
 	if (Generator->GetCellState(Position) != bAdditive)
 	{
@@ -92,7 +92,7 @@ void AWT_Landmark_Circle::FloodFill(AWT_GeneratorCore* Generator, FVector Positi
 
 }
 
-void AWT_Landmark_Circle::FloodFill_Floor(AWT_GeneratorCore* Generator, FVector Position)
+void AWT_Landmark_Circle::FloodFill_Floor(AWT_GeneratorCore* Generator, const FVector& Position)
 {
 	if (Generator->GetCellState(Position) != bAdditive)
 	{
